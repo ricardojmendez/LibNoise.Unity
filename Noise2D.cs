@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-//using Microsoft.Unity.Framework;
-//using Microsoft.Unity.Framework.Graphics;
 using UnityEngine;
 
 namespace LibNoise.Unity
@@ -396,7 +394,6 @@ namespace LibNoise.Unity
                     }
                 }
             }
-            //result.SetData<Color>(data);
             result.SetPixels(data);
             return result;
         }
@@ -449,8 +446,6 @@ namespace LibNoise.Unity
                     data[id] = gradient[d];
                 }
             }
-            //result.SetData<Color>(data);
-            //Debug.Log("Setting pixels");
             result.SetPixels(data);
             return result;
         }
