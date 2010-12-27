@@ -35,14 +35,14 @@ namespace LibNoise.Unity
         {
             Gradient._terrain.m_data = new List<KeyValuePair<double, Color>>();
             Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(-1.0, new Color(0, 0, 128)));
-            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(-0.2, new Color(32, 64, 128)));
-            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(-0.04, new Color(64, 96, 192)));
-            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(-0.02, new Color(192, 192, 128)));
-            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(0.0, new Color(0, 192, 0)));
-            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(0.25, new Color(192, 192, 0)));
-            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(0.5, new Color(160, 96, 64)));
-            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(0.75, new Color(128, 255, 255)));
-            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(1.0, new Color(255, 255, 255)));
+            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(-0.2, new Color(0.125f, 0.25f, 0.5f)));
+            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(-0.04, new Color(0.25f, 0.375f, 0.75f)));
+            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(-0.02, new Color(0.75f, 0.75f, 0.5f)));
+            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(0.0, new Color(0, 0.75f, 0)));
+            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(0.25, new Color(0.75f, 0.75f, 0)));
+            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(0.5, new Color(0.625f, 0.375f, 0.25f)));
+            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(0.75, new Color(0.5f, 1, 1)));
+            Gradient._terrain.m_data.Add(new KeyValuePair<double, Color>(1.0, Color.white));
             Gradient._terrain.m_inverted = false;
             Gradient._grayscale.m_data = new List<KeyValuePair<double, Color>>();
             Gradient._grayscale.m_data.Add(new KeyValuePair<double, Color>(-1.0, Color.black));
