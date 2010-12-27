@@ -300,7 +300,6 @@ namespace LibNoise.Unity
                         fv = (float)Utils.InterpolateLinear(z0, z1, zb);
                     }
                     this.m_data[x, z] = fv;
-					Debug.Log("Generated "+fv);
                     zc += zd;
                 }
                 xc += xd;
