@@ -11,7 +11,7 @@ namespace LibNoise.Unity.Generator
     /// <summary>
     /// Provides a noise module that outputs 3-dimensional ridged-multifractal noise. [GENERATOR]
     /// </summary>
-    public class RiggedMultifractal : ModuleBase
+    public class RidgedMultifractal : ModuleBase
     {
         #region Fields
 
@@ -27,23 +27,23 @@ namespace LibNoise.Unity.Generator
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of RiggedMultifractal.
+        /// Initializes a new instance of RidgedMultifractal.
         /// </summary>
-        public RiggedMultifractal()
+        public RidgedMultifractal()
             : base(0)
         {
             this.UpdateWeights();
         }
 
         /// <summary>
-        /// Initializes a new instance of RiggedMultifractal.
+        /// Initializes a new instance of RidgedMultifractal.
         /// </summary>
         /// <param name="frequency">The frequency of the first octave.</param>
         /// <param name="lacunarity">The lacunarity of the ridged-multifractal noise.</param>
         /// <param name="octaves">The number of octaves of the ridged-multifractal noise.</param>
         /// <param name="seed">The seed of the ridged-multifractal noise.</param>
         /// <param name="quality">The quality of the ridged-multifractal noise.</param>
-        public RiggedMultifractal(double frequency, double lacunarity, int octaves, int seed, QualityMode quality)
+        public RidgedMultifractal(double frequency, double lacunarity, int octaves, int seed, QualityMode quality)
             : base(0)
         {
             this.Frequency = frequency;
