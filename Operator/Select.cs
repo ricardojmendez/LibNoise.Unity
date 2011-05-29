@@ -26,9 +26,23 @@ namespace LibNoise.Unity.Operator
 		/// Initializes a new instance of Select.
 		/// </summary>
 		public Select()
-			: base(2)
+			: base(3)
 		{
 		}
+		
+		/// <summary>
+		/// Initializes a new instance of Select.
+		/// </summary>
+		/// <param name="inputA">The first input module.</param>
+		/// <param name="inputB">The second input module.</param>
+		/// <param name="inputB">The controller module.</param>
+		public Select(ModuleBase inputA, ModuleBase inputB, ModuleBase controller)
+			: base(3)
+		{
+			this.m_modules[0] = inputA;
+			this.m_modules[1] = inputB;
+			this.m_modules[2] = controller;
+		}		
 
 		/// <summary>
 		/// Initializes a new instance of Select.
@@ -36,13 +50,11 @@ namespace LibNoise.Unity.Operator
 		/// <param name="min">The minimum value.</param>
 		/// <param name="max">The maximum value.</param>
 		/// <param name="fallOff">The falloff value at the edge transition.</param>
-		/// <param name="input">The input module.</param>
-		/// <param name="controller">The controller of the operator.</param>
-		public Select(double min, double max, double fallOff, ModuleBase input, ModuleBase controller)
-			: base(2)
+		/// <param name="inputA">The first input module.</param>
+		/// <param name="inputB">The second input module.</param>
+		public Select(double min, double max, double fallOff, ModuleBase inputA, ModuleBase inputB)
+			: this(inputA, inputB, null)
 		{
-			this.m_modules[0] = input;
-			this.m_modules[1] = controller;
 			this.m_min = min;
 			this.m_max = max;
 			this.FallOff = fallOff;

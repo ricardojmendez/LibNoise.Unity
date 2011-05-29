@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-//using Microsoft.Unity.Framework;
-//using Microsoft.Unity.Framework.Graphics;
 using UnityEngine;
 
 namespace LibNoise.Unity
@@ -302,7 +300,6 @@ namespace LibNoise.Unity
                         fv = (float)Utils.InterpolateLinear(z0, z1, zb);
                     }
                     this.m_data[x, z] = fv;
-					Debug.Log("Generated "+fv);
                     zc += zd;
                 }
                 xc += xd;
@@ -396,7 +393,6 @@ namespace LibNoise.Unity
                     }
                 }
             }
-            //result.SetData<Color>(data);
             result.SetPixels(data);
             return result;
         }
@@ -449,8 +445,6 @@ namespace LibNoise.Unity
                     data[id] = gradient[d];
                 }
             }
-            //result.SetData<Color>(data);
-            //Debug.Log("Setting pixels");
             result.SetPixels(data);
             return result;
         }
