@@ -14,16 +14,16 @@ namespace LibNoise.Unity
     {
         #region Constants
 
-        public const double South = -90.0;
-        public const double North = 90.0;
-        public const double West = -180.0;
-        public const double East = 180.0;
-        public const double AngleMin = -180.0;
-        public const double AngleMax = 180.0;
-        public const double Left = -1.0;
-        public const double Right = 1.0;
-        public const double Top = -1.0;
-        public const double Bottom = 1.0;
+        public static readonly double South = -90.0;
+        public static readonly double North = 90.0;
+        public static readonly double West = -180.0;
+        public static readonly double East = 180.0;
+        public static readonly double AngleMin = -180.0;
+        public static readonly double AngleMax = 180.0;
+        public static readonly double Left = -1.0;
+        public static readonly double Right = 1.0;
+        public static readonly double Top = -1.0;
+        public static readonly double Bottom = 1.0;
 
         #endregion
 
