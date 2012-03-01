@@ -105,11 +105,11 @@ namespace LibNoise.Unity
             {
                 if (x < 0 && x >= this.m_width)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("Invalid x position");
                 }
                 if (y < 0 && y >= this.m_height)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("Inavlid y position");
                 }
                 return this.m_data[x, y];
             }
@@ -117,11 +117,11 @@ namespace LibNoise.Unity
             {
                 if (x < 0 && x >= this.m_width)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("Invalid x position");
                 }
                 if (y < 0 && y >= this.m_height)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("Invalid y position");
                 }
                 this.m_data[x, y] = value;
             }
@@ -215,10 +215,14 @@ namespace LibNoise.Unity
         /// <param name="heightMax">The maximum height of the clip region.</param>
         public void GenerateCylindrical(double angleMin, double angleMax, double heightMin, double heightMax)
         {
-            if (angleMax <= angleMin || heightMax <= heightMin || this.m_generator == null)
+            if (angleMax <= angleMin || heightMax <= heightMin)
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Invalid angle or height parameters");
             }
+			if (m_generator == null)
+			{
+				throw new ArgumentNullException("Generator is null");
+			}
             double ae = angleMax - angleMin;
             double he = heightMax - heightMin;
             double xd = ae / (double)this.m_width;
@@ -270,10 +274,14 @@ namespace LibNoise.Unity
         /// <param name="seamless">Indicates whether the resulting noise map should be seamless.</param>
         public void GeneratePlanar(double left, double right, double top, double bottom, bool seamless)
         {
-            if (right <= left || bottom <= top || this.m_generator == null)
+            if (right <= left || bottom <= top)
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Invalid right/left or bottom/top combination");
             }
+			if (m_generator == null)
+			{
+				throw new ArgumentNullException("Generator is null");
+			}			
             double xe = right - left;
             double ze = bottom - top;
             double xd = xe / (double)this.m_width;
@@ -328,10 +336,14 @@ namespace LibNoise.Unity
         /// <param name="east">The clip region to the east.</param>
         public void GenerateSpherical(double south, double north, double west, double east)
         {
-            if (east <= west || north <= south || this.m_generator == null)
+            if (east <= west || north <= south)
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Invalid east/west or north/south combination");
             }
+			if (m_generator == null)
+			{
+				throw new ArgumentNullException("Generator is null");
+			}			
             double loe = east - west;
             double lae = north - south;
             double xd = loe / (double)this.m_width;

@@ -64,11 +64,11 @@ namespace LibNoise.Unity
                 System.Diagnostics.Debug.Assert(this.m_modules.Length > 0);
                 if (index < 0 || index >= this.m_modules.Length)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("Index out of valid module range");
                 }
                 if (this.m_modules[index] == null)
                 {
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException("Desired element is null");
                 }
                 return this.m_modules[index];
             }
@@ -77,11 +77,11 @@ namespace LibNoise.Unity
                 System.Diagnostics.Debug.Assert(this.m_modules.Length > 0);
                 if (index < 0 || index >= this.m_modules.Length)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("Index out of valid module range");
                 }
                 if (value == null)
                 {
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException("Value should not be null");
                 }
                 this.m_modules[index] = value;
             }
