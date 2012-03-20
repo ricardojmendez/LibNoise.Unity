@@ -104,7 +104,7 @@ namespace LibNoise.Unity.Operator
         {
             if (steps < 2)
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Need at least two steps");
             }
             this.Clear();
             double ts = 2.0 / ((double)steps - 1.0);
