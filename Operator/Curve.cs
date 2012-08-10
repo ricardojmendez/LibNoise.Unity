@@ -119,8 +119,10 @@ namespace LibNoise.Unity.Operator
             {
                 return this.m_data[i1].Value;
             }
-            double ip0 = this.m_data[i1].Value;
-            double ip1 = this.m_data[i2].Value;
+            //double ip0 = this.m_data[i1].Value;
+            //double ip1 = this.m_data[i2].Value;
+            double ip0 = this.m_data[i1].Key;
+            double ip1 = this.m_data[i2].Key;
             double a = (smv - ip0) / (ip1 - ip0);
             return Utils.InterpolateCubic(this.m_data[i0].Value, this.m_data[i1].Value, this.m_data[i2].Value, this.m_data[i3].Value, a);
         }
