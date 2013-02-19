@@ -282,7 +282,7 @@ namespace LibNoise.Unity
 			{
 				throw new ArgumentNullException("Generator is null");
 			}			
-            double xe = right - left;
+            double xe = left - right;
             double ze = bottom - top;
             double xd = xe / (double)this.m_width;
             double zd = ze / (double)this.m_height;
