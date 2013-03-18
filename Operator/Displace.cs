@@ -99,8 +99,8 @@ namespace LibNoise.Unity.Operator
             System.Diagnostics.Debug.Assert(this.m_modules[2] != null);
             System.Diagnostics.Debug.Assert(this.m_modules[3] != null);
             double dx = x + this.m_modules[1].GetValue(x, y, z);
-            double dy = y + this.m_modules[1].GetValue(x, y, z);
-            double dz = z + this.m_modules[1].GetValue(x, y, z);
+            double dy = y + this.m_modules[2].GetValue(x, y, z);
+            double dz = z + this.m_modules[3].GetValue(x, y, z);
             return this.m_modules[0].GetValue(dx, dy, dz);
         }
 
