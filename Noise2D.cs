@@ -416,8 +416,9 @@ namespace LibNoise.Unity
         /// <returns>The created texture map.</returns>
         public Texture2D GetTexture()
         {
-            return this.GetTexture(Gradient.Grayscale);
+            return this.GetTexture(GradientPresets.Grayscale);
         }
+
 
         /// <summary>
         /// Creates a texture map for the current content of the noise map.
@@ -426,17 +427,6 @@ namespace LibNoise.Unity
         /// <param name="gradient">The gradient to color the texture map with.</param>
         /// <returns>The created texture map.</returns>
         public Texture2D GetTexture(Gradient gradient)
-        {
-            return this.GetTexture(ref gradient);
-        }
-
-        /// <summary>
-        /// Creates a texture map for the current content of the noise map.
-        /// </summary>
-        /// <param name="device">The graphics device to use.</param>
-        /// <param name="gradient">The gradient to color the texture map with.</param>
-        /// <returns>The created texture map.</returns>
-        public Texture2D GetTexture(ref Gradient gradient)
         {
             Texture2D result = new Texture2D(this.m_width, this.m_height);
             Color[] data = new Color[this.m_width * this.m_height];
@@ -454,7 +444,8 @@ namespace LibNoise.Unity
                     {
                         d = this.m_data[x, y];
                     }
-                    data[id] = gradient[d];
+                    data[id] = gradient.Evaluate((d + 1) / 2);
+                    // Debug.Log(string.Format("d: {0} id: {1} result: {2}", d, id, data[id]));
                 }
             }
             result.SetPixels(data);
