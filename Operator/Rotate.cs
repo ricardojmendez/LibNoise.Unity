@@ -42,6 +42,16 @@
 		/// <summary>
 		/// Initializes a new instance of Rotate.
 		/// </summary>
+		/// <param name="input">The input module.</param>
+		public Rotate(ModuleBase input)
+			: base(1)
+		{
+			this.m_modules[0] = input;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of Rotate.
+		/// </summary>
 		/// <param name="x">The rotation around the x-axis.</param>
 		/// <param name="y">The rotation around the y-axis.</param>
 		/// <param name="z">The rotation around the z-axis.</param>

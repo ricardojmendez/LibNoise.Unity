@@ -32,6 +32,16 @@
         /// <summary>
         /// Initializes a new instance of Scale.
         /// </summary>
+        /// <param name="input">The input module.</param>
+        public Scale(ModuleBase input)
+            : base(1)
+        {
+            this.m_modules[0] = input;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of Scale.
+        /// </summary>
         /// <param name="x">The scaling on the x-axis.</param>
         /// <param name="y">The scaling on the y-axis.</param>
         /// <param name="z">The scaling on the z-axis.</param>

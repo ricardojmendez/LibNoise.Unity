@@ -32,6 +32,16 @@
         /// <summary>
         /// Initializes a new instance of Translate.
         /// </summary>
+        /// <param name="input">The input module.</param>
+        public Translate(ModuleBase input)
+            : base(1)
+        {
+            this.m_modules[0] = input;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of Translate.
+        /// </summary>
         /// <param name="x">The translation on the x-axis.</param>
         /// <param name="y">The translation on the y-axis.</param>
         /// <param name="z">The translation on the z-axis.</param>
