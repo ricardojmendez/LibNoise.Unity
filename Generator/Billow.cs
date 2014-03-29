@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-//using Microsoft.Xna.Framework;
-using UnityEngine;
-
-namespace LibNoise.Unity.Generator
+﻿namespace LibNoise.Unity.Generator
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    //using Microsoft.Xna.Framework;
+    using UnityEngine;
+
     /// <summary>
     /// Provides a noise module that outputs a three-dimensional billowy noise. [GENERATOR]
     /// </summary>

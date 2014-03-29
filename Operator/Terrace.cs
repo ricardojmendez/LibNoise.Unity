@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using UnityEngine;
-
-namespace LibNoise.Unity.Operator
+﻿namespace LibNoise.Unity.Operator
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    using UnityEngine;
+
     /// <summary>
     /// Provides a noise module that maps the output value from a source module onto a
     /// terrace-forming curve. [OPERATOR]

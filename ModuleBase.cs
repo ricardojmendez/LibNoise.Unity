@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-//using Microsoft.Xna.Framework;
-using UnityEngine;
-
-namespace LibNoise.Unity
+﻿namespace LibNoise.Unity
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    //using Microsoft.Xna.Framework;
+    using UnityEngine;
+
     #region Enumerations
 
     /// <summary>

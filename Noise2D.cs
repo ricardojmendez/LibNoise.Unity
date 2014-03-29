@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using UnityEngine;
-
 namespace LibNoise.Unity
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    using UnityEngine;
+
     /// <summary>
     /// Provides a two-dimensional noise map.
     /// </summary>

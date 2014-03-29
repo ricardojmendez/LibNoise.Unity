@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
-
-using UnityEngine;
-
 namespace LibNoise.Unity
 {
+    using System;
+    using System.Collections.Generic;
+
+    using UnityEngine;
+
     /// <summary>
     /// Provides a series of gradient presets
     /// </summary>
