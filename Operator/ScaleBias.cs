@@ -31,6 +31,16 @@
         /// <summary>
         /// Initializes a new instance of ScaleBias.
         /// </summary>
+        /// <param name="input">The input module.</param>
+        public ScaleBias(ModuleBase input)
+            : base(1)
+        {
+            this.m_modules[0] = input;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of ScaleBias.
+        /// </summary>
         /// <param name="scale">The scaling factor to apply to the output value from the source module.</param>
         /// <param name="bias">The bias to apply to the scaled output value from the source module.</param>
         /// <param name="input">The input module.</param>

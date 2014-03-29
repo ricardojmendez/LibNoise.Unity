@@ -52,6 +52,19 @@
         /// <summary>
         /// Initializes a new instance of Turbulence.
         /// </summary>
+        /// <param name="input">The input module.</param>
+        public Turbulence(ModuleBase input)
+            : base(1)
+        {
+            this.m_xDistort = new Perlin();
+            this.m_yDistort = new Perlin();
+            this.m_zDistort = new Perlin();
+            this.m_modules[0] = input;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of Turbulence.
+        /// </summary>
         public Turbulence(double power, ModuleBase input)
             : this(new Perlin(), new Perlin(), new Perlin(), power, input)
         {

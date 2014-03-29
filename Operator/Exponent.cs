@@ -30,6 +30,16 @@
         /// <summary>
         /// Initializes a new instance of Exponent.
         /// </summary>
+        /// <param name="input">The input module.</param>
+        public Exponent(ModuleBase input)
+            : base(1)
+        {
+            this.m_modules[0] = input;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of Exponent.
+        /// </summary>
         /// <param name="exponent">The exponent to use.</param>
         /// <param name="input">The input module.</param>
         public Exponent(double exponent, ModuleBase input)

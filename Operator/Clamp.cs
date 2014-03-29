@@ -32,6 +32,16 @@
         /// Initializes a new instance of Clamp.
         /// </summary>
         /// <param name="input">The input module.</param>
+        public Clamp(ModuleBase input)
+            : base(1)
+        {
+            this.m_modules[0] = input;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of Clamp.
+        /// </summary>
+        /// <param name="input">The input module.</param>
         /// <param name="min">The minimum value.</param>
         /// <param name="max">The maximum value.</param>
         public Clamp(double min, double max, ModuleBase input)
@@ -62,6 +72,22 @@
         {
             get { return this.m_min; }
             set { this.m_min = value; }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Sets the bounds.
+        /// </summary>
+        /// <param name="min">The minimum value.</param>
+        /// <param name="max">The maximum value.</param>
+        public void SetBounds(double min, double max)
+        {
+            System.Diagnostics.Debug.Assert(min < max);
+            this.m_min = min;
+            this.m_max = max;
         }
 
         #endregion

@@ -33,6 +33,16 @@
         /// <summary>
         /// Initializes a new instance of Terrace.
         /// </summary>
+        /// <param name="input">The input module.</param>
+        public Terrace(ModuleBase input)
+            : base(1)
+        {
+            this.m_modules[0] = input;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of Terrace.
+        /// </summary>
         /// <param name="inverted">Indicates whether the terrace curve is inverted.</param>
         /// <param name="input">The input module.</param>
         public Terrace(bool inverted, ModuleBase input)

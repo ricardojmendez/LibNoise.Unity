@@ -13,19 +13,19 @@
         internal const double Sqrt3 = 1.7320508075688772935;
         internal const int OctavesMaximum = 30;
 
-#if NOISE_VERSION_1
-        private const int GeneratorNoiseX = 1;
-        private const int GeneratorNoiseY = 31337;
-        private const int GeneratorNoiseZ = 263;
-        private const int GeneratorSeed = 1013;
-        private const int GeneratorShift = 13;
-#else
-        private const int GeneratorNoiseX = 1619;
-        private const int GeneratorNoiseY = 31337;
-        private const int GeneratorNoiseZ = 6971;
-        private const int GeneratorSeed = 1013;
-        private const int GeneratorShift = 8;
-#endif
+        #if NOISE_VERSION_1
+            private const int GeneratorNoiseX = 1;
+            private const int GeneratorNoiseY = 31337;
+            private const int GeneratorNoiseZ = 263;
+            private const int GeneratorSeed = 1013;
+            private const int GeneratorShift = 13;
+        #else
+            private const int GeneratorNoiseX = 1619;
+            private const int GeneratorNoiseY = 31337;
+            private const int GeneratorNoiseZ = 6971;
+            private const int GeneratorSeed = 1013;
+            private const int GeneratorShift = 8;
+        #endif
 
         #endregion
 
