@@ -32,6 +32,7 @@ namespace LibNoise.Unity
         private int m_width = 0;
         private int m_height = 0;
         private float m_borderValue = float.NaN;
+        private float[,] m_uncroppedData = null; // This has a 1px border of extra noise data used for calculating normal map edges.
         private float[,] m_data = null;
         private ModuleBase m_generator = null;
 
@@ -86,6 +87,7 @@ namespace LibNoise.Unity
             this.m_generator = generator;
             this.m_width = width;
             this.m_height = height;
+            this.m_uncroppedData = new float[width + 2, height + 2];
             this.m_data = new float[width, height];
         }
 
@@ -99,31 +101,39 @@ namespace LibNoise.Unity
         /// <param name="x">The position on the x-axis.</param>
         /// <param name="y">The position on the y-axis.</param>
         /// <returns>The corresponding value.</returns>
-        public float this[int x, int y]
+        public float this[int x, int y, bool isCropped = true]
         {
             get
             {
-                if (x < 0 && x >= this.m_width)
-                {
+                if (x < 0 && x >= this.m_width) {
                     throw new ArgumentOutOfRangeException("Invalid x position");
                 }
-                if (y < 0 && y >= this.m_height)
-                {
+
+                if (y < 0 && y >= this.m_height) {
                     throw new ArgumentOutOfRangeException("Inavlid y position");
                 }
-                return this.m_data[x, y];
+
+                if (isCropped) {
+                    return this.m_data[x, y];
+                } else {
+                    return this.m_uncroppedData[x, y];
+                }
             }
             set
             {
-                if (x < 0 && x >= this.m_width)
-                {
+                if (x < 0 && x >= this.m_width) {
                     throw new ArgumentOutOfRangeException("Invalid x position");
                 }
-                if (y < 0 && y >= this.m_height)
-                {
+
+                if (y < 0 && y >= this.m_height) {
                     throw new ArgumentOutOfRangeException("Invalid y position");
                 }
-                this.m_data[x, y] = value;
+
+                if (isCropped) {
+                    this.m_data[x, y] = value;
+                } else {
+                    this.m_uncroppedData[x, y] = value;
+                }
             }
         }
 
@@ -251,6 +261,12 @@ namespace LibNoise.Unity
                 for (int y = 0; y < this.m_height; y++)
                 {
                     this.m_data[x, y] = (float)this.GenerateCylindrical(ca, ch);
+                    
+                    // Crop off a 1px border of noise data
+                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1) {
+                        this.m_data[x, y] = (float)this.GenerateCylindrical(ca, ch);
+                    }
+
                     ch += yd;
                 }
                 ca += xd;
@@ -323,7 +339,14 @@ namespace LibNoise.Unity
                         double z1 = Utils.InterpolateLinear(nwv, nev, xb);
                         fv = (float)Utils.InterpolateLinear(z0, z1, zb);
                     }
-                    this.m_data[x, z] = fv;
+
+                    this.m_uncroppedData[x, z] = fv;
+
+                    // Crop off a 1px border of noise data
+                    if (x > 0 && z > 0 && x < this.m_width + 1 && z < this.m_height + 1) {
+                        this.m_data[x, z] = fv;
+                    }
+
                     zc += zd;
                 }
                 xc += xd;
@@ -371,8 +394,15 @@ namespace LibNoise.Unity
                 cla = south;
                 for (int y = 0; y < this.m_height; y++)
                 {
-                    this.m_data[x, y] = (float)this.GenerateSpherical(cla, clo);
+                    this.m_uncroppedData[x, y] = (float)this.GenerateSpherical(cla, clo);
+
+                    // Crop off a 1px border of noise data
+                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1) {
+                        this.m_data[y - 1, x - 1] = (float)this.GenerateSpherical(cla, clo);
+                    }
+
                     cla += yd;
+
                 }
                 clo += xd;
             }
@@ -381,93 +411,80 @@ namespace LibNoise.Unity
         /// <summary>
         /// Creates a normal map for the current content of the noise map.
         /// </summary>
-        /// <param name="device">The graphics device to use.</param>
-        /// <param name="scale">The scaling of the normal map values.</param>
+        /// <param name="intensity">The scaling of the normal map values.</param>
         /// <returns>The created normal map.</returns>
-        public Texture2D GetNormalMap(float scale)
-        {
-            Texture2D result = new Texture2D(this.m_width, this.m_height);
-            Color[] data = new Color[this.m_width * this.m_height];
-            for (int y = 0; y < this.m_height; y++)
-            {
-                for (int x = 0; x < this.m_width; x++)
-                {
-                    Vector3 normX = Vector3.zero;
-                    Vector3 normY = Vector3.zero;
-                    Vector3 normalVector = new Vector3();
-                    if (x > 0 && y > 0 && x < this.m_width - 1 && y < this.m_height - 1)
-                    {
-                        normX = new Vector3((this.m_data[x - 1, y] - this.m_data[x + 1, y]) / 2 * scale, 0, 1);
-                        normY = new Vector3(0, (this.m_data[x, y - 1] - this.m_data[x, y + 1]) / 2 * scale, 1);
-                        normalVector = normX + normY;
-                        normalVector.Normalize();
-                        Vector3 texVector = Vector3.zero;
-                        texVector.x = (normalVector.x + 1) / 2f;
-                        texVector.y = (normalVector.y + 1) / 2f;
-                        texVector.z = (normalVector.z + 1) / 2f;
-                        data[x + y * this.m_height] = new Color(texVector.x, texVector.y, texVector.z );
-                    }
-                    else
-                    {
-                        normX = new Vector3(0, 0, 1);
-                        normY = new Vector3(0, 0, 1);
-                        normalVector = normX + normY;
-                        normalVector.Normalize();
-                        Vector3 texVector = Vector3.zero;
-                        texVector.x = (normalVector.x + 1) / 2f;
-                        texVector.y = (normalVector.y + 1) / 2f;
-                        texVector.z = (normalVector.z + 1) / 2f;
-                        data[x + y * this.m_height] = new Color(texVector.x, texVector.y, texVector.z );
+        public Texture2D GetNormalMap(float intensity) {
+            var texture = new Texture2D(this.m_width, this.m_height);
+            var pixels = new Color[this.m_width * this.m_height];
+
+            for (var y = 0; y < this.m_height + 2; y++) {
+                for (var x = 0; x < this.m_width + 2; x++) {
+                    var xPos = (this.m_uncroppedData[Mathf.Max(0, y - 1), x] - this.m_uncroppedData[Mathf.Min(y + 1, this.m_height + 2 - 1), x]) / 2;
+                    var yPos = (this.m_uncroppedData[y, Mathf.Max(0, x - 1)] - this.m_uncroppedData[y, Mathf.Min(x + 1, this.m_width + 2 - 1)]) / 2;
+                    var normalX = new Vector3(xPos * intensity, 0, 1);
+                    var normalY = new Vector3(0, yPos * intensity, 1);
+                    
+                    var normalVector = normalX + normalY;
+                    normalVector.Normalize();
+                    
+                    var colorVector = Vector3.zero;
+                    colorVector.x = (normalVector.x + 1) / 2;
+                    colorVector.y = (normalVector.y + 1) / 2;
+                    colorVector.z = (normalVector.z + 1) / 2;
+
+                    // Start at (x + 1, y + 1) so that resulting normal map aligns with cropped data
+                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1) {
+                        pixels[(y - 1) * this.m_width + x - 1] = new Color(colorVector.x, colorVector.y, colorVector.z);
                     }
                 }
             }
-            result.SetPixels(data);
-            result.Apply();
-            return result;
+
+            texture.SetPixels(pixels);
+            texture.wrapMode = TextureWrapMode.Clamp;
+            texture.Apply();
+
+            return texture;
         }
 
         /// <summary>
         /// Creates a grayscale texture map for the current content of the noise map.
         /// </summary>
-        /// <param name="device">The graphics device to use.</param>
         /// <returns>The created texture map.</returns>
         public Texture2D GetTexture()
         {
             return this.GetTexture(GradientPresets.Grayscale);
         }
 
-
         /// <summary>
         /// Creates a texture map for the current content of the noise map.
         /// </summary>
-        /// <param name="device">The graphics device to use.</param>
         /// <param name="gradient">The gradient to color the texture map with.</param>
         /// <returns>The created texture map.</returns>
         public Texture2D GetTexture(Gradient gradient)
         {
-            Texture2D result = new Texture2D(this.m_width, this.m_height);
-            Color[] data = new Color[this.m_width * this.m_height];
-            int id = 0;
-            for (int y = 0; y < this.m_height; y++)
-            {
-                for (int x = 0; x < this.m_width; x++, id++)
-                {
-                    float d = 0.0f;
-                    if (!float.IsNaN(this.m_borderValue) && (x == 0 || x == this.m_width - 1 || y == 0 || y == this.m_height - 1))
-                    {
-                        d = this.m_borderValue;
+            var texture = new Texture2D(this.m_width, this.m_height);
+            var pixels = new Color[this.m_width * this.m_height];
+
+            var id = 0;
+            for (var y = 0; y < this.m_height; y++) {
+                for (var x = 0; x < this.m_width; x++) {
+                    var sample = 0.0f;
+
+                    if (!float.IsNaN(this.m_borderValue) && (x == 0 || x == this.m_width - 1 || y == 0 || y == this.m_height - 1)) {
+                        sample = this.m_borderValue;
+                    } else {
+                        sample = this.m_data[y, x];
                     }
-                    else
-                    {
-                        d = this.m_data[x, y];
-                    }
-                    data[id] = gradient.Evaluate((d + 1) / 2);
-                    // Debug.Log(string.Format("d: {0} id: {1} result: {2}", d, id, data[id]));
+
+                    pixels[y * this.m_width + x] = gradient.Evaluate((sample + 1) / 2);
                 }
             }
-            result.SetPixels(data);
-            result.Apply();
-            return result;
+
+            texture.SetPixels(pixels);
+            texture.wrapMode = TextureWrapMode.Clamp;
+            texture.Apply();
+
+            return texture;
         }
 
         #endregion
