@@ -170,6 +170,22 @@ namespace LibNoise.Unity
         #region Methods
 
         /// <summary>
+        /// Gets normalized noise map data with all values in the set of {0..1}.
+        /// </summary>
+        /// <returns>The normalized noise map data.</returns>
+        public float[,] GetNormalizedData() {
+            var result = new float[this.m_width, this.m_height];
+
+            for (var x = 0; x < this.m_width; x++) {
+                for (var y = 0; y < this.m_height; y++) {
+                    result[x, y] = (this.m_data[x, y] + 1) / 2;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Clears the noise map.
         /// </summary>
         public void Clear()
@@ -406,6 +422,7 @@ namespace LibNoise.Unity
                 }
             }
             result.SetPixels(data);
+            result.Apply();
             return result;
         }
 
@@ -449,6 +466,7 @@ namespace LibNoise.Unity
                 }
             }
             result.SetPixels(data);
+            result.Apply();
             return result;
         }
 
