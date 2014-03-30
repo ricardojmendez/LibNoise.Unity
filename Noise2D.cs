@@ -419,8 +419,8 @@ namespace LibNoise.Unity
 
             for (var y = 0; y < this.m_height + 2; y++) {
                 for (var x = 0; x < this.m_width + 2; x++) {
-                    var xPos = (this.m_uncroppedData[Mathf.Max(0, y - 1), x] - this.m_uncroppedData[Mathf.Min(y + 1, this.m_height + 2 - 1), x]) / 2;
-                    var yPos = (this.m_uncroppedData[y, Mathf.Max(0, x - 1)] - this.m_uncroppedData[y, Mathf.Min(x + 1, this.m_width + 2 - 1)]) / 2;
+                    var xPos = (this.m_uncroppedData[Mathf.Max(0, y - 1), x] - this.m_uncroppedData[Mathf.Min(y + 1, this.m_height + 1), x]) / 2;
+                    var yPos = (this.m_uncroppedData[y, Mathf.Max(0, x - 1)] - this.m_uncroppedData[y, Mathf.Min(x + 1, this.m_width + 1)]) / 2;
                     var normalX = new Vector3(xPos * intensity, 0, 1);
                     var normalY = new Vector3(0, yPos * intensity, 1);
                     
