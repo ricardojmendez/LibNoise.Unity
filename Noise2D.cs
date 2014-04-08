@@ -465,7 +465,6 @@ namespace LibNoise.Unity
             var texture = new Texture2D(this.m_width, this.m_height);
             var pixels = new Color[this.m_width * this.m_height];
 
-            var id = 0;
             for (var y = 0; y < this.m_height; y++) {
                 for (var x = 0; x < this.m_width; x++) {
                     var sample = 0.0f;
