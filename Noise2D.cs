@@ -419,8 +419,8 @@ namespace LibNoise.Unity
 
             for (var y = 0; y < this.m_height + 2; y++) {
                 for (var x = 0; x < this.m_width + 2; x++) {
-                    var xPos = (this.m_uncroppedData[Mathf.Max(0, y - 1), x] - this.m_uncroppedData[Mathf.Min(y + 1, this.m_height + 1), x]) / 2;
-                    var yPos = (this.m_uncroppedData[y, Mathf.Max(0, x - 1)] - this.m_uncroppedData[y, Mathf.Min(x + 1, this.m_width + 1)]) / 2;
+                    var xPos = (this.m_uncroppedData[Mathf.Max(0, x - 1), y] - this.m_uncroppedData[Mathf.Min(x + 1, this.m_height + 1), y]) / 2;
+                    var yPos = (this.m_uncroppedData[x, Mathf.Max(0, y - 1)] - this.m_uncroppedData[x, Mathf.Min(y + 1, this.m_width + 1)]) / 2;
                     var normalX = new Vector3(xPos * intensity, 0, 1);
                     var normalY = new Vector3(0, yPos * intensity, 1);
                     
@@ -434,7 +434,7 @@ namespace LibNoise.Unity
 
                     // Start at (x + 1, y + 1) so that resulting normal map aligns with cropped data
                     if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1) {
-                        pixels[(y - 1) * this.m_width + x - 1] = new Color(colorVector.x, colorVector.y, colorVector.z);
+                        pixels[(x - 1) + (y - 1) * this.m_width] = new Color(colorVector.x, colorVector.y, colorVector.z);
                     }
                 }
             }
@@ -472,10 +472,10 @@ namespace LibNoise.Unity
                     if (!float.IsNaN(this.m_borderValue) && (x == 0 || x == this.m_width - 1 || y == 0 || y == this.m_height - 1)) {
                         sample = this.m_borderValue;
                     } else {
-                        sample = this.m_data[y, x];
+                        sample = this.m_data[x, y];
                     }
 
-                    pixels[y * this.m_width + x] = gradient.Evaluate((sample + 1) / 2);
+                    pixels[x + y * this.m_width] = gradient.Evaluate((sample + 1) / 2);
                 }
             }
 
