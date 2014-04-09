@@ -27,11 +27,11 @@ namespace LibNoise.Unity
         /// </summary>
         static GradientPresets()
         {
-            var alphaKeys = new List<GradientAlphaKey>();
+            List<GradientAlphaKey> alphaKeys = new List<GradientAlphaKey>();
             alphaKeys.Add(new GradientAlphaKey(1, 0));
             alphaKeys.Add(new GradientAlphaKey(1, 1));
 
-            var islandKeys = new List<GradientColorKey>();
+            List<GradientColorKey> islandKeys = new List<GradientColorKey>();
             islandKeys.Add(new GradientColorKey(new Color(  3/255f,  29/255f,  63/255f), 0));
             islandKeys.Add(new GradientColorKey(new Color(  7/255f, 106/255f, 127/255f), 0.250f));
             islandKeys.Add(new GradientColorKey(new Color( 62/255f,  86/255f,  30/255f), 0.375f));
@@ -44,7 +44,7 @@ namespace LibNoise.Unity
             _island = new Gradient();
             _island.SetKeys(islandKeys.ToArray(), alphaKeys.ToArray());
 
-            var terrainKeys = new List<GradientColorKey>();
+            List<GradientColorKey> terrainKeys = new List<GradientColorKey>();
             terrainKeys.Add(new GradientColorKey(new Color(0, 0, 0.5f), 0));
             terrainKeys.Add(new GradientColorKey(new Color(0.125f, 0.25f, 0.5f), 0.4f));
             terrainKeys.Add(new GradientColorKey(new Color(0.25f, 0.375f, 0.75f), 0.48f));
@@ -57,7 +57,7 @@ namespace LibNoise.Unity
             _terrain = new Gradient();
             _terrain.SetKeys(terrainKeys.ToArray(), alphaKeys.ToArray());
 
-            var rgbKeys = new List<GradientColorKey>();
+            List<GradientColorKey> rgbKeys = new List<GradientColorKey>();
             rgbKeys.Add(new GradientColorKey(new Color(0, 0, 1), 0));
             rgbKeys.Add(new GradientColorKey(new Color(0, 1, 0), 0.5f));
             rgbKeys.Add(new GradientColorKey(new Color(1, 0, 0), 1));
@@ -65,7 +65,7 @@ namespace LibNoise.Unity
             _rgb = new Gradient();
             _rgb.SetKeys(rgbKeys.ToArray(), alphaKeys.ToArray());
 
-            var grayscaleKeys = new List<GradientColorKey>();
+            List<GradientColorKey> grayscaleKeys = new List<GradientColorKey>();
             grayscaleKeys.Add(new GradientColorKey(Color.black, 0));
             grayscaleKeys.Add(new GradientColorKey(Color.white, 1));
 

@@ -184,10 +184,10 @@ namespace LibNoise.Unity
         /// </summary>
         /// <returns>The normalized noise map data.</returns>
         public float[,] GetNormalizedData() {
-            var result = new float[this.m_width, this.m_height];
+            float[,] result = new float[this.m_width, this.m_height];
 
-            for (var x = 0; x < this.m_width; x++) {
-                for (var y = 0; y < this.m_height; y++) {
+            for (int x = 0; x < this.m_width; x++) {
+                for (int y = 0; y < this.m_height; y++) {
                     result[x, y] = (this.m_data[x, y] + 1) / 2;
                 }
             }
@@ -414,20 +414,20 @@ namespace LibNoise.Unity
         /// <param name="intensity">The scaling of the normal map values.</param>
         /// <returns>The created normal map.</returns>
         public Texture2D GetNormalMap(float intensity) {
-            var texture = new Texture2D(this.m_width, this.m_height);
-            var pixels = new Color[this.m_width * this.m_height];
+            Texture2D texture = new Texture2D(this.m_width, this.m_height);
+            Color[] pixels = new Color[this.m_width * this.m_height];
 
-            for (var y = 0; y < this.m_height + 2; y++) {
-                for (var x = 0; x < this.m_width + 2; x++) {
-                    var xPos = (this.m_uncroppedData[Mathf.Max(0, x - 1), y] - this.m_uncroppedData[Mathf.Min(x + 1, this.m_height + 1), y]) / 2;
-                    var yPos = (this.m_uncroppedData[x, Mathf.Max(0, y - 1)] - this.m_uncroppedData[x, Mathf.Min(y + 1, this.m_width + 1)]) / 2;
-                    var normalX = new Vector3(xPos * intensity, 0, 1);
-                    var normalY = new Vector3(0, yPos * intensity, 1);
+            for (int y = 0; y < this.m_height + 2; y++) {
+                for (int x = 0; x < this.m_width + 2; x++) {
+                    float xPos = (this.m_uncroppedData[Mathf.Max(0, x - 1), y] - this.m_uncroppedData[Mathf.Min(x + 1, this.m_height + 1), y]) / 2;
+                    float yPos = (this.m_uncroppedData[x, Mathf.Max(0, y - 1)] - this.m_uncroppedData[x, Mathf.Min(y + 1, this.m_width + 1)]) / 2;
+                    Vector3 normalX = new Vector3(xPos * intensity, 0, 1);
+                    Vector3 normalY = new Vector3(0, yPos * intensity, 1);
                     
-                    var normalVector = normalX + normalY;
+                    Vector3 normalVector = normalX + normalY;
                     normalVector.Normalize();
                     
-                    var colorVector = Vector3.zero;
+                    Vector3 colorVector = Vector3.zero;
                     colorVector.x = (normalVector.x + 1) / 2;
                     colorVector.y = (normalVector.y + 1) / 2;
                     colorVector.z = (normalVector.z + 1) / 2;
@@ -462,12 +462,12 @@ namespace LibNoise.Unity
         /// <returns>The created texture map.</returns>
         public Texture2D GetTexture(Gradient gradient)
         {
-            var texture = new Texture2D(this.m_width, this.m_height);
-            var pixels = new Color[this.m_width * this.m_height];
+            Texture2D texture = new Texture2D(this.m_width, this.m_height);
+            Color[] pixels = new Color[this.m_width * this.m_height];
 
-            for (var y = 0; y < this.m_height; y++) {
-                for (var x = 0; x < this.m_width; x++) {
-                    var sample = 0.0f;
+            for (int y = 0; y < this.m_height; y++) {
+                for (int x = 0; x < this.m_width; x++) {
+                    float sample = 0.0f;
 
                     if (!float.IsNaN(this.m_borderValue) && (x == 0 || x == this.m_width - 1 || y == 0 || y == this.m_height - 1)) {
                         sample = this.m_borderValue;
