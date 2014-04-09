@@ -100,6 +100,7 @@ namespace LibNoise.Unity
         /// </summary>
         /// <param name="x">The position on the x-axis.</param>
         /// <param name="y">The position on the y-axis.</param>
+        /// <param name="isCropped">True if cropped data (default). False if uncropped data.</param>
         /// <returns>The corresponding value.</returns>
         public float this[int x, int y, bool isCropped = true]
         {
@@ -251,20 +252,20 @@ namespace LibNoise.Unity
 			}
             double ae = angleMax - angleMin;
             double he = heightMax - heightMin;
-            double xd = ae / (double)this.m_width;
-            double yd = he / (double)this.m_height;
+            double xd = ae / ((double)this.m_width - 1);
+            double yd = he / ((double)this.m_height - 1);
             double ca = angleMin;
             double ch = heightMin;
-            for (int x = 0; x < this.m_width; x++)
+            for (int x = 0; x < this.m_width + 2; x++)
             {
                 ch = heightMin;
-                for (int y = 0; y < this.m_height; y++)
+                for (int y = 0; y < this.m_height + 2; y++)
                 {
-                    this.m_data[x, y] = (float)this.GenerateCylindrical(ca, ch);
+                    this.m_uncroppedData[x, y] = (float)this.GenerateCylindrical(ca, ch);
                     
                     // Crop off a 1px border of noise data
                     if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1) {
-                        this.m_data[x, y] = (float)this.GenerateCylindrical(ca, ch);
+                        this.m_data[x - 1, y - 1] = (float)this.GenerateCylindrical(ca, ch);
                     }
 
                     ch += yd;
@@ -316,15 +317,15 @@ namespace LibNoise.Unity
 			}			
             double xe = right - left;
             double ze = bottom - top;
-            double xd = xe / (double)this.m_width;
-            double zd = ze / (double)this.m_height;
+            double xd = xe / ((double)this.m_width - 1);
+            double zd = ze / ((double)this.m_height - 1);
             double xc = left;
             double zc = top;
             float fv = 0.0f;
-            for (int x = 0; x < this.m_width; x++)
+            for (int x = 0; x < this.m_width + 2; x++)
             {
                 zc = top;
-                for (int z = 0; z < this.m_height; z++)
+                for (int z = 0; z < this.m_height + 2; z++)
                 {
                     if (!seamless) { fv = (float)this.GeneratePlanar(xc, zc); }
                     else
@@ -344,7 +345,7 @@ namespace LibNoise.Unity
 
                     // Crop off a 1px border of noise data
                     if (x > 0 && z > 0 && x < this.m_width + 1 && z < this.m_height + 1) {
-                        this.m_data[x, z] = fv;
+                        this.m_data[x - 1, z - 1] = fv;
                     }
 
                     zc += zd;
@@ -385,14 +386,14 @@ namespace LibNoise.Unity
 			}			
             double loe = east - west;
             double lae = north - south;
-            double xd = loe / (double)this.m_width;
-            double yd = lae / (double)this.m_height;
+            double xd = loe / ((double)this.m_width - 1);
+            double yd = lae / ((double)this.m_height - 1);
             double clo = west;
             double cla = south;
-            for (int x = 0; x < this.m_width; x++)
+            for (int x = 0; x < this.m_width + 2; x++)
             {
                 cla = south;
-                for (int y = 0; y < this.m_height; y++)
+                for (int y = 0; y < this.m_height + 2; y++)
                 {
                     this.m_uncroppedData[x, y] = (float)this.GenerateSpherical(cla, clo);
 
