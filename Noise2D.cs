@@ -100,7 +100,7 @@ namespace LibNoise.Unity
         /// </summary>
         /// <param name="x">The position on the x-axis.</param>
         /// <param name="y">The position on the y-axis.</param>
-        /// <param name="isCropped">True if cropped data (default). False if uncropped data.</param>
+        /// <param name="isCropped">Indicates whether the noise map data should be cropped (default) or uncropped.</param>
         /// <returns>The corresponding value.</returns>
         public float this[int x, int y, bool isCropped = true]
         {
@@ -294,7 +294,7 @@ namespace LibNoise.Unity
         /// <param name="bottom">The clip region to the bottom.</param>
         public void GeneratePlanar(double left, double right, double top, double bottom)
         {
-            this.GeneratePlanar(left, right, top, bottom, false);
+            this.GeneratePlanar(left, right, top, bottom, true);
         }
 
         /// <summary>
@@ -304,8 +304,8 @@ namespace LibNoise.Unity
         /// <param name="right">The clip region to the right.</param>
         /// <param name="top">The clip region to the top.</param>
         /// <param name="bottom">The clip region to the bottom.</param>
-        /// <param name="seamless">Indicates whether the resulting noise map should be seamless.</param>
-        public void GeneratePlanar(double left, double right, double top, double bottom, bool seamless)
+        /// <param name="isSeamless">Indicates whether the resulting noise map should be seamless.</param>
+        public void GeneratePlanar(double left, double right, double top, double bottom, bool isSeamless)
         {
             if (right <= left || bottom <= top)
             {
@@ -327,7 +327,7 @@ namespace LibNoise.Unity
                 zc = top;
                 for (int z = 0; z < this.m_height + 2; z++)
                 {
-                    if (!seamless) { fv = (float)this.GeneratePlanar(xc, zc); }
+                    if (isSeamless) { fv = (float)this.GeneratePlanar(xc, zc); }
                     else
                     {
                         double swv = this.GeneratePlanar(xc, zc);
