@@ -10,7 +10,7 @@ requests are welcome.
 [LibNoise](http://libnoise.sourceforge.net/) was originally created by
 Jason Bevins. The library was later ported to Unity by
 Tim Speltz. His original development forum thread contains a Unity package with
-an example scene, which can be downloaded
+an example scene, which can be found
 [here](http://forum.unity3d.com/threads/68764-LibNoise-Ported-to-Unity). Please
 note that LibNoise.Unity is only a repository for the library code itself and
 contains no example files. Other contributors to LibNoise.Unity include
