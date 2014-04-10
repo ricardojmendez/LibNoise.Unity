@@ -111,8 +111,14 @@
                 this.m_max = t;
             }
             double v = this.m_modules[0].GetValue(x, y, z);
-            if (v < this.m_min) { return this.m_min; }
-            else if (v > this.m_max) { return this.m_max; }
+            if (v < this.m_min)
+            {
+                return this.m_min;
+            }
+            else if (v > this.m_max)
+            {
+                return this.m_max;
+            }
             return v;
         }
 

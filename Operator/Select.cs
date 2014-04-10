@@ -154,7 +154,10 @@
             double a;
             if (this.m_fallOff > 0.0)
             {
-                if (cv < (this.m_min - this.m_fallOff)) { return this.m_modules[0].GetValue(x, y, z); }
+                if (cv < (this.m_min - this.m_fallOff))
+                {
+                    return this.m_modules[0].GetValue(x, y, z);
+                }
                 else if (cv < (this.m_min + this.m_fallOff))
                 {
                     double lc = (this.m_min - this.m_fallOff);
@@ -163,7 +166,10 @@
                     return Utils.InterpolateLinear(this.m_modules[0].GetValue(x, y, z), this.m_modules[1].GetValue(x, y, z), a);
 
                 }
-                else if (cv < (this.m_max - this.m_fallOff)) { return this.m_modules[1].GetValue(x, y, z); }
+                else if (cv < (this.m_max - this.m_fallOff))
+                {
+                    return this.m_modules[1].GetValue(x, y, z);
+                }
                 else if (cv < (this.m_max + this.m_fallOff))
                 {
                     double lc = (this.m_max - this.m_fallOff);
@@ -176,7 +182,10 @@
             }
             else
             {
-                if (cv < this.m_min || cv > this.m_max) { return this.m_modules[0].GetValue(x, y, z); }
+                if (cv < this.m_min || cv > this.m_max)
+                {
+                    return this.m_modules[0].GetValue(x, y, z);
+                }
                 return this.m_modules[1].GetValue(x, y, z);
             }
         }

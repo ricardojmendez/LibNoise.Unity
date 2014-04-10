@@ -106,33 +106,43 @@ namespace LibNoise.Unity
         {
             get
             {
-                if (x < 0 && x >= this.m_width) {
+                if (x < 0 && x >= this.m_width)
+                {
                     throw new ArgumentOutOfRangeException("Invalid x position");
                 }
 
-                if (y < 0 && y >= this.m_height) {
+                if (y < 0 && y >= this.m_height)
+                {
                     throw new ArgumentOutOfRangeException("Inavlid y position");
                 }
 
-                if (isCropped) {
+                if (isCropped)
+                {
                     return this.m_data[x, y];
-                } else {
+                }
+                else
+                {
                     return this.m_uncroppedData[x, y];
                 }
             }
             set
             {
-                if (x < 0 && x >= this.m_width) {
+                if (x < 0 && x >= this.m_width)
+                {
                     throw new ArgumentOutOfRangeException("Invalid x position");
                 }
 
-                if (y < 0 && y >= this.m_height) {
+                if (y < 0 && y >= this.m_height)
+                {
                     throw new ArgumentOutOfRangeException("Invalid y position");
                 }
 
-                if (isCropped) {
+                if (isCropped)
+                {
                     this.m_data[x, y] = value;
-                } else {
+                }
+                else
+                {
                     this.m_uncroppedData[x, y] = value;
                 }
             }
@@ -184,11 +194,14 @@ namespace LibNoise.Unity
         /// Gets normalized noise map data with all values in the set of {0..1}.
         /// </summary>
         /// <returns>The normalized noise map data.</returns>
-        public float[,] GetNormalizedData() {
+        public float[,] GetNormalizedData()
+        {
             float[,] result = new float[this.m_width, this.m_height];
 
-            for (int x = 0; x < this.m_width; x++) {
-                for (int y = 0; y < this.m_height; y++) {
+            for (int x = 0; x < this.m_width; x++)
+            {
+                for (int y = 0; y < this.m_height; y++)
+                {
                     result[x, y] = (this.m_data[x, y] + 1) / 2;
                 }
             }
@@ -264,7 +277,8 @@ namespace LibNoise.Unity
                     this.m_uncroppedData[x, y] = (float)this.GenerateCylindrical(ca, ch);
                     
                     // Crop off a 1px border of noise data
-                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1) {
+                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1)
+                    {
                         this.m_data[x - 1, y - 1] = (float)this.GenerateCylindrical(ca, ch);
                     }
 
@@ -327,7 +341,10 @@ namespace LibNoise.Unity
                 zc = top;
                 for (int z = 0; z < this.m_height + 2; z++)
                 {
-                    if (isSeamless) { fv = (float)this.GeneratePlanar(xc, zc); }
+                    if (isSeamless)
+                    {
+                        fv = (float)this.GeneratePlanar(xc, zc);
+                    }
                     else
                     {
                         double swv = this.GeneratePlanar(xc, zc);
@@ -344,7 +361,8 @@ namespace LibNoise.Unity
                     this.m_uncroppedData[x, z] = fv;
 
                     // Crop off a 1px border of noise data
-                    if (x > 0 && z > 0 && x < this.m_width + 1 && z < this.m_height + 1) {
+                    if (x > 0 && z > 0 && x < this.m_width + 1 && z < this.m_height + 1)
+                    {
                         this.m_data[x - 1, z - 1] = fv;
                     }
 
@@ -398,7 +416,8 @@ namespace LibNoise.Unity
                     this.m_uncroppedData[x, y] = (float)this.GenerateSpherical(cla, clo);
 
                     // Crop off a 1px border of noise data
-                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1) {
+                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1)
+                    {
                         this.m_data[y - 1, x - 1] = (float)this.GenerateSpherical(cla, clo);
                     }
 
@@ -414,12 +433,15 @@ namespace LibNoise.Unity
         /// </summary>
         /// <param name="intensity">The scaling of the normal map values.</param>
         /// <returns>The created normal map.</returns>
-        public Texture2D GetNormalMap(float intensity) {
+        public Texture2D GetNormalMap(float intensity)
+        {
             Texture2D texture = new Texture2D(this.m_width, this.m_height);
             Color[] pixels = new Color[this.m_width * this.m_height];
 
-            for (int y = 0; y < this.m_height + 2; y++) {
-                for (int x = 0; x < this.m_width + 2; x++) {
+            for (int y = 0; y < this.m_height + 2; y++)
+            {
+                for (int x = 0; x < this.m_width + 2; x++)
+                {
                     float xPos = (this.m_uncroppedData[Mathf.Max(0, x - 1), y] - this.m_uncroppedData[Mathf.Min(x + 1, this.m_height + 1), y]) / 2;
                     float yPos = (this.m_uncroppedData[x, Mathf.Max(0, y - 1)] - this.m_uncroppedData[x, Mathf.Min(y + 1, this.m_width + 1)]) / 2;
                     Vector3 normalX = new Vector3(xPos * intensity, 0, 1);
@@ -434,7 +456,8 @@ namespace LibNoise.Unity
                     colorVector.z = (normalVector.z + 1) / 2;
 
                     // Start at (x + 1, y + 1) so that resulting normal map aligns with cropped data
-                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1) {
+                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1)
+                    {
                         pixels[(x - 1) + (y - 1) * this.m_width] = new Color(colorVector.x, colorVector.y, colorVector.z);
                     }
                 }
@@ -466,13 +489,18 @@ namespace LibNoise.Unity
             Texture2D texture = new Texture2D(this.m_width, this.m_height);
             Color[] pixels = new Color[this.m_width * this.m_height];
 
-            for (int y = 0; y < this.m_height; y++) {
-                for (int x = 0; x < this.m_width; x++) {
+            for (int y = 0; y < this.m_height; y++)
+            {
+                for (int x = 0; x < this.m_width; x++)
+                {
                     float sample = 0.0f;
 
-                    if (!float.IsNaN(this.m_borderValue) && (x == 0 || x == this.m_width - 1 || y == 0 || y == this.m_height - 1)) {
+                    if (!float.IsNaN(this.m_borderValue) && (x == 0 || x == this.m_width - 1 || y == 0 || y == this.m_height - 1))
+                    {
                         sample = this.m_borderValue;
-                    } else {
+                    }
+                    else
+                    {
                         sample = this.m_data[x, y];
                     }
 
@@ -492,9 +520,10 @@ namespace LibNoise.Unity
         #region IDisposable Members
 
         [System.Xml.Serialization.XmlIgnore]
-#if !XBOX360 && !ZUNE
-        [NonSerialized]
-#endif
+        #if !XBOX360 && !ZUNE
+            [NonSerialized]
+        #endif
+
         private bool m_disposed = false;
 
         /// <summary>
@@ -510,7 +539,10 @@ namespace LibNoise.Unity
         /// </summary>
         public void Dispose()
         {
-            if (!this.m_disposed) { this.m_disposed = this.Disposing(); }
+            if (!this.m_disposed)
+            {
+                this.m_disposed = this.Disposing();
+            }
             GC.SuppressFinalize(this);
         }
 
@@ -520,7 +552,10 @@ namespace LibNoise.Unity
         /// <returns>True if the object is completely disposed.</returns>
         protected virtual bool Disposing()
         {
-            if (this.m_data != null) { this.m_data = null; }
+            if (this.m_data != null)
+            {
+                this.m_data = null;
+            }
             this.m_width = 0;
             this.m_height = 0;
             return true;

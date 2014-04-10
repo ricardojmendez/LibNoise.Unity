@@ -137,9 +137,10 @@
         #region IDisposable Members
 
         [System.Xml.Serialization.XmlIgnore]
-#if !XBOX360 && !ZUNE
-        [NonSerialized]
-#endif
+        #if !XBOX360 && !ZUNE
+            [NonSerialized]
+        #endif
+
         private bool m_disposed = false;
 
         /// <summary>
@@ -155,7 +156,10 @@
         /// </summary>
         public void Dispose()
         {
-            if (!this.m_disposed) { this.m_disposed = this.Disposing(); }
+            if (!this.m_disposed)
+            {
+                this.m_disposed = this.Disposing();
+            }
             GC.SuppressFinalize(this);
         }
 
