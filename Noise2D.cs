@@ -100,7 +100,7 @@ namespace LibNoise.Unity
         /// </summary>
         /// <param name="x">The position on the x-axis.</param>
         /// <param name="y">The position on the y-axis.</param>
-        /// <param name="isCropped">Indicates whether the noise map data should be cropped (default) or uncropped.</param>
+        /// <param name="isCropped">Indicates whether to select the cropped (default) or uncropped noise map data.</param>
         /// <returns>The corresponding value.</returns>
         public float this[int x, int y, bool isCropped = true]
         {
