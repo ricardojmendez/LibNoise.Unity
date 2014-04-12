@@ -140,7 +140,6 @@
         #if !XBOX360 && !ZUNE
             [NonSerialized]
         #endif
-
         private bool m_disposed = false;
 
         /// <summary>
