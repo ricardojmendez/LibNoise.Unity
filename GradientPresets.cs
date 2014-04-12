@@ -27,7 +27,7 @@ namespace LibNoise.Unity
         /// </summary>
         static GradientPresets()
         {
-            // Grayscale gradient keys
+            // Grayscale gradient color keys
             List<GradientColorKey> grayscaleColorKeys = new List<GradientColorKey>();
             grayscaleColorKeys.Add(new GradientColorKey(Color.black, 0));
             grayscaleColorKeys.Add(new GradientColorKey(Color.white, 1));
