@@ -1,15 +1,16 @@
 # LibNoise.Unity
 
-## License
-
-LibNoise.Unity is released under the LGPL license. See COPYING.txt and
-COPYING.LESSER.txt for details.
-
-## About
-
 The main repository for LibNoise.Unity is currently maintained by
 [Ricardo J. Méndez](https://github.com/ricardojmendez). Pull requests
 are welcome.
+
+## License
+
+LibNoise.Unity is released under the
+[LGPL license](https://www.gnu.org/licenses/lgpl.html). See COPYING.txt and
+COPYING.LESSER.txt for details.
+
+## About
 
 [LibNoise](http://libnoise.sourceforge.net/) was originally created by
 Jason Bevins. The library was later ported to Unity by
