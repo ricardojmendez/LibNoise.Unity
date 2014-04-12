@@ -34,15 +34,15 @@ namespace LibNoise.Unity
 
             // RGB gradient color keys
             List<GradientColorKey> rgbColorKeys = new List<GradientColorKey>();
-            rgbColorKeys.Add(new GradientColorKey(new Color(1, 0, 0), 0));
-            rgbColorKeys.Add(new GradientColorKey(new Color(0, 1, 0), 0.5f));
-            rgbColorKeys.Add(new GradientColorKey(new Color(0, 0, 1), 1));
+            rgbColorKeys.Add(new GradientColorKey(Color.red, 0));
+            rgbColorKeys.Add(new GradientColorKey(Color.green, 0.5f));
+            rgbColorKeys.Add(new GradientColorKey(Color.blue, 1));
 
             // RGBA gradient color keys
             List<GradientColorKey> rgbaColorKeys = new List<GradientColorKey>();
-            rgbaColorKeys.Add(new GradientColorKey(new Color(1, 0, 0), 0));
-            rgbaColorKeys.Add(new GradientColorKey(new Color(0, 1, 0), 1/3f));
-            rgbaColorKeys.Add(new GradientColorKey(new Color(0, 0, 1), 2/3f));
+            rgbaColorKeys.Add(new GradientColorKey(Color.red, 0));
+            rgbaColorKeys.Add(new GradientColorKey(Color.green, 1/3f));
+            rgbaColorKeys.Add(new GradientColorKey(Color.blue, 2/3f));
             rgbaColorKeys.Add(new GradientColorKey(Color.black, 1));
 
             // RGBA gradient alpha keys
