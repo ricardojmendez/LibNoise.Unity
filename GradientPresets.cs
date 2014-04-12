@@ -27,48 +27,58 @@ namespace LibNoise.Unity
         /// </summary>
         static GradientPresets()
         {
-            _empty = new Gradient();
+            // Grayscale gradient keys
+            List<GradientColorKey> grayscaleColorKeys = new List<GradientColorKey>();
+            grayscaleColorKeys.Add(new GradientColorKey(Color.black, 0));
+            grayscaleColorKeys.Add(new GradientColorKey(Color.white, 1));
 
+            // RGB gradient color keys
+            List<GradientColorKey> rgbColorKeys = new List<GradientColorKey>();
+            rgbColorKeys.Add(new GradientColorKey(new Color(1, 0, 0), 0));
+            rgbColorKeys.Add(new GradientColorKey(new Color(0, 1, 0), 0.5f));
+            rgbColorKeys.Add(new GradientColorKey(new Color(0, 0, 1), 1));
+
+            // RGBA gradient color keys
+            List<GradientColorKey> rgbaColorKeys = new List<GradientColorKey>();
+            rgbaColorKeys.Add(new GradientColorKey(new Color(1, 0, 0), 0));
+            rgbaColorKeys.Add(new GradientColorKey(new Color(0, 1, 0), 1/3f));
+            rgbaColorKeys.Add(new GradientColorKey(new Color(0, 0, 1), 2/3f));
+            rgbaColorKeys.Add(new GradientColorKey(new Color(0, 0, 0), 1));
+
+            // RGBA gradient alpha keys
+            List<GradientAlphaKey> rgbaAlphaKeys = new List<GradientAlphaKey>();
+            rgbaAlphaKeys.Add(new GradientAlphaKey(0, 2/3f));
+            rgbaAlphaKeys.Add(new GradientAlphaKey(1, 1));
+
+            // Terrain gradient color keys
+            List<GradientColorKey> terrainColorKeys = new List<GradientColorKey>();
+            terrainColorKeys.Add(new GradientColorKey(new Color(0, 0, 0.5f), 0));
+            terrainColorKeys.Add(new GradientColorKey(new Color(0.125f, 0.25f, 0.5f), 0.4f));
+            terrainColorKeys.Add(new GradientColorKey(new Color(0.25f, 0.375f, 0.75f), 0.48f));
+            terrainColorKeys.Add(new GradientColorKey(new Color(0, 0.75f, 0), 0.5f));
+            terrainColorKeys.Add(new GradientColorKey(new Color(0.75f, 0.75f, 0), 0.625f));
+            terrainColorKeys.Add(new GradientColorKey(new Color(0.625f, 0.375f, 0.25f), 0.75f));
+            terrainColorKeys.Add(new GradientColorKey(new Color(0.5f, 1, 1), 0.875f));
+            terrainColorKeys.Add(new GradientColorKey(Color.white, 1));
+
+            // Generic gradient alpha keys
             List<GradientAlphaKey> alphaKeys = new List<GradientAlphaKey>();
             alphaKeys.Add(new GradientAlphaKey(1, 0));
             alphaKeys.Add(new GradientAlphaKey(1, 1));
 
-            List<GradientColorKey> grayscaleKeys = new List<GradientColorKey>();
-            grayscaleKeys.Add(new GradientColorKey(Color.black, 0));
-            grayscaleKeys.Add(new GradientColorKey(Color.white, 1));
-
-            _grayscale = new Gradient();
-            _grayscale.SetKeys(grayscaleKeys.ToArray(), alphaKeys.ToArray());
-
-            List<GradientColorKey> rgbKeys = new List<GradientColorKey>();
-            rgbKeys.Add(new GradientColorKey(new Color(1, 0, 0), 0));
-            rgbKeys.Add(new GradientColorKey(new Color(0, 1, 0), 0.5f));
-            rgbKeys.Add(new GradientColorKey(new Color(0, 0, 1), 1));
+            _empty = new Gradient();
 
             _rgb = new Gradient();
-            _rgb.SetKeys(rgbKeys.ToArray(), alphaKeys.ToArray());
-
-            List<GradientColorKey> rgbaKeys = new List<GradientColorKey>();
-            rgbaKeys.Add(new GradientColorKey(new Color(1, 0, 0, 0), 0));
-            rgbaKeys.Add(new GradientColorKey(new Color(0, 1, 0, 0), 1/3f));
-            rgbaKeys.Add(new GradientColorKey(new Color(0, 0, 1, 0), 2/3f));
-            rgbaKeys.Add(new GradientColorKey(new Color(0, 0, 0, 1), 1));
+            _rgb.SetKeys(rgbColorKeys.ToArray(), alphaKeys.ToArray());
 
             _rgba = new Gradient();
-            _rgba.SetKeys(rgbaKeys.ToArray(), alphaKeys.ToArray());
+            _rgba.SetKeys(rgbaColorKeys.ToArray(), rgbaAlphaKeys.ToArray());
 
-            List<GradientColorKey> terrainKeys = new List<GradientColorKey>();
-            terrainKeys.Add(new GradientColorKey(new Color(0, 0, 0.5f), 0));
-            terrainKeys.Add(new GradientColorKey(new Color(0.125f, 0.25f, 0.5f), 0.4f));
-            terrainKeys.Add(new GradientColorKey(new Color(0.25f, 0.375f, 0.75f), 0.48f));
-            terrainKeys.Add(new GradientColorKey(new Color(0, 0.75f, 0), 0.5f));
-            terrainKeys.Add(new GradientColorKey(new Color(0.75f, 0.75f, 0), 0.625f));
-            terrainKeys.Add(new GradientColorKey(new Color(0.625f, 0.375f, 0.25f), 0.75f));
-            terrainKeys.Add(new GradientColorKey(new Color(0.5f, 1, 1), 0.875f));
-            terrainKeys.Add(new GradientColorKey(Color.white, 1));
+            _grayscale = new Gradient();
+            _grayscale.SetKeys(grayscaleColorKeys.ToArray(), alphaKeys.ToArray());
 
             _terrain = new Gradient();
-            _terrain.SetKeys(terrainKeys.ToArray(), alphaKeys.ToArray());
+            _terrain.SetKeys(terrainColorKeys.ToArray(), alphaKeys.ToArray());
         }
 
         #endregion
