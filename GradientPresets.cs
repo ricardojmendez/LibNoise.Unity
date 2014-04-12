@@ -15,6 +15,7 @@ namespace LibNoise.Unity
         private static Gradient _empty;
         private static Gradient _grayscale;
         private static Gradient _rgb;
+        private static Gradient _rgba;
         private static Gradient _terrain;
 
         #endregion
@@ -46,6 +47,15 @@ namespace LibNoise.Unity
 
             _rgb = new Gradient();
             _rgb.SetKeys(rgbKeys.ToArray(), alphaKeys.ToArray());
+
+            List<GradientColorKey> rgbaKeys = new List<GradientColorKey>();
+            rgbaKeys.Add(new GradientColorKey(new Color(1, 0, 0, 0), 0));
+            rgbaKeys.Add(new GradientColorKey(new Color(0, 1, 0, 0), 1/3f));
+            rgbaKeys.Add(new GradientColorKey(new Color(0, 0, 1, 0), 2/3f));
+            rgbaKeys.Add(new GradientColorKey(new Color(0, 0, 0, 1), 1));
+
+            _rgba = new Gradient();
+            _rgba.SetKeys(rgbaKeys.ToArray(), alphaKeys.ToArray());
 
             List<GradientColorKey> terrainKeys = new List<GradientColorKey>();
             terrainKeys.Add(new GradientColorKey(new Color(0, 0, 0.5f), 0));
@@ -87,6 +97,14 @@ namespace LibNoise.Unity
         public static Gradient RGB
         {
             get { return _rgb; }
+        }
+
+        /// <summary>
+        /// Gets the RGBA instance of Gradient.
+        /// </summary>
+        public static Gradient RGBA
+        {
+            get { return _rgba; }
         }
 
         /// <summary>
