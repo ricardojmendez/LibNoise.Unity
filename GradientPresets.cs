@@ -43,7 +43,7 @@ namespace LibNoise.Unity
             rgbaColorKeys.Add(new GradientColorKey(new Color(1, 0, 0), 0));
             rgbaColorKeys.Add(new GradientColorKey(new Color(0, 1, 0), 1/3f));
             rgbaColorKeys.Add(new GradientColorKey(new Color(0, 0, 1), 2/3f));
-            rgbaColorKeys.Add(new GradientColorKey(new Color(0, 0, 0), 1));
+            rgbaColorKeys.Add(new GradientColorKey(Color.black, 1));
 
             // RGBA gradient alpha keys
             List<GradientAlphaKey> rgbaAlphaKeys = new List<GradientAlphaKey>();
