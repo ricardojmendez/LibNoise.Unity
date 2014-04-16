@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace LibNoise.Unity.Generator
+﻿namespace LibNoise.Unity.Generator
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
     /// <summary>
     /// Provides a noise module that outputs concentric cylinders. [GENERATOR]
     /// </summary>

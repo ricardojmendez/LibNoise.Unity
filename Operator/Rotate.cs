@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace LibNoise.Unity.Operator
+﻿namespace LibNoise.Unity.Operator
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text;
+
 	/// <summary>
 	/// Provides a noise module that rotates the input value around the origin before
 	/// returning the output value from a source module. [OPERATOR]
@@ -37,6 +37,16 @@ namespace LibNoise.Unity.Operator
 			: base(1)
 		{
 			this.SetAngles(0.0, 0.0, 0.0);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of Rotate.
+		/// </summary>
+		/// <param name="input">The input module.</param>
+		public Rotate(ModuleBase input)
+			: base(1)
+		{
+			this.m_modules[0] = input;
 		}
 
 		/// <summary>

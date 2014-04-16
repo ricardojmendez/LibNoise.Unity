@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace LibNoise.Unity.Operator
+﻿namespace LibNoise.Unity.Operator
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
     /// <summary>
     /// Provides a noise module that clamps the output value from a source module to a
     /// range of values. [OPERATOR]
@@ -26,6 +26,16 @@ namespace LibNoise.Unity.Operator
         public Clamp()
             : base(1)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of Clamp.
+        /// </summary>
+        /// <param name="input">The input module.</param>
+        public Clamp(ModuleBase input)
+            : base(1)
+        {
+            this.m_modules[0] = input;
         }
 
         /// <summary>
@@ -66,6 +76,22 @@ namespace LibNoise.Unity.Operator
 
         #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// Sets the bounds.
+        /// </summary>
+        /// <param name="min">The minimum value.</param>
+        /// <param name="max">The maximum value.</param>
+        public void SetBounds(double min, double max)
+        {
+            System.Diagnostics.Debug.Assert(min < max);
+            this.m_min = min;
+            this.m_max = max;
+        }
+
+        #endregion
+
         #region ModuleBase Members
 
         /// <summary>
@@ -85,8 +111,14 @@ namespace LibNoise.Unity.Operator
                 this.m_max = t;
             }
             double v = this.m_modules[0].GetValue(x, y, z);
-            if (v < this.m_min) { return this.m_min; }
-            else if (v > this.m_max) { return this.m_max; }
+            if (v < this.m_min)
+            {
+                return this.m_min;
+            }
+            else if (v > this.m_max)
+            {
+                return this.m_max;
+            }
             return v;
         }
 
