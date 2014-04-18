@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace LibNoise.Unity.Operator
+﻿namespace LibNoise.Unity.Operator
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
     /// <summary>
     /// Provides a noise module that maps the output value from a source module onto an
     /// exponential curve. [OPERATOR]
@@ -25,6 +25,16 @@ namespace LibNoise.Unity.Operator
         public Exponent()
             : base(1)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of Exponent.
+        /// </summary>
+        /// <param name="input">The input module.</param>
+        public Exponent(ModuleBase input)
+            : base(1)
+        {
+            this.m_modules[0] = input;
         }
 
         /// <summary>

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-//using Microsoft.Xna.Framework;
-using UnityEngine;
-
-namespace LibNoise.Unity
+﻿namespace LibNoise.Unity
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    //using Microsoft.Xna.Framework;
+    using UnityEngine;
+
     #region Enumerations
 
     /// <summary>
@@ -137,9 +137,9 @@ namespace LibNoise.Unity
         #region IDisposable Members
 
         [System.Xml.Serialization.XmlIgnore]
-#if !XBOX360 && !ZUNE
-        [NonSerialized]
-#endif
+        #if !XBOX360 && !ZUNE
+            [NonSerialized]
+        #endif
         private bool m_disposed = false;
 
         /// <summary>
@@ -155,7 +155,10 @@ namespace LibNoise.Unity
         /// </summary>
         public void Dispose()
         {
-            if (!this.m_disposed) { this.m_disposed = this.Disposing(); }
+            if (!this.m_disposed)
+            {
+                this.m_disposed = this.Disposing();
+            }
             GC.SuppressFinalize(this);
         }
 
