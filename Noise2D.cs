@@ -193,9 +193,9 @@ namespace LibNoise.Unity
         /// <param name="xCrop">This value crops off data from the right of the noise map data.</param>
         /// <param name="yCrop">This value crops off data from the bottom of the noise map data.</param>
         /// <returns>The normalized noise map data.</returns>
-        public float[,] GetNormalizedData(int xCrop = 0, int yCrop = 0, bool isCropped = true)
+        public float[,] GetNormalizedData(bool isCropped = true, int xCrop = 0, int yCrop = 0)
         {
-            return this.GetData(xCrop, yCrop, isCropped, true);
+            return this.GetData(true, isCropped, xCrop, yCrop);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace LibNoise.Unity
         /// <param name="xCrop">This value crops off data from the right of the noise map data.</param>
         /// <param name="yCrop">This value crops off data from the bottom of the noise map data.</param>
         /// <returns>The normalized noise map data.</returns>
-        public float[,] GetData(int xCrop = 0, int yCrop = 0, bool isCropped = true, bool isNormalized = false)
+        public float[,] GetData(bool isNormalized = false, bool isCropped = true, int xCrop = 0, int yCrop = 0)
         {
             int width, height;
             float[,] data;
