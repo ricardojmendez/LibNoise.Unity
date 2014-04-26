@@ -110,12 +110,10 @@ namespace LibNoise.Unity
                 {
                     throw new ArgumentOutOfRangeException("Invalid x position");
                 }
-
                 if (y < 0 && y >= this.m_height)
                 {
                     throw new ArgumentOutOfRangeException("Inavlid y position");
                 }
-
                 if (isCropped)
                 {
                     return this.m_data[x, y];
@@ -131,12 +129,10 @@ namespace LibNoise.Unity
                 {
                     throw new ArgumentOutOfRangeException("Invalid x position");
                 }
-
                 if (y < 0 && y >= this.m_height)
                 {
                     throw new ArgumentOutOfRangeException("Invalid y position");
                 }
-
                 if (isCropped)
                 {
                     this.m_data[x, y] = value;
@@ -193,19 +189,58 @@ namespace LibNoise.Unity
         /// <summary>
         /// Gets normalized noise map data with all values in the set of {0..1}.
         /// </summary>
+        /// <param name="isCropped">Indicates whether to select the cropped (default) or uncropped noise map data.</param>
+        /// <param name="xCrop">This value crops off data from the right of the noise map data.</param>
+        /// <param name="yCrop">This value crops off data from the bottom of the noise map data.</param>
         /// <returns>The normalized noise map data.</returns>
-        public float[,] GetNormalizedData()
+        public float[,] GetNormalizedData(int xCrop = 0, int yCrop = 0, bool isCropped = true)
         {
-            float[,] result = new float[this.m_width, this.m_height];
+            return this.GetData(xCrop, yCrop, isCropped, true);
+        }
 
-            for (int x = 0; x < this.m_width; x++)
+        /// <summary>
+        /// Gets noise map data.
+        /// </summary>
+        /// <param name="isNormalized">Indicates whether to normalize noise map data.</param>
+        /// <param name="isCropped">Indicates whether to select the cropped (default) or uncropped noise map data.</param>
+        /// <param name="xCrop">This value crops off data from the right of the noise map data.</param>
+        /// <param name="yCrop">This value crops off data from the bottom of the noise map data.</param>
+        /// <returns>The normalized noise map data.</returns>
+        public float[,] GetData(int xCrop = 0, int yCrop = 0, bool isCropped = true, bool isNormalized = false)
+        {
+            int width, height;
+            float[,] data;
+            if (isCropped)
             {
-                for (int y = 0; y < this.m_height; y++)
+                width = this.m_width;
+                height = this.m_height;
+                data = this.m_data;
+            }
+            else
+            {
+                width = this.m_width + 2;
+                height = this.m_height + 2;
+                data = this.m_uncroppedData;
+            }
+            width -= xCrop;
+            height -= yCrop;
+            float[,] result = new float[width, height];
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
                 {
-                    result[x, y] = (this.m_data[x, y] + 1) / 2;
+                    float sample;
+                    if (isNormalized)
+                    {
+                        sample = ((float)data[x, y] + 1) / 2;
+                    }
+                    else
+                    {
+                        sample = (float)data[x, y];
+                    }
+                    result[x, y] = sample;
                 }
             }
-
             return result;
         }
 
@@ -229,62 +264,6 @@ namespace LibNoise.Unity
                 {
                     this.m_data[x, y] = value;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Generates a cylindrical projection of a point in the noise map.
-        /// </summary>
-        /// <param name="angle">The angle of the point.</param>
-        /// <param name="height">The height of the point.</param>
-        /// <returns>The corresponding noise map value.</returns>
-        private double GenerateCylindrical(double angle, double height)
-        {
-            double x = Math.Cos(angle * Utils.DegToRad);
-            double y = height;
-            double z = Math.Sin(angle * Utils.DegToRad);
-            return this.m_generator.GetValue(x, y, z);
-        }
-
-        /// <summary>
-        /// Generates a cylindrical projection of the noise map.
-        /// </summary>
-        /// <param name="angleMin">The maximum angle of the clip region.</param>
-        /// <param name="angleMax">The minimum angle of the clip region.</param>
-        /// <param name="heightMin">The minimum height of the clip region.</param>
-        /// <param name="heightMax">The maximum height of the clip region.</param>
-        public void GenerateCylindrical(double angleMin, double angleMax, double heightMin, double heightMax)
-        {
-            if (angleMax <= angleMin || heightMax <= heightMin)
-            {
-                throw new ArgumentException("Invalid angle or height parameters");
-            }
-			if (m_generator == null)
-			{
-				throw new ArgumentNullException("Generator is null");
-			}
-            double ae = angleMax - angleMin;
-            double he = heightMax - heightMin;
-            double xd = ae / ((double)this.m_width - 1);
-            double yd = he / ((double)this.m_height - 1);
-            double ca = angleMin;
-            double ch = heightMin;
-            for (int x = 0; x < this.m_width + 2; x++)
-            {
-                ch = heightMin;
-                for (int y = 0; y < this.m_height + 2; y++)
-                {
-                    this.m_uncroppedData[x, y] = (float)this.GenerateCylindrical(ca, ch);
-                    
-                    // Crop off a 1px border of noise data
-                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1)
-                    {
-                        this.m_data[x - 1, y - 1] = (float)this.GenerateCylindrical(ca, ch);
-                    }
-
-                    ch += yd;
-                }
-                ca += xd;
             }
         }
 
@@ -325,10 +304,10 @@ namespace LibNoise.Unity
             {
                 throw new ArgumentException("Invalid right/left or bottom/top combination");
             }
-			if (m_generator == null)
-			{
-				throw new ArgumentNullException("Generator is null");
-			}			
+            if (m_generator == null)
+            {
+                throw new ArgumentNullException("Generator is null");
+            }           
             double xe = right - left;
             double ze = bottom - top;
             double xd = xe / ((double)this.m_width - 1);
@@ -339,7 +318,7 @@ namespace LibNoise.Unity
             for (int x = 0; x < this.m_width + 2; x++)
             {
                 zc = top;
-                for (int z = 0; z < this.m_height + 2; z++)
+                for (int y = 0; y < this.m_height + 2; y++)
                 {
                     if (isSeamless)
                     {
@@ -357,18 +336,67 @@ namespace LibNoise.Unity
                         double z1 = Utils.InterpolateLinear(nwv, nev, xb);
                         fv = (float)Utils.InterpolateLinear(z0, z1, zb);
                     }
-
-                    this.m_uncroppedData[x, z] = fv;
-
-                    // Crop off a 1px border of noise data
-                    if (x > 0 && z > 0 && x < this.m_width + 1 && z < this.m_height + 1)
+                    this.m_uncroppedData[x, y] = fv;
+                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1)
                     {
-                        this.m_data[x - 1, z - 1] = fv;
+                        this.m_data[x - 1, y - 1] = fv; // Cropped data
                     }
-
                     zc += zd;
                 }
                 xc += xd;
+            }
+        }
+
+        /// <summary>
+        /// Generates a cylindrical projection of a point in the noise map.
+        /// </summary>
+        /// <param name="angle">The angle of the point.</param>
+        /// <param name="height">The height of the point.</param>
+        /// <returns>The corresponding noise map value.</returns>
+        private double GenerateCylindrical(double angle, double height)
+        {
+            double x = Math.Cos(angle * Utils.DegToRad);
+            double y = height;
+            double z = Math.Sin(angle * Utils.DegToRad);
+            return this.m_generator.GetValue(x, y, z);
+        }
+
+        /// <summary>
+        /// Generates a cylindrical projection of the noise map.
+        /// </summary>
+        /// <param name="angleMin">The maximum angle of the clip region.</param>
+        /// <param name="angleMax">The minimum angle of the clip region.</param>
+        /// <param name="heightMin">The minimum height of the clip region.</param>
+        /// <param name="heightMax">The maximum height of the clip region.</param>
+        public void GenerateCylindrical(double angleMin, double angleMax, double heightMin, double heightMax)
+        {
+            if (angleMax <= angleMin || heightMax <= heightMin)
+            {
+                throw new ArgumentException("Invalid angle or height parameters");
+            }
+            if (m_generator == null)
+            {
+                throw new ArgumentNullException("Generator is null");
+            }
+            double ae = angleMax - angleMin;
+            double he = heightMax - heightMin;
+            double xd = ae / ((double)this.m_width - 1);
+            double yd = he / ((double)this.m_height - 1);
+            double ca = angleMin;
+            double ch = heightMin;
+            for (int x = 0; x < this.m_width + 2; x++)
+            {
+                ch = heightMin;
+                for (int y = 0; y < this.m_height + 2; y++)
+                {
+                    this.m_uncroppedData[x, y] = (float)this.GenerateCylindrical(ca, ch);
+                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1)
+                    {
+                        this.m_data[x - 1, y - 1] = (float)this.GenerateCylindrical(ca, ch); // Cropped data
+                    }
+                    ch += yd;
+                }
+                ca += xd;
             }
         }
 
@@ -398,10 +426,10 @@ namespace LibNoise.Unity
             {
                 throw new ArgumentException("Invalid east/west or north/south combination");
             }
-			if (m_generator == null)
-			{
-				throw new ArgumentNullException("Generator is null");
-			}			
+            if (m_generator == null)
+            {
+                throw new ArgumentNullException("Generator is null");
+            }
             double loe = east - west;
             double lae = north - south;
             double xd = loe / ((double)this.m_width - 1);
@@ -414,60 +442,14 @@ namespace LibNoise.Unity
                 for (int y = 0; y < this.m_height + 2; y++)
                 {
                     this.m_uncroppedData[x, y] = (float)this.GenerateSpherical(cla, clo);
-
-                    // Crop off a 1px border of noise data
                     if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1)
                     {
-                        this.m_data[y - 1, x - 1] = (float)this.GenerateSpherical(cla, clo);
+                        this.m_data[x - 1, y - 1] = (float)this.GenerateSpherical(cla, clo); // Cropped data
                     }
-
                     cla += yd;
-
                 }
                 clo += xd;
             }
-        }
-
-        /// <summary>
-        /// Creates a normal map for the current content of the noise map.
-        /// </summary>
-        /// <param name="intensity">The scaling of the normal map values.</param>
-        /// <returns>The created normal map.</returns>
-        public Texture2D GetNormalMap(float intensity)
-        {
-            Texture2D texture = new Texture2D(this.m_width, this.m_height);
-            Color[] pixels = new Color[this.m_width * this.m_height];
-
-            for (int y = 0; y < this.m_height + 2; y++)
-            {
-                for (int x = 0; x < this.m_width + 2; x++)
-                {
-                    float xPos = (this.m_uncroppedData[Mathf.Max(0, x - 1), y] - this.m_uncroppedData[Mathf.Min(x + 1, this.m_height + 1), y]) / 2;
-                    float yPos = (this.m_uncroppedData[x, Mathf.Max(0, y - 1)] - this.m_uncroppedData[x, Mathf.Min(y + 1, this.m_width + 1)]) / 2;
-                    Vector3 normalX = new Vector3(xPos * intensity, 0, 1);
-                    Vector3 normalY = new Vector3(0, yPos * intensity, 1);
-                    
-                    Vector3 normalVector = normalX + normalY;
-                    normalVector.Normalize();
-                    
-                    Vector3 colorVector = Vector3.zero;
-                    colorVector.x = (normalVector.x + 1) / 2;
-                    colorVector.y = (normalVector.y + 1) / 2;
-                    colorVector.z = (normalVector.z + 1) / 2;
-
-                    // Start at (x + 1, y + 1) so that resulting normal map aligns with cropped data
-                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1)
-                    {
-                        pixels[(x - 1) + (y - 1) * this.m_width] = new Color(colorVector.x, colorVector.y, colorVector.z);
-                    }
-                }
-            }
-
-            texture.SetPixels(pixels);
-            texture.wrapMode = TextureWrapMode.Clamp;
-            texture.Apply();
-
-            return texture;
         }
 
         /// <summary>
@@ -488,13 +470,11 @@ namespace LibNoise.Unity
         {
             Texture2D texture = new Texture2D(this.m_width, this.m_height);
             Color[] pixels = new Color[this.m_width * this.m_height];
-
-            for (int y = 0; y < this.m_height; y++)
+            for (int x = 0; x < this.m_width; x++)
             {
-                for (int x = 0; x < this.m_width; x++)
+                for (int y = 0; y < this.m_height; y++)
                 {
                     float sample = 0.0f;
-
                     if (!float.IsNaN(this.m_borderValue) && (x == 0 || x == this.m_width - 1 || y == 0 || y == this.m_height - 1))
                     {
                         sample = this.m_borderValue;
@@ -503,15 +483,50 @@ namespace LibNoise.Unity
                     {
                         sample = this.m_data[x, y];
                     }
-
                     pixels[x + y * this.m_width] = gradient.Evaluate((sample + 1) / 2);
                 }
             }
-
             texture.SetPixels(pixels);
             texture.wrapMode = TextureWrapMode.Clamp;
             texture.Apply();
+            return texture;
+        }
 
+        /// <summary>
+        /// Creates a normal map for the current content of the noise map.
+        /// </summary>
+        /// <param name="intensity">The scaling of the normal map values.</param>
+        /// <returns>The created normal map.</returns>
+        public Texture2D GetNormalMap(float intensity)
+        {
+            Texture2D texture = new Texture2D(this.m_width, this.m_height);
+            Color[] pixels = new Color[this.m_width * this.m_height];
+            for (int x = 0; x < this.m_width + 2; x++)
+            {
+                for (int y = 0; y < this.m_height + 2; y++)
+                {
+                    float xPos = (this.m_uncroppedData[Mathf.Max(0, x - 1), y] - this.m_uncroppedData[Mathf.Min(x + 1, this.m_height + 1), y]) / 2;
+                    float yPos = (this.m_uncroppedData[x, Mathf.Max(0, y - 1)] - this.m_uncroppedData[x, Mathf.Min(y + 1, this.m_width + 1)]) / 2;
+                    Vector3 normalX = new Vector3(xPos * intensity, 0, 1);
+                    Vector3 normalY = new Vector3(0, yPos * intensity, 1);
+                    // Get normal vector
+                    Vector3 normalVector = normalX + normalY;
+                    normalVector.Normalize();
+                    // Get color vector
+                    Vector3 colorVector = Vector3.zero;
+                    colorVector.x = (normalVector.x + 1) / 2;
+                    colorVector.y = (normalVector.y + 1) / 2;
+                    colorVector.z = (normalVector.z + 1) / 2;
+                    // Start at (x + 1, y + 1) so that resulting normal map aligns with cropped data
+                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1)
+                    {
+                        pixels[(x - 1) + (y - 1) * this.m_width] = new Color(colorVector.x, colorVector.y, colorVector.z);
+                    }
+                }
+            }
+            texture.SetPixels(pixels);
+            texture.wrapMode = TextureWrapMode.Clamp;
+            texture.Apply();
             return texture;
         }
 
