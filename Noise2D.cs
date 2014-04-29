@@ -31,9 +31,12 @@ namespace LibNoise.Unity
 
         private int m_width = 0;
         private int m_height = 0;
-        private float m_borderValue = float.NaN;
-        private float[,] m_uncroppedData = null; // This has a 1px border of extra noise data used for calculating normal map edges.
         private float[,] m_data = null;
+        private int m_ucWidth = 0;
+        private int m_ucHeight = 0;
+        private int m_ucBorder = 1; // Border size of extra noise for uncropped data.
+        private float[,] m_ucData = null; // Uncropped data. This has a border of extra noise data used for calculating normal map edges.
+        private float m_borderValue = float.NaN;
         private ModuleBase m_generator = null;
 
         #endregion
@@ -87,8 +90,10 @@ namespace LibNoise.Unity
             this.m_generator = generator;
             this.m_width = width;
             this.m_height = height;
-            this.m_uncroppedData = new float[width + 2, height + 2];
             this.m_data = new float[width, height];
+            this.m_ucWidth = width + m_ucBorder * 2;
+            this.m_ucHeight = height + m_ucBorder * 2;
+            this.m_ucData = new float[width + m_ucBorder * 2, height + m_ucBorder * 2];
         }
 
         #endregion
@@ -106,40 +111,56 @@ namespace LibNoise.Unity
         {
             get
             {
-                if (x < 0 && x >= this.m_width)
-                {
-                    throw new ArgumentOutOfRangeException("Invalid x position");
-                }
-                if (y < 0 && y >= this.m_height)
-                {
-                    throw new ArgumentOutOfRangeException("Inavlid y position");
-                }
                 if (isCropped)
                 {
+                    if (x < 0 && x >= this.m_width)
+                    {
+                        throw new ArgumentOutOfRangeException("Invalid x position");
+                    }
+                    if (y < 0 && y >= this.m_height)
+                    {
+                        throw new ArgumentOutOfRangeException("Inavlid y position");
+                    }
                     return this.m_data[x, y];
                 }
                 else
                 {
-                    return this.m_uncroppedData[x, y];
+                    if (x < 0 && x >= this.m_ucWidth)
+                    {
+                        throw new ArgumentOutOfRangeException("Invalid x position");
+                    }
+                    if (y < 0 && y >= this.m_ucHeight)
+                    {
+                        throw new ArgumentOutOfRangeException("Inavlid y position");
+                    }
+                    return this.m_ucData[x, y];
                 }
             }
             set
             {
-                if (x < 0 && x >= this.m_width)
-                {
-                    throw new ArgumentOutOfRangeException("Invalid x position");
-                }
-                if (y < 0 && y >= this.m_height)
-                {
-                    throw new ArgumentOutOfRangeException("Invalid y position");
-                }
                 if (isCropped)
                 {
+                    if (x < 0 && x >= this.m_width)
+                    {
+                        throw new ArgumentOutOfRangeException("Invalid x position");
+                    }
+                    if (y < 0 && y >= this.m_height)
+                    {
+                        throw new ArgumentOutOfRangeException("Invalid y position");
+                    }
                     this.m_data[x, y] = value;
                 }
                 else
                 {
-                    this.m_uncroppedData[x, y] = value;
+                    if (x < 0 && x >= this.m_ucWidth)
+                    {
+                        throw new ArgumentOutOfRangeException("Invalid x position");
+                    }
+                    if (y < 0 && y >= this.m_ucHeight)
+                    {
+                        throw new ArgumentOutOfRangeException("Inavlid y position");
+                    }
+                    this.m_ucData[x, y] = value;
                 }
             }
         }
@@ -195,18 +216,18 @@ namespace LibNoise.Unity
         /// <returns>The normalized noise map data.</returns>
         public float[,] GetNormalizedData(bool isCropped = true, int xCrop = 0, int yCrop = 0)
         {
-            return this.GetData(true, isCropped, xCrop, yCrop);
+            return this.GetData(isCropped, xCrop, yCrop, true);
         }
 
         /// <summary>
         /// Gets noise map data.
         /// </summary>
-        /// <param name="isNormalized">Indicates whether to normalize noise map data.</param>
         /// <param name="isCropped">Indicates whether to select the cropped (default) or uncropped noise map data.</param>
         /// <param name="xCrop">This value crops off data from the right of the noise map data.</param>
         /// <param name="yCrop">This value crops off data from the bottom of the noise map data.</param>
-        /// <returns>The normalized noise map data.</returns>
-        public float[,] GetData(bool isNormalized = false, bool isCropped = true, int xCrop = 0, int yCrop = 0)
+        /// <param name="isNormalized">Indicates whether to normalize noise map data.</param>
+        /// <returns>The noise map data.</returns>
+        public float[,] GetData(bool isCropped = true, int xCrop = 0, int yCrop = 0, bool isNormalized = false)
         {
             int width, height;
             float[,] data;
@@ -218,9 +239,9 @@ namespace LibNoise.Unity
             }
             else
             {
-                width = this.m_width + 2;
-                height = this.m_height + 2;
-                data = this.m_uncroppedData;
+                width = this.m_ucWidth;
+                height = this.m_ucHeight;
+                data = this.m_ucData;
             }
             width -= xCrop;
             height -= yCrop;
@@ -310,15 +331,15 @@ namespace LibNoise.Unity
             }           
             double xe = right - left;
             double ze = bottom - top;
-            double xd = xe / ((double)this.m_width - 1);
-            double zd = ze / ((double)this.m_height - 1);
+            double xd = xe / ((double)this.m_width - m_ucBorder);
+            double zd = ze / ((double)this.m_height - m_ucBorder);
             double xc = left;
             double zc = top;
             float fv = 0.0f;
-            for (int x = 0; x < this.m_width + 2; x++)
+            for (int x = 0; x < this.m_ucWidth; x++)
             {
                 zc = top;
-                for (int y = 0; y < this.m_height + 2; y++)
+                for (int y = 0; y < this.m_ucHeight; y++)
                 {
                     if (isSeamless)
                     {
@@ -336,10 +357,10 @@ namespace LibNoise.Unity
                         double z1 = Utils.InterpolateLinear(nwv, nev, xb);
                         fv = (float)Utils.InterpolateLinear(z0, z1, zb);
                     }
-                    this.m_uncroppedData[x, y] = fv;
-                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1)
+                    this.m_ucData[x, y] = fv;
+                    if (x >= m_ucBorder && y >= m_ucBorder && x < this.m_width + m_ucBorder && y < this.m_height + m_ucBorder)
                     {
-                        this.m_data[x - 1, y - 1] = fv; // Cropped data
+                        this.m_data[x - m_ucBorder, y - m_ucBorder] = fv; // Cropped data
                     }
                     zc += zd;
                 }
@@ -380,19 +401,19 @@ namespace LibNoise.Unity
             }
             double ae = angleMax - angleMin;
             double he = heightMax - heightMin;
-            double xd = ae / ((double)this.m_width - 1);
-            double yd = he / ((double)this.m_height - 1);
+            double xd = ae / ((double)this.m_width - m_ucBorder);
+            double yd = he / ((double)this.m_height - m_ucBorder);
             double ca = angleMin;
             double ch = heightMin;
-            for (int x = 0; x < this.m_width + 2; x++)
+            for (int x = 0; x < this.m_ucWidth; x++)
             {
                 ch = heightMin;
-                for (int y = 0; y < this.m_height + 2; y++)
+                for (int y = 0; y < this.m_ucHeight; y++)
                 {
-                    this.m_uncroppedData[x, y] = (float)this.GenerateCylindrical(ca, ch);
-                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1)
+                    this.m_ucData[x, y] = (float)this.GenerateCylindrical(ca, ch);
+                    if (x >= m_ucBorder && y >= m_ucBorder && x < this.m_width + m_ucBorder && y < this.m_height + m_ucBorder)
                     {
-                        this.m_data[x - 1, y - 1] = (float)this.GenerateCylindrical(ca, ch); // Cropped data
+                        this.m_data[x - m_ucBorder, y - m_ucBorder] = (float)this.GenerateCylindrical(ca, ch); // Cropped data
                     }
                     ch += yd;
                 }
@@ -432,19 +453,19 @@ namespace LibNoise.Unity
             }
             double loe = east - west;
             double lae = north - south;
-            double xd = loe / ((double)this.m_width - 1);
-            double yd = lae / ((double)this.m_height - 1);
+            double xd = loe / ((double)this.m_width - m_ucBorder);
+            double yd = lae / ((double)this.m_height - m_ucBorder);
             double clo = west;
             double cla = south;
-            for (int x = 0; x < this.m_width + 2; x++)
+            for (int x = 0; x < this.m_ucWidth; x++)
             {
                 cla = south;
-                for (int y = 0; y < this.m_height + 2; y++)
+                for (int y = 0; y < this.m_ucHeight; y++)
                 {
-                    this.m_uncroppedData[x, y] = (float)this.GenerateSpherical(cla, clo);
-                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1)
+                    this.m_ucData[x, y] = (float)this.GenerateSpherical(cla, clo);
+                    if (x >= m_ucBorder && y >= m_ucBorder && x < this.m_width + m_ucBorder && y < this.m_height + m_ucBorder)
                     {
-                        this.m_data[x - 1, y - 1] = (float)this.GenerateSpherical(cla, clo); // Cropped data
+                        this.m_data[x - m_ucBorder, y - m_ucBorder] = (float)this.GenerateSpherical(cla, clo); // Cropped data
                     }
                     cla += yd;
                 }
@@ -475,7 +496,7 @@ namespace LibNoise.Unity
                 for (int y = 0; y < this.m_height; y++)
                 {
                     float sample = 0.0f;
-                    if (!float.IsNaN(this.m_borderValue) && (x == 0 || x == this.m_width - 1 || y == 0 || y == this.m_height - 1))
+                    if (!float.IsNaN(this.m_borderValue) && (x == 0 || x == this.m_width - m_ucBorder || y == 0 || y == this.m_height - m_ucBorder))
                     {
                         sample = this.m_borderValue;
                     }
@@ -501,12 +522,12 @@ namespace LibNoise.Unity
         {
             Texture2D texture = new Texture2D(this.m_width, this.m_height);
             Color[] pixels = new Color[this.m_width * this.m_height];
-            for (int x = 0; x < this.m_width + 2; x++)
+            for (int x = 0; x < this.m_ucWidth; x++)
             {
-                for (int y = 0; y < this.m_height + 2; y++)
+                for (int y = 0; y < this.m_ucHeight; y++)
                 {
-                    float xPos = (this.m_uncroppedData[Mathf.Max(0, x - 1), y] - this.m_uncroppedData[Mathf.Min(x + 1, this.m_height + 1), y]) / 2;
-                    float yPos = (this.m_uncroppedData[x, Mathf.Max(0, y - 1)] - this.m_uncroppedData[x, Mathf.Min(y + 1, this.m_width + 1)]) / 2;
+                    float xPos = (this.m_ucData[Mathf.Max(0, x - m_ucBorder), y] - this.m_ucData[Mathf.Min(x + m_ucBorder, this.m_height + m_ucBorder), y]) / 2;
+                    float yPos = (this.m_ucData[x, Mathf.Max(0, y - m_ucBorder)] - this.m_ucData[x, Mathf.Min(y + m_ucBorder, this.m_width + m_ucBorder)]) / 2;
                     Vector3 normalX = new Vector3(xPos * intensity, 0, 1);
                     Vector3 normalY = new Vector3(0, yPos * intensity, 1);
                     // Get normal vector
@@ -517,10 +538,10 @@ namespace LibNoise.Unity
                     colorVector.x = (normalVector.x + 1) / 2;
                     colorVector.y = (normalVector.y + 1) / 2;
                     colorVector.z = (normalVector.z + 1) / 2;
-                    // Start at (x + 1, y + 1) so that resulting normal map aligns with cropped data
-                    if (x > 0 && y > 0 && x < this.m_width + 1 && y < this.m_height + 1)
+                    // Start at (x + m_ucBorder, y + m_ucBorder) so that resulting normal map aligns with cropped data
+                    if (x >= m_ucBorder && y >= m_ucBorder && x < this.m_width + m_ucBorder && y < this.m_height + m_ucBorder)
                     {
-                        pixels[(x - 1) + (y - 1) * this.m_width] = new Color(colorVector.x, colorVector.y, colorVector.z);
+                        pixels[(x - m_ucBorder) + (y - m_ucBorder) * this.m_width] = new Color(colorVector.x, colorVector.y, colorVector.z);
                     }
                 }
             }
