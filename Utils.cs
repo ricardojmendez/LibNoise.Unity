@@ -179,23 +179,23 @@
             {
                 case QualityMode.Low:
                     {
-                        xs = (x - (double)x0);
-                        ys = (y - (double)y0);
-                        zs = (z - (double)z0);
+                        xs = (x - x0);
+                        ys = (y - y0);
+                        zs = (z - z0);
                         break;
                     }
                 case QualityMode.Medium:
                     {
-                        xs = Utils.MapCubicSCurve(x - (double)x0);
-                        ys = Utils.MapCubicSCurve(y - (double)y0);
-                        zs = Utils.MapCubicSCurve(z - (double)z0);
+                        xs = Utils.MapCubicSCurve(x - x0);
+                        ys = Utils.MapCubicSCurve(y - y0);
+                        zs = Utils.MapCubicSCurve(z - z0);
                         break;
                     }
                 case QualityMode.High:
                     {
-                        xs = Utils.MapQuinticSCurve(x - (double)x0);
-                        ys = Utils.MapQuinticSCurve(y - (double)y0);
-                        zs = Utils.MapQuinticSCurve(z - (double)z0);
+                        xs = Utils.MapQuinticSCurve(x - x0);
+                        ys = Utils.MapQuinticSCurve(y - y0);
+                        zs = Utils.MapQuinticSCurve(z - z0);
                         break;
                     }
             }
@@ -226,9 +226,9 @@
             double xvg = Utils._randoms[(i << 2)];
             double yvg = Utils._randoms[(i << 2) + 1];
             double zvg = Utils._randoms[(i << 2) + 2];
-            double xvp = (fx - (double)ix);
-            double yvp = (fy - (double)iy);
-            double zvp = (fz - (double)iz);
+            double xvp = (fx - ix);
+            double yvp = (fy - iy);
+            double zvp = (fz - iz);
             return ((xvg * xvp) + (yvg * yvp) + (zvg * zvp)) * 2.12;
         }
 

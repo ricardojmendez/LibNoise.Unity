@@ -119,7 +119,7 @@
         /// <returns>The resulting output value.</returns>
         public double GetValue(Vector3 coordinate)
         {
-            return this.GetValue((double)coordinate.x, (double)coordinate.y, (double)coordinate.z);
+            return this.GetValue(coordinate.x, coordinate.y, coordinate.z);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@
         /// <returns>The resulting output value.</returns>
         public double GetValue(ref Vector3 coordinate)
         {
-            return this.GetValue((double)coordinate.x, (double)coordinate.y, (double)coordinate.z);
+            return this.GetValue(coordinate.x, coordinate.y, coordinate.z);
         }
 
         #endregion

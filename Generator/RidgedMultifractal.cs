@@ -156,8 +156,7 @@
                 signal *= signal;
                 signal *= weight;
                 weight = signal * gain;
-                if (weight > 1.0) { weight = 1.0; }
-                if (weight < 0.0) { weight = 0.0; }
+				weight = Mathf.Clamp01((float)weight);
                 value += (signal * this.m_weights[i]);
                 x *= this.m_lacunarity;
                 y *= this.m_lacunarity;
