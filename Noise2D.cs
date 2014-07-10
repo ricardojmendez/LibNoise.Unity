@@ -95,7 +95,6 @@ namespace LibNoise.Unity
             this.m_ucHeight = height + m_ucBorder * 2;
             this.m_ucData = new float[width + m_ucBorder * 2, height + m_ucBorder * 2];
         }
-
         #endregion
 
         #region Indexers
@@ -119,7 +118,7 @@ namespace LibNoise.Unity
                     }
                     if (y < 0 && y >= this.m_height)
                     {
-                        throw new ArgumentOutOfRangeException("Inavlid y position");
+                        throw new ArgumentOutOfRangeException("Invalid y position");
                     }
                     return this.m_data[x, y];
                 }
@@ -131,7 +130,7 @@ namespace LibNoise.Unity
                     }
                     if (y < 0 && y >= this.m_ucHeight)
                     {
-                        throw new ArgumentOutOfRangeException("Inavlid y position");
+                        throw new ArgumentOutOfRangeException("Invalid y position");
                     }
                     return this.m_ucData[x, y];
                 }
@@ -158,7 +157,7 @@ namespace LibNoise.Unity
                     }
                     if (y < 0 && y >= this.m_ucHeight)
                     {
-                        throw new ArgumentOutOfRangeException("Inavlid y position");
+                        throw new ArgumentOutOfRangeException("Invalid y position");
                     }
                     this.m_ucData[x, y] = value;
                 }
