@@ -138,7 +138,7 @@
 
         [System.Xml.Serialization.XmlIgnore]
         #if !XBOX360 && !ZUNE
-            [NonSerialized]
+        [NonSerialized]
         #endif
         private bool m_disposed = false;
 

@@ -376,9 +376,9 @@ namespace LibNoise.Unity
         /// <returns>The corresponding noise map value.</returns>
         private double GenerateCylindrical(double angle, double height)
         {
-            double x = Math.Cos(angle * Utils.DegToRad);
+            double x = Math.Cos(angle * Mathf.Deg2Rad);
             double y = height;
-            double z = Math.Sin(angle * Utils.DegToRad);
+            double z = Math.Sin(angle * Mathf.Deg2Rad);
             return this.m_generator.GetValue(x, y, z);
         }
 
@@ -429,9 +429,9 @@ namespace LibNoise.Unity
         /// <returns>The corresponding noise map value.</returns>
         private double GenerateSpherical(double lat, double lon)
         {
-            double r = Math.Cos(Utils.DegToRad * lat);
-            return this.m_generator.GetValue(r * Math.Cos(Utils.DegToRad * lon), Math.Sin(Utils.DegToRad * lat),
-                r * Math.Sin(Utils.DegToRad * lon));
+            double r = Math.Cos(Mathf.Deg2Rad * lat);
+            return this.m_generator.GetValue(r * Math.Cos(Mathf.Deg2Rad * lon), Math.Sin(Mathf.Deg2Rad * lat),
+                r * Math.Sin(Mathf.Deg2Rad * lon));
         }
 
         /// <summary>

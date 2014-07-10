@@ -8,8 +8,7 @@
     internal static class Utils
     {
         #region Constants
-
-        internal const double DegToRad = Math.PI / 180.0;
+		
         internal const double Sqrt3 = 1.7320508075688772935;
         internal const int OctavesMaximum = 30;
 

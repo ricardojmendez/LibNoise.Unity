@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Text;
+	using UnityEngine;
 
 	/// <summary>
 	/// Provides a noise module that rotates the input value around the origin before
@@ -106,12 +107,12 @@
 		/// <param name="z">The rotation around the z-axis.</param>
 		private void SetAngles(double x, double y, double z)
 		{
-			double xc = Math.Cos(x * Utils.DegToRad);
-			double yc = Math.Cos(y * Utils.DegToRad);
-			double zc = Math.Cos(z * Utils.DegToRad);
-			double xs = Math.Sin(x * Utils.DegToRad);
-			double ys = Math.Sin(y * Utils.DegToRad);
-			double zs = Math.Sin(z * Utils.DegToRad);
+			double xc = Math.Cos(x * Mathf.Deg2Rad);
+			double yc = Math.Cos(y * Mathf.Deg2Rad);
+			double zc = Math.Cos(z * Mathf.Deg2Rad);
+			double xs = Math.Sin(x * Mathf.Deg2Rad);
+			double ys = Math.Sin(y * Mathf.Deg2Rad);
+			double zs = Math.Sin(z * Mathf.Deg2Rad);
 			this.m_x1Matrix = ys * xs * zs + yc * zc;
 			this.m_y1Matrix = xc * zs;
 			this.m_z1Matrix = ys * zc - yc * xs * zs;
