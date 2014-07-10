@@ -300,18 +300,6 @@ namespace LibNoise.Unity
         }
 
         /// <summary>
-        /// Generates a planar projection of the noise map.
-        /// </summary>
-        /// <param name="left">The clip region to the left.</param>
-        /// <param name="right">The clip region to the right.</param>
-        /// <param name="top">The clip region to the top.</param>
-        /// <param name="bottom">The clip region to the bottom.</param>
-        public void GeneratePlanar(double left, double right, double top, double bottom)
-        {
-            this.GeneratePlanar(left, right, top, bottom, true);
-        }
-
-        /// <summary>
         /// Generates a non-seamless planar projection of the noise map.
         /// </summary>
         /// <param name="left">The clip region to the left.</param>
@@ -319,7 +307,7 @@ namespace LibNoise.Unity
         /// <param name="top">The clip region to the top.</param>
         /// <param name="bottom">The clip region to the bottom.</param>
         /// <param name="isSeamless">Indicates whether the resulting noise map should be seamless.</param>
-        public void GeneratePlanar(double left, double right, double top, double bottom, bool isSeamless)
+        public void GeneratePlanar(double left, double right, double top, double bottom, bool isSeamless = true)
         {
             if (right <= left || bottom <= top)
             {
