@@ -267,16 +267,8 @@ namespace LibNoise.Unity
         /// <summary>
         /// Clears the noise map.
         /// </summary>
-        public void Clear()
-        {
-            this.Clear(0.0f);
-        }
-
-        /// <summary>
-        /// Clears the noise map.
-        /// </summary>
         /// <param name="value">The constant value to clear the noise map with.</param>
-        public void Clear(float value)
+        public void Clear(float value = 0f)
         {
             for (int x = 0; x < this.m_width; x++)
             {
