@@ -1,10 +1,7 @@
 ﻿namespace LibNoise.Unity.Operator
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
+    
     /// <summary>
     /// Provides a noise module that outputs the value selected from one of two source
     /// modules chosen by the output value from a control module. [OPERATOR]
