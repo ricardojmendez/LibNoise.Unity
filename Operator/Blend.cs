@@ -1,10 +1,7 @@
 ﻿namespace LibNoise.Unity.Operator
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
+    
     /// <summary>
     /// Provides a noise module that outputs a weighted blend of the output values from
     /// two source modules given the output value supplied by a control module. [OPERATOR]

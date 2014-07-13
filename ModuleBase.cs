@@ -1,12 +1,8 @@
 ﻿namespace LibNoise.Unity
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
-    //using Microsoft.Xna.Framework;
-    using UnityEngine;
+    
+	using UnityEngine;
 
     #region Enumerations
 
@@ -119,7 +115,7 @@
         /// <returns>The resulting output value.</returns>
         public double GetValue(Vector3 coordinate)
         {
-            return this.GetValue((double)coordinate.x, (double)coordinate.y, (double)coordinate.z);
+            return this.GetValue(coordinate.x, coordinate.y, coordinate.z);
         }
 
         /// <summary>
@@ -129,7 +125,7 @@
         /// <returns>The resulting output value.</returns>
         public double GetValue(ref Vector3 coordinate)
         {
-            return this.GetValue((double)coordinate.x, (double)coordinate.y, (double)coordinate.z);
+            return this.GetValue(coordinate.x, coordinate.y, coordinate.z);
         }
 
         #endregion
@@ -138,7 +134,7 @@
 
         [System.Xml.Serialization.XmlIgnore]
         #if !XBOX360 && !ZUNE
-            [NonSerialized]
+        [NonSerialized]
         #endif
         private bool m_disposed = false;
 

@@ -1,12 +1,8 @@
 ﻿namespace LibNoise.Unity.Generator
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
-    //using Microsoft.Xna.Framework;
-    using UnityEngine;
+    
+	using UnityEngine;
 
     /// <summary>
     /// Provides a noise module that outputs a three-dimensional perlin noise. [GENERATOR]

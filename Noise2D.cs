@@ -1,10 +1,7 @@
 namespace LibNoise.Unity
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
+    
     using UnityEngine;
 
     /// <summary>
@@ -95,7 +92,6 @@ namespace LibNoise.Unity
             this.m_ucHeight = height + m_ucBorder * 2;
             this.m_ucData = new float[width + m_ucBorder * 2, height + m_ucBorder * 2];
         }
-
         #endregion
 
         #region Indexers
@@ -119,7 +115,7 @@ namespace LibNoise.Unity
                     }
                     if (y < 0 && y >= this.m_height)
                     {
-                        throw new ArgumentOutOfRangeException("Inavlid y position");
+                        throw new ArgumentOutOfRangeException("Invalid y position");
                     }
                     return this.m_data[x, y];
                 }
@@ -131,7 +127,7 @@ namespace LibNoise.Unity
                     }
                     if (y < 0 && y >= this.m_ucHeight)
                     {
-                        throw new ArgumentOutOfRangeException("Inavlid y position");
+                        throw new ArgumentOutOfRangeException("Invalid y position");
                     }
                     return this.m_ucData[x, y];
                 }
@@ -158,7 +154,7 @@ namespace LibNoise.Unity
                     }
                     if (y < 0 && y >= this.m_ucHeight)
                     {
-                        throw new ArgumentOutOfRangeException("Inavlid y position");
+                        throw new ArgumentOutOfRangeException("Invalid y position");
                     }
                     this.m_ucData[x, y] = value;
                 }
@@ -268,16 +264,8 @@ namespace LibNoise.Unity
         /// <summary>
         /// Clears the noise map.
         /// </summary>
-        public void Clear()
-        {
-            this.Clear(0.0f);
-        }
-
-        /// <summary>
-        /// Clears the noise map.
-        /// </summary>
         /// <param name="value">The constant value to clear the noise map with.</param>
-        public void Clear(float value)
+        public void Clear(float value = 0f)
         {
             for (int x = 0; x < this.m_width; x++)
             {
@@ -300,18 +288,6 @@ namespace LibNoise.Unity
         }
 
         /// <summary>
-        /// Generates a planar projection of the noise map.
-        /// </summary>
-        /// <param name="left">The clip region to the left.</param>
-        /// <param name="right">The clip region to the right.</param>
-        /// <param name="top">The clip region to the top.</param>
-        /// <param name="bottom">The clip region to the bottom.</param>
-        public void GeneratePlanar(double left, double right, double top, double bottom)
-        {
-            this.GeneratePlanar(left, right, top, bottom, true);
-        }
-
-        /// <summary>
         /// Generates a non-seamless planar projection of the noise map.
         /// </summary>
         /// <param name="left">The clip region to the left.</param>
@@ -319,7 +295,7 @@ namespace LibNoise.Unity
         /// <param name="top">The clip region to the top.</param>
         /// <param name="bottom">The clip region to the bottom.</param>
         /// <param name="isSeamless">Indicates whether the resulting noise map should be seamless.</param>
-        public void GeneratePlanar(double left, double right, double top, double bottom, bool isSeamless)
+        public void GeneratePlanar(double left, double right, double top, double bottom, bool isSeamless = true)
         {
             if (right <= left || bottom <= top)
             {
@@ -376,9 +352,9 @@ namespace LibNoise.Unity
         /// <returns>The corresponding noise map value.</returns>
         private double GenerateCylindrical(double angle, double height)
         {
-            double x = Math.Cos(angle * Utils.DegToRad);
+            double x = Math.Cos(angle * Mathf.Deg2Rad);
             double y = height;
-            double z = Math.Sin(angle * Utils.DegToRad);
+            double z = Math.Sin(angle * Mathf.Deg2Rad);
             return this.m_generator.GetValue(x, y, z);
         }
 
@@ -429,9 +405,9 @@ namespace LibNoise.Unity
         /// <returns>The corresponding noise map value.</returns>
         private double GenerateSpherical(double lat, double lon)
         {
-            double r = Math.Cos(Utils.DegToRad * lat);
-            return this.m_generator.GetValue(r * Math.Cos(Utils.DegToRad * lon), Math.Sin(Utils.DegToRad * lat),
-                r * Math.Sin(Utils.DegToRad * lon));
+            double r = Math.Cos(Mathf.Deg2Rad * lat);
+            return this.m_generator.GetValue(r * Math.Cos(Mathf.Deg2Rad * lon), Math.Sin(Mathf.Deg2Rad * lat),
+                r * Math.Sin(Mathf.Deg2Rad * lon));
         }
 
         /// <summary>
