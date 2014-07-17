@@ -1,7 +1,7 @@
-﻿namespace LibNoise.Unity.Operator
+﻿using System.Diagnostics;
+
+namespace LibNoise.Unity.Operator
 {
-    using System;
-    
     /// <summary>
     /// Provides a noise module that outputs the sum of the two output values from two
     /// source modules. [OPERATOR]
@@ -26,8 +26,8 @@
         public Add(ModuleBase lhs, ModuleBase rhs)
             : base(2)
         {
-            this.m_modules[0] = lhs;
-            this.m_modules[1] = rhs;
+            m_modules[0] = lhs;
+            m_modules[1] = rhs;
         }
 
         #endregion
@@ -43,9 +43,9 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            System.Diagnostics.Debug.Assert(this.m_modules[1] != null);
-            return this.m_modules[0].GetValue(x, y, z) + this.m_modules[1].GetValue(x, y, z);
+            Debug.Assert(m_modules[0] != null);
+            Debug.Assert(m_modules[1] != null);
+            return m_modules[0].GetValue(x, y, z) + m_modules[1].GetValue(x, y, z);
         }
 
         #endregion

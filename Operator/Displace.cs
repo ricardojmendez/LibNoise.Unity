@@ -1,7 +1,7 @@
-﻿namespace LibNoise.Unity.Operator
+﻿using System.Diagnostics;
+
+namespace LibNoise.Unity.Operator
 {
-    using System;
-    
     /// <summary>
     /// Provides a noise module that uses three source modules to displace each
     /// coordinate of the input value before returning the output value from
@@ -29,10 +29,10 @@
         public Displace(ModuleBase input, ModuleBase x, ModuleBase y, ModuleBase z)
             : base(4)
         {
-            this.m_modules[0] = input;
-            this.m_modules[1] = x;
-            this.m_modules[2] = y;
-            this.m_modules[3] = z;
+            m_modules[0] = input;
+            m_modules[1] = x;
+            m_modules[2] = y;
+            m_modules[3] = z;
         }
 
         #endregion
@@ -44,11 +44,11 @@
         /// </summary>
         public ModuleBase X
         {
-            get { return this.m_modules[1]; }
+            get { return m_modules[1]; }
             set
             {
-                System.Diagnostics.Debug.Assert(value != null);
-                this.m_modules[1] = value;
+                Debug.Assert(value != null);
+                m_modules[1] = value;
             }
         }
 
@@ -57,11 +57,11 @@
         /// </summary>
         public ModuleBase Y
         {
-            get { return this.m_modules[2]; }
+            get { return m_modules[2]; }
             set
             {
-                System.Diagnostics.Debug.Assert(value != null);
-                this.m_modules[2] = value;
+                Debug.Assert(value != null);
+                m_modules[2] = value;
             }
         }
 
@@ -70,11 +70,11 @@
         /// </summary>
         public ModuleBase Z
         {
-            get { return this.m_modules[3]; }
+            get { return m_modules[3]; }
             set
             {
-                System.Diagnostics.Debug.Assert(value != null);
-                this.m_modules[3] = value;
+                Debug.Assert(value != null);
+                m_modules[3] = value;
             }
         }
 
@@ -91,14 +91,14 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            System.Diagnostics.Debug.Assert(this.m_modules[1] != null);
-            System.Diagnostics.Debug.Assert(this.m_modules[2] != null);
-            System.Diagnostics.Debug.Assert(this.m_modules[3] != null);
-            double dx = x + this.m_modules[1].GetValue(x, y, z);
-            double dy = y + this.m_modules[2].GetValue(x, y, z);
-            double dz = z + this.m_modules[3].GetValue(x, y, z);
-            return this.m_modules[0].GetValue(dx, dy, dz);
+            Debug.Assert(m_modules[0] != null);
+            Debug.Assert(m_modules[1] != null);
+            Debug.Assert(m_modules[2] != null);
+            Debug.Assert(m_modules[3] != null);
+            var dx = x + m_modules[1].GetValue(x, y, z);
+            var dy = y + m_modules[2].GetValue(x, y, z);
+            var dz = z + m_modules[3].GetValue(x, y, z);
+            return m_modules[0].GetValue(dx, dy, dz);
         }
 
         #endregion

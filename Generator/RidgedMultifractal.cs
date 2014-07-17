@@ -1,9 +1,8 @@
-﻿namespace LibNoise.Unity.Generator
-{
-    using System;
-    
-	using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+namespace LibNoise.Unity.Generator
+{
     /// <summary>
     /// Provides a noise module that outputs 3-dimensional ridged-multifractal noise. [GENERATOR]
     /// </summary>
@@ -15,8 +14,8 @@
         private double m_lacunarity = 2.0;
         private QualityMode m_quality = QualityMode.Medium;
         private int m_octaveCount = 6;
-        private int m_seed = 0;
-        private double[] m_weights = new double[Utils.OctavesMaximum];
+        private int m_seed;
+        private readonly double[] m_weights = new double[Utils.OctavesMaximum];
 
         #endregion
 
@@ -28,7 +27,7 @@
         public RidgedMultifractal()
             : base(0)
         {
-            this.UpdateWeights();
+            UpdateWeights();
         }
 
         /// <summary>
@@ -42,11 +41,11 @@
         public RidgedMultifractal(double frequency, double lacunarity, int octaves, int seed, QualityMode quality)
             : base(0)
         {
-            this.Frequency = frequency;
-            this.Lacunarity = lacunarity;
-            this.OctaveCount = octaves;
-            this.Seed = seed;
-            this.Quality = quality;
+            Frequency = frequency;
+            Lacunarity = lacunarity;
+            OctaveCount = octaves;
+            Seed = seed;
+            Quality = quality;
         }
 
         #endregion
@@ -58,8 +57,8 @@
         /// </summary>
         public double Frequency
         {
-            get { return this.m_frequency; }
-            set { this.m_frequency = value; }
+            get { return m_frequency; }
+            set { m_frequency = value; }
         }
 
         /// <summary>
@@ -67,11 +66,11 @@
         /// </summary>
         public double Lacunarity
         {
-            get { return this.m_lacunarity; }
+            get { return m_lacunarity; }
             set
             {
-                this.m_lacunarity = value;
-                this.UpdateWeights();
+                m_lacunarity = value;
+                UpdateWeights();
             }
         }
 
@@ -80,8 +79,8 @@
         /// </summary>
         public QualityMode Quality
         {
-            get { return this.m_quality; }
-            set { this.m_quality = value; }
+            get { return m_quality; }
+            set { m_quality = value; }
         }
 
         /// <summary>
@@ -89,8 +88,8 @@
         /// </summary>
         public int OctaveCount
         {
-            get { return this.m_octaveCount; }
-            set { this.m_octaveCount = (int)Mathf.Clamp(value, 1, Utils.OctavesMaximum); }
+            get { return m_octaveCount; }
+            set { m_octaveCount = Mathf.Clamp(value, 1, Utils.OctavesMaximum); }
         }
 
         /// <summary>
@@ -98,8 +97,8 @@
         /// </summary>
         public int Seed
         {
-            get { return this.m_seed; }
-            set { this.m_seed = value; }
+            get { return m_seed; }
+            set { m_seed = value; }
         }
 
         #endregion
@@ -111,11 +110,11 @@
         /// </summary>
         private void UpdateWeights()
         {
-            double f = 1.0;
-            for (int i = 0; i < Utils.OctavesMaximum; i++)
+            var f = 1.0;
+            for (var i = 0; i < Utils.OctavesMaximum; i++)
             {
-                this.m_weights[i] = Math.Pow(f, -1.0);
-                f *= this.m_lacunarity;
+                m_weights[i] = Math.Pow(f, -1.0);
+                f *= m_lacunarity;
             }
         }
 
@@ -132,31 +131,31 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            x *= this.m_frequency;
-            y *= this.m_frequency;
-            z *= this.m_frequency;
-            double signal = 0.0;
-            double value = 0.0;
-            double weight = 1.0;
-            double offset = 1.0;
-            double gain = 2.0;
-            for (int i = 0; i < this.m_octaveCount; i++)
+            x *= m_frequency;
+            y *= m_frequency;
+            z *= m_frequency;
+            var signal = 0.0;
+            var value = 0.0;
+            var weight = 1.0;
+            var offset = 1.0;
+            var gain = 2.0;
+            for (var i = 0; i < m_octaveCount; i++)
             {
-                double nx = Utils.MakeInt32Range(x);
-                double ny = Utils.MakeInt32Range(y);
-                double nz = Utils.MakeInt32Range(z);
-                long seed = (this.m_seed + i) & 0x7fffffff;
-                signal = Utils.GradientCoherentNoise3D(nx, ny, nz, seed, this.m_quality);
+                var nx = Utils.MakeInt32Range(x);
+                var ny = Utils.MakeInt32Range(y);
+                var nz = Utils.MakeInt32Range(z);
+                long seed = (m_seed + i) & 0x7fffffff;
+                signal = Utils.GradientCoherentNoise3D(nx, ny, nz, seed, m_quality);
                 signal = Math.Abs(signal);
                 signal = offset - signal;
                 signal *= signal;
                 signal *= weight;
                 weight = signal * gain;
-				weight = Mathf.Clamp01((float)weight);
-                value += (signal * this.m_weights[i]);
-                x *= this.m_lacunarity;
-                y *= this.m_lacunarity;
-                z *= this.m_lacunarity;
+                weight = Mathf.Clamp01((float) weight);
+                value += (signal * m_weights[i]);
+                x *= m_lacunarity;
+                y *= m_lacunarity;
+                z *= m_lacunarity;
             }
             return (value * 1.25) - 1.0;
         }

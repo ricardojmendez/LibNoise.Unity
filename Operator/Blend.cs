@@ -1,7 +1,7 @@
-﻿namespace LibNoise.Unity.Operator
+﻿using System.Diagnostics;
+
+namespace LibNoise.Unity.Operator
 {
-    using System;
-    
     /// <summary>
     /// Provides a noise module that outputs a weighted blend of the output values from
     /// two source modules given the output value supplied by a control module. [OPERATOR]
@@ -27,9 +27,9 @@
         public Blend(ModuleBase lhs, ModuleBase rhs, ModuleBase controller)
             : base(3)
         {
-            this.m_modules[0] = lhs;
-            this.m_modules[1] = rhs;
-            this.m_modules[2] = controller;
+            m_modules[0] = lhs;
+            m_modules[1] = rhs;
+            m_modules[2] = controller;
         }
 
         #endregion
@@ -41,11 +41,11 @@
         /// </summary>
         public ModuleBase Controller
         {
-            get { return this.m_modules[2]; }
+            get { return m_modules[2]; }
             set
             {
-                System.Diagnostics.Debug.Assert(value != null);
-                this.m_modules[2] = value;
+                Debug.Assert(value != null);
+                m_modules[2] = value;
             }
         }
 
@@ -62,12 +62,12 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            System.Diagnostics.Debug.Assert(this.m_modules[1] != null);
-            System.Diagnostics.Debug.Assert(this.m_modules[2] != null);
-            double a = this.m_modules[0].GetValue(x, y, z);
-            double b = this.m_modules[1].GetValue(x, y, z);
-            double c = (this.m_modules[2].GetValue(x, y, z) + 1.0) / 2.0;
+            Debug.Assert(m_modules[0] != null);
+            Debug.Assert(m_modules[1] != null);
+            Debug.Assert(m_modules[2] != null);
+            var a = m_modules[0].GetValue(x, y, z);
+            var b = m_modules[1].GetValue(x, y, z);
+            var c = (m_modules[2].GetValue(x, y, z) + 1.0) / 2.0;
             return Utils.InterpolateLinear(a, b, c);
         }
 

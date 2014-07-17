@@ -1,10 +1,8 @@
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace LibNoise.Unity
 {
-    using System;
-    using System.Collections.Generic;
-
-    using UnityEngine;
-
     /// <summary>
     /// Provides a series of gradient presets
     /// </summary>
@@ -12,11 +10,11 @@ namespace LibNoise.Unity
     {
         #region Fields
 
-        private static Gradient _empty;
-        private static Gradient _grayscale;
-        private static Gradient _rgb;
-        private static Gradient _rgba;
-        private static Gradient _terrain;
+        private static readonly Gradient _empty;
+        private static readonly Gradient _grayscale;
+        private static readonly Gradient _rgb;
+        private static readonly Gradient _rgba;
+        private static readonly Gradient _terrain;
 
         #endregion
 
@@ -28,30 +26,30 @@ namespace LibNoise.Unity
         static GradientPresets()
         {
             // Grayscale gradient color keys
-            List<GradientColorKey> grayscaleColorKeys = new List<GradientColorKey>();
+            var grayscaleColorKeys = new List<GradientColorKey>();
             grayscaleColorKeys.Add(new GradientColorKey(Color.black, 0));
             grayscaleColorKeys.Add(new GradientColorKey(Color.white, 1));
 
             // RGB gradient color keys
-            List<GradientColorKey> rgbColorKeys = new List<GradientColorKey>();
+            var rgbColorKeys = new List<GradientColorKey>();
             rgbColorKeys.Add(new GradientColorKey(Color.red, 0));
             rgbColorKeys.Add(new GradientColorKey(Color.green, 0.5f));
             rgbColorKeys.Add(new GradientColorKey(Color.blue, 1));
 
             // RGBA gradient color keys
-            List<GradientColorKey> rgbaColorKeys = new List<GradientColorKey>();
+            var rgbaColorKeys = new List<GradientColorKey>();
             rgbaColorKeys.Add(new GradientColorKey(Color.red, 0));
-            rgbaColorKeys.Add(new GradientColorKey(Color.green, 1/3f));
-            rgbaColorKeys.Add(new GradientColorKey(Color.blue, 2/3f));
+            rgbaColorKeys.Add(new GradientColorKey(Color.green, 1 / 3f));
+            rgbaColorKeys.Add(new GradientColorKey(Color.blue, 2 / 3f));
             rgbaColorKeys.Add(new GradientColorKey(Color.black, 1));
 
             // RGBA gradient alpha keys
-            List<GradientAlphaKey> rgbaAlphaKeys = new List<GradientAlphaKey>();
-            rgbaAlphaKeys.Add(new GradientAlphaKey(0, 2/3f));
+            var rgbaAlphaKeys = new List<GradientAlphaKey>();
+            rgbaAlphaKeys.Add(new GradientAlphaKey(0, 2 / 3f));
             rgbaAlphaKeys.Add(new GradientAlphaKey(1, 1));
 
             // Terrain gradient color keys
-            List<GradientColorKey> terrainColorKeys = new List<GradientColorKey>();
+            var terrainColorKeys = new List<GradientColorKey>();
             terrainColorKeys.Add(new GradientColorKey(new Color(0, 0, 0.5f), 0));
             terrainColorKeys.Add(new GradientColorKey(new Color(0.125f, 0.25f, 0.5f), 0.4f));
             terrainColorKeys.Add(new GradientColorKey(new Color(0.25f, 0.375f, 0.75f), 0.48f));
@@ -62,7 +60,7 @@ namespace LibNoise.Unity
             terrainColorKeys.Add(new GradientColorKey(Color.white, 1));
 
             // Generic gradient alpha keys
-            List<GradientAlphaKey> alphaKeys = new List<GradientAlphaKey>();
+            var alphaKeys = new List<GradientAlphaKey>();
             alphaKeys.Add(new GradientAlphaKey(1, 0));
             alphaKeys.Add(new GradientAlphaKey(1, 1));
 

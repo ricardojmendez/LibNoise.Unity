@@ -1,10 +1,10 @@
-﻿namespace LibNoise.Unity.Operator
-{
-    using System;
-	using System.Collections.Generic;
-    
-    using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using Debug = System.Diagnostics.Debug;
 
+namespace LibNoise.Unity.Operator
+{
     /// <summary>
     /// Provides a noise module that maps the output value from a source module onto a
     /// terrace-forming curve. [OPERATOR]
@@ -13,8 +13,8 @@
     {
         #region Fields
 
-        private List<double> m_data = new List<double>();
-        private bool m_inverted = false;
+        private readonly List<double> m_data = new List<double>();
+        private bool m_inverted;
 
         #endregion
 
@@ -35,7 +35,7 @@
         public Terrace(ModuleBase input)
             : base(1)
         {
-            this.m_modules[0] = input;
+            m_modules[0] = input;
         }
 
         /// <summary>
@@ -46,8 +46,8 @@
         public Terrace(bool inverted, ModuleBase input)
             : base(1)
         {
-            this.m_modules[0] = input;
-            this.IsInverted = inverted;
+            m_modules[0] = input;
+            IsInverted = inverted;
         }
 
         #endregion
@@ -59,7 +59,7 @@
         /// </summary>
         public int ControlPointCount
         {
-            get { return this.m_data.Count; }
+            get { return m_data.Count; }
         }
 
         /// <summary>
@@ -67,7 +67,7 @@
         /// </summary>
         public List<double> ControlPoints
         {
-            get { return this.m_data; }
+            get { return m_data; }
         }
 
         /// <summary>
@@ -75,8 +75,8 @@
         /// </summary>
         public bool IsInverted
         {
-            get { return this.m_inverted; }
-            set { this.m_inverted = value; }
+            get { return m_inverted; }
+            set { m_inverted = value; }
         }
 
         #endregion
@@ -89,11 +89,11 @@
         /// <param name="input">The curves input value.</param>
         public void Add(double input)
         {
-            if (!this.m_data.Contains(input))
+            if (!m_data.Contains(input))
             {
-                this.m_data.Add(input);
+                m_data.Add(input);
             }
-            this.m_data.Sort(delegate(double lhs, double rhs) { return lhs.CompareTo(rhs); });
+            m_data.Sort(delegate(double lhs, double rhs) { return lhs.CompareTo(rhs); });
         }
 
         /// <summary>
@@ -101,7 +101,7 @@
         /// </summary>
         public void Clear()
         {
-            this.m_data.Clear();
+            m_data.Clear();
         }
 
         /// <summary>
@@ -114,12 +114,12 @@
             {
                 throw new ArgumentException("Need at least two steps");
             }
-            this.Clear();
-            double ts = 2.0 / ((double)steps - 1.0);
-            double cv = -1.0;
-            for (int i = 0; i < (int)steps; i++)
+            Clear();
+            var ts = 2.0 / (steps - 1.0);
+            var cv = -1.0;
+            for (var i = 0; i < steps; i++)
             {
-                this.Add(cv);
+                Add(cv);
                 cv += ts;
             }
         }
@@ -137,30 +137,30 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            System.Diagnostics.Debug.Assert(this.ControlPointCount >= 2);
-            double smv = this.m_modules[0].GetValue(x, y, z);
+            Debug.Assert(m_modules[0] != null);
+            Debug.Assert(ControlPointCount >= 2);
+            var smv = m_modules[0].GetValue(x, y, z);
             int ip;
-            for (ip = 0; ip < this.m_data.Count; ip++)
+            for (ip = 0; ip < m_data.Count; ip++)
             {
-                if (smv < this.m_data[ip])
+                if (smv < m_data[ip])
                 {
                     break;
                 }
             }
-            int i0 = (int)Mathf.Clamp(ip - 1, 0, this.m_data.Count - 1);
-            int i1 = (int)Mathf.Clamp(ip, 0, this.m_data.Count - 1);
+            var i0 = Mathf.Clamp(ip - 1, 0, m_data.Count - 1);
+            var i1 = Mathf.Clamp(ip, 0, m_data.Count - 1);
             if (i0 == i1)
             {
-                return this.m_data[i1];
+                return m_data[i1];
             }
-            double v0 = this.m_data[i0];
-            double v1 = this.m_data[i1];
-            double a = (smv - v0) / (v1 - v0);
-            if (this.m_inverted)
+            var v0 = m_data[i0];
+            var v1 = m_data[i1];
+            var a = (smv - v0) / (v1 - v0);
+            if (m_inverted)
             {
                 a = 1.0 - a;
-                double t = v0;
+                var t = v0;
                 v0 = v1;
                 v1 = t;
             }

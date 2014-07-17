@@ -1,9 +1,7 @@
-﻿namespace LibNoise.Unity.Generator
-{
-    using System;
-    
-	using UnityEngine;
+﻿using UnityEngine;
 
+namespace LibNoise.Unity.Generator
+{
     /// <summary>
     /// Provides a noise module that outputs a three-dimensional perlin noise. [GENERATOR]
     /// </summary>
@@ -16,7 +14,7 @@
         private QualityMode m_quality = QualityMode.Medium;
         private int m_octaveCount = 6;
         private double m_persistence = 0.5;
-        private int m_seed = 0;
+        private int m_seed;
 
         #endregion
 
@@ -39,15 +37,16 @@
         /// <param name="octaves">The number of octaves of the perlin noise.</param>
         /// <param name="seed">The seed of the perlin noise.</param>
         /// <param name="quality">The quality of the perlin noise.</param>
-        public Perlin(double frequency, double lacunarity, double persistence, int octaves, int seed, QualityMode quality)
+        public Perlin(double frequency, double lacunarity, double persistence, int octaves, int seed,
+            QualityMode quality)
             : base(0)
         {
-            this.Frequency = frequency;
-            this.Lacunarity = lacunarity;
-            this.OctaveCount = octaves;
-            this.Persistence = persistence;
-            this.Seed = seed;
-            this.Quality = quality;
+            Frequency = frequency;
+            Lacunarity = lacunarity;
+            OctaveCount = octaves;
+            Persistence = persistence;
+            Seed = seed;
+            Quality = quality;
         }
 
         #endregion
@@ -59,8 +58,8 @@
         /// </summary>
         public double Frequency
         {
-            get { return this.m_frequency; }
-            set { this.m_frequency = value; }
+            get { return m_frequency; }
+            set { m_frequency = value; }
         }
 
         /// <summary>
@@ -68,8 +67,8 @@
         /// </summary>
         public double Lacunarity
         {
-            get { return this.m_lacunarity; }
-            set { this.m_lacunarity = value; }
+            get { return m_lacunarity; }
+            set { m_lacunarity = value; }
         }
 
         /// <summary>
@@ -77,8 +76,8 @@
         /// </summary>
         public QualityMode Quality
         {
-            get { return this.m_quality; }
-            set { this.m_quality = value; }
+            get { return m_quality; }
+            set { m_quality = value; }
         }
 
         /// <summary>
@@ -86,8 +85,8 @@
         /// </summary>
         public int OctaveCount
         {
-            get { return this.m_octaveCount; }
-            set { this.m_octaveCount = (int)Mathf.Clamp(value, 1, Utils.OctavesMaximum); }
+            get { return m_octaveCount; }
+            set { m_octaveCount = Mathf.Clamp(value, 1, Utils.OctavesMaximum); }
         }
 
         /// <summary>
@@ -95,8 +94,8 @@
         /// </summary>
         public double Persistence
         {
-            get { return this.m_persistence; }
-            set { this.m_persistence = value; }
+            get { return m_persistence; }
+            set { m_persistence = value; }
         }
 
         /// <summary>
@@ -104,8 +103,8 @@
         /// </summary>
         public int Seed
         {
-            get { return this.m_seed; }
-            set { this.m_seed = value; }
+            get { return m_seed; }
+            set { m_seed = value; }
         }
 
         #endregion
@@ -121,26 +120,26 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            double value = 0.0;
-            double signal = 0.0;
-            double cp = 1.0;
+            var value = 0.0;
+            var signal = 0.0;
+            var cp = 1.0;
             double nx, ny, nz;
             long seed;
-            x *= this.m_frequency;
-            y *= this.m_frequency;
-            z *= this.m_frequency;
-            for (int i = 0; i < this.m_octaveCount; i++)
+            x *= m_frequency;
+            y *= m_frequency;
+            z *= m_frequency;
+            for (var i = 0; i < m_octaveCount; i++)
             {
                 nx = Utils.MakeInt32Range(x);
                 ny = Utils.MakeInt32Range(y);
                 nz = Utils.MakeInt32Range(z);
-                seed = (this.m_seed + i) & 0xffffffff;
-                signal = Utils.GradientCoherentNoise3D(nx, ny, nz, seed, this.m_quality);
+                seed = (m_seed + i) & 0xffffffff;
+                signal = Utils.GradientCoherentNoise3D(nx, ny, nz, seed, m_quality);
                 value += signal * cp;
-                x *= this.m_lacunarity;
-                y *= this.m_lacunarity;
-                z *= this.m_lacunarity;
-                cp *= this.m_persistence;
+                x *= m_lacunarity;
+                y *= m_lacunarity;
+                z *= m_lacunarity;
+                cp *= m_persistence;
             }
             return value;
         }

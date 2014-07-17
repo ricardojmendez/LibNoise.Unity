@@ -1,9 +1,8 @@
-﻿namespace LibNoise.Unity.Operator
-{
-    using System;
-    
-    using LibNoise.Unity.Generator;
+﻿using System.Diagnostics;
+using LibNoise.Unity.Generator;
 
+namespace LibNoise.Unity.Operator
+{
     /// <summary>
     /// Provides a noise module that that randomly displaces the input value before
     /// returning the output value from a source module. [OPERATOR]
@@ -27,9 +26,9 @@
         #region Fields
 
         private double m_power = 1.0;
-        private Perlin m_xDistort = null;
-        private Perlin m_yDistort = null;
-        private Perlin m_zDistort = null;
+        private readonly Perlin m_xDistort;
+        private readonly Perlin m_yDistort;
+        private readonly Perlin m_zDistort;
 
         #endregion
 
@@ -41,9 +40,9 @@
         public Turbulence()
             : base(1)
         {
-            this.m_xDistort = new Perlin();
-            this.m_yDistort = new Perlin();
-            this.m_zDistort = new Perlin();
+            m_xDistort = new Perlin();
+            m_yDistort = new Perlin();
+            m_zDistort = new Perlin();
         }
 
         /// <summary>
@@ -53,10 +52,10 @@
         public Turbulence(ModuleBase input)
             : base(1)
         {
-            this.m_xDistort = new Perlin();
-            this.m_yDistort = new Perlin();
-            this.m_zDistort = new Perlin();
-            this.m_modules[0] = input;
+            m_xDistort = new Perlin();
+            m_yDistort = new Perlin();
+            m_zDistort = new Perlin();
+            m_modules[0] = input;
         }
 
         /// <summary>
@@ -78,11 +77,11 @@
         public Turbulence(Perlin x, Perlin y, Perlin z, double power, ModuleBase input)
             : base(1)
         {
-            this.m_xDistort = x;
-            this.m_yDistort = y;
-            this.m_zDistort = z;
-            this.m_modules[0] = input;
-            this.Power = power;
+            m_xDistort = x;
+            m_yDistort = y;
+            m_zDistort = z;
+            m_modules[0] = input;
+            Power = power;
         }
 
         #endregion
@@ -94,12 +93,12 @@
         /// </summary>
         public double Frequency
         {
-            get { return this.m_xDistort.Frequency; }
+            get { return m_xDistort.Frequency; }
             set
             {
-                this.m_xDistort.Frequency = value;
-                this.m_yDistort.Frequency = value;
-                this.m_zDistort.Frequency = value;
+                m_xDistort.Frequency = value;
+                m_yDistort.Frequency = value;
+                m_zDistort.Frequency = value;
             }
         }
 
@@ -108,8 +107,8 @@
         /// </summary>
         public double Power
         {
-            get { return this.m_power; }
-            set { this.m_power = value; }
+            get { return m_power; }
+            set { m_power = value; }
         }
 
         /// <summary>
@@ -117,12 +116,12 @@
         /// </summary>
         public int Roughness
         {
-            get { return this.m_xDistort.OctaveCount; }
+            get { return m_xDistort.OctaveCount; }
             set
             {
-                this.m_xDistort.OctaveCount = value;
-                this.m_yDistort.OctaveCount = value;
-                this.m_zDistort.OctaveCount = value;
+                m_xDistort.OctaveCount = value;
+                m_yDistort.OctaveCount = value;
+                m_zDistort.OctaveCount = value;
             }
         }
 
@@ -131,12 +130,12 @@
         /// </summary>
         public int Seed
         {
-            get { return this.m_xDistort.Seed; }
+            get { return m_xDistort.Seed; }
             set
             {
-                this.m_xDistort.Seed = value;
-                this.m_yDistort.Seed = value + 1;
-                this.m_zDistort.Seed = value + 2;
+                m_xDistort.Seed = value;
+                m_yDistort.Seed = value + 1;
+                m_zDistort.Seed = value + 2;
             }
         }
 
@@ -153,11 +152,11 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            double xd = x + (this.m_xDistort.GetValue(x + Turbulence.X0, y + Turbulence.Y0, z + Turbulence.Z0) * this.m_power);
-            double yd = y + (this.m_yDistort.GetValue(x + Turbulence.X1, y + Turbulence.Y1, z + Turbulence.Z1) * this.m_power);
-            double zd = z + (this.m_zDistort.GetValue(x + Turbulence.X2, y + Turbulence.Y2, z + Turbulence.Z2) * this.m_power);
-            return this.m_modules[0].GetValue(xd, yd, zd);
+            Debug.Assert(m_modules[0] != null);
+            var xd = x + (m_xDistort.GetValue(x + X0, y + Y0, z + Z0) * m_power);
+            var yd = y + (m_yDistort.GetValue(x + X1, y + Y1, z + Z1) * m_power);
+            var zd = z + (m_zDistort.GetValue(x + X2, y + Y2, z + Z2) * m_power);
+            return m_modules[0].GetValue(xd, yd, zd);
         }
 
         #endregion

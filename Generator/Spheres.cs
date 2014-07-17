@@ -1,7 +1,7 @@
-﻿namespace LibNoise.Unity.Generator
+﻿using System;
+
+namespace LibNoise.Unity.Generator
 {
-    using System;
-    
     /// <summary>
     /// Provides a noise module that outputs concentric spheres. [GENERATOR]
     /// </summary>
@@ -30,7 +30,7 @@
         public Spheres(double frequency)
             : base(0)
         {
-            this.Frequency = frequency;
+            Frequency = frequency;
         }
 
         #endregion
@@ -42,8 +42,8 @@
         /// </summary>
         public double Frequency
         {
-            get { return this.m_frequency; }
-            set { this.m_frequency = value; }
+            get { return m_frequency; }
+            set { m_frequency = value; }
         }
 
         #endregion
@@ -59,13 +59,13 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            x *= this.m_frequency;
-            y *= this.m_frequency;
-            z *= this.m_frequency;
-            double dfc = Math.Sqrt(x * x + y * y + z * z);
-            double dfss = dfc - Math.Floor(dfc);
-            double dfls = 1.0 - dfss;
-            double nd = Math.Min(dfss, dfls);
+            x *= m_frequency;
+            y *= m_frequency;
+            z *= m_frequency;
+            var dfc = Math.Sqrt(x * x + y * y + z * z);
+            var dfss = dfc - Math.Floor(dfc);
+            var dfls = 1.0 - dfss;
+            var nd = Math.Min(dfss, dfls);
             return 1.0 - (nd * 4.0);
         }
 

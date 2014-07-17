@@ -1,27 +1,27 @@
-﻿namespace LibNoise.Unity
+﻿using System;
+
+namespace LibNoise.Unity
 {
-    using System;
-    
     internal static class Utils
     {
         #region Constants
-		
+
         internal const double Sqrt3 = 1.7320508075688772935;
         internal const int OctavesMaximum = 30;
 
-        #if NOISE_VERSION_1
+#if NOISE_VERSION_1
             private const int GeneratorNoiseX = 1;
             private const int GeneratorNoiseY = 31337;
             private const int GeneratorNoiseZ = 263;
             private const int GeneratorSeed = 1013;
             private const int GeneratorShift = 13;
         #else
-            private const int GeneratorNoiseX = 1619;
-            private const int GeneratorNoiseY = 31337;
-            private const int GeneratorNoiseZ = 6971;
-            private const int GeneratorSeed = 1013;
-            private const int GeneratorShift = 8;
-        #endif
+        private const int GeneratorNoiseX = 1619;
+        private const int GeneratorNoiseY = 31337;
+        private const int GeneratorNoiseZ = 6971;
+        private const int GeneratorSeed = 1013;
+        private const int GeneratorShift = 8;
+#endif
 
         #endregion
 
@@ -165,76 +165,76 @@
 
         internal static double GradientCoherentNoise3D(double x, double y, double z, long seed, QualityMode quality)
         {
-            int x0 = x > 0.0 ? (int)x : (int)x - 1;
-            int x1 = x0 + 1;
-            int y0 = y > 0.0 ? (int)y : (int)y - 1;
-            int y1 = y0 + 1;
-            int z0 = z > 0.0 ? (int)z : (int)z - 1;
-            int z1 = z0 + 1;
+            var x0 = x > 0.0 ? (int) x : (int) x - 1;
+            var x1 = x0 + 1;
+            var y0 = y > 0.0 ? (int) y : (int) y - 1;
+            var y1 = y0 + 1;
+            var z0 = z > 0.0 ? (int) z : (int) z - 1;
+            var z1 = z0 + 1;
             double xs = 0, ys = 0, zs = 0;
             switch (quality)
             {
                 case QualityMode.Low:
-                    {
-                        xs = (x - x0);
-                        ys = (y - y0);
-                        zs = (z - z0);
-                        break;
-                    }
+                {
+                    xs = (x - x0);
+                    ys = (y - y0);
+                    zs = (z - z0);
+                    break;
+                }
                 case QualityMode.Medium:
-                    {
-                        xs = Utils.MapCubicSCurve(x - x0);
-                        ys = Utils.MapCubicSCurve(y - y0);
-                        zs = Utils.MapCubicSCurve(z - z0);
-                        break;
-                    }
+                {
+                    xs = MapCubicSCurve(x - x0);
+                    ys = MapCubicSCurve(y - y0);
+                    zs = MapCubicSCurve(z - z0);
+                    break;
+                }
                 case QualityMode.High:
-                    {
-                        xs = Utils.MapQuinticSCurve(x - x0);
-                        ys = Utils.MapQuinticSCurve(y - y0);
-                        zs = Utils.MapQuinticSCurve(z - z0);
-                        break;
-                    }
+                {
+                    xs = MapQuinticSCurve(x - x0);
+                    ys = MapQuinticSCurve(y - y0);
+                    zs = MapQuinticSCurve(z - z0);
+                    break;
+                }
             }
             double n0, n1, ix0, ix1, iy0, iy1;
-            n0 = Utils.GradientNoise3D(x, y, z, x0, y0, z0, seed);
-            n1 = Utils.GradientNoise3D(x, y, z, x1, y0, z0, seed);
-            ix0 = Utils.InterpolateLinear(n0, n1, xs);
-            n0 = Utils.GradientNoise3D(x, y, z, x0, y1, z0, seed);
-            n1 = Utils.GradientNoise3D(x, y, z, x1, y1, z0, seed);
-            ix1 = Utils.InterpolateLinear(n0, n1, xs);
-            iy0 = Utils.InterpolateLinear(ix0, ix1, ys);
-            n0 = Utils.GradientNoise3D(x, y, z, x0, y0, z1, seed);
-            n1 = Utils.GradientNoise3D(x, y, z, x1, y0, z1, seed);
-            ix0 = Utils.InterpolateLinear(n0, n1, xs);
-            n0 = Utils.GradientNoise3D(x, y, z, x0, y1, z1, seed);
-            n1 = Utils.GradientNoise3D(x, y, z, x1, y1, z1, seed);
-            ix1 = Utils.InterpolateLinear(n0, n1, xs);
-            iy1 = Utils.InterpolateLinear(ix0, ix1, ys);
-            return Utils.InterpolateLinear(iy0, iy1, zs);
+            n0 = GradientNoise3D(x, y, z, x0, y0, z0, seed);
+            n1 = GradientNoise3D(x, y, z, x1, y0, z0, seed);
+            ix0 = InterpolateLinear(n0, n1, xs);
+            n0 = GradientNoise3D(x, y, z, x0, y1, z0, seed);
+            n1 = GradientNoise3D(x, y, z, x1, y1, z0, seed);
+            ix1 = InterpolateLinear(n0, n1, xs);
+            iy0 = InterpolateLinear(ix0, ix1, ys);
+            n0 = GradientNoise3D(x, y, z, x0, y0, z1, seed);
+            n1 = GradientNoise3D(x, y, z, x1, y0, z1, seed);
+            ix0 = InterpolateLinear(n0, n1, xs);
+            n0 = GradientNoise3D(x, y, z, x0, y1, z1, seed);
+            n1 = GradientNoise3D(x, y, z, x1, y1, z1, seed);
+            ix1 = InterpolateLinear(n0, n1, xs);
+            iy1 = InterpolateLinear(ix0, ix1, ys);
+            return InterpolateLinear(iy0, iy1, zs);
         }
 
         internal static double GradientNoise3D(double fx, double fy, double fz, int ix, int iy, int iz, long seed)
         {
-            long i = (Utils.GeneratorNoiseX * ix + Utils.GeneratorNoiseY * iy + Utils.GeneratorNoiseZ * iz +
-                Utils.GeneratorSeed * seed) & 0xffffffff;
-            i ^= (i >> Utils.GeneratorShift);
+            var i = (GeneratorNoiseX * ix + GeneratorNoiseY * iy + GeneratorNoiseZ * iz +
+                     GeneratorSeed * seed) & 0xffffffff;
+            i ^= (i >> GeneratorShift);
             i &= 0xff;
-            double xvg = Utils._randoms[(i << 2)];
-            double yvg = Utils._randoms[(i << 2) + 1];
-            double zvg = Utils._randoms[(i << 2) + 2];
-            double xvp = (fx - ix);
-            double yvp = (fy - iy);
-            double zvp = (fz - iz);
+            var xvg = _randoms[(i << 2)];
+            var yvg = _randoms[(i << 2) + 1];
+            var zvg = _randoms[(i << 2) + 2];
+            var xvp = (fx - ix);
+            var yvp = (fy - iy);
+            var zvp = (fz - iz);
             return ((xvg * xvp) + (yvg * yvp) + (zvg * zvp)) * 2.12;
         }
 
         internal static double InterpolateCubic(double a, double b, double c, double d, double position)
         {
-            double p = (d - c) - (a - b);
-            double q = (a - b) - p;
-            double r = c - a;
-            double s = b;
+            var p = (d - c) - (a - b);
+            var q = (a - b) - p;
+            var r = c - a;
+            var s = b;
             return p * position * position * position + q * position * position + r * position + s;
         }
 
@@ -249,14 +249,11 @@
             {
                 return (2.0 * Math.IEEERemainder(value, 1073741824.0)) - 1073741824.0;
             }
-            else if (value <= -1073741824.0)
+            if (value <= -1073741824.0)
             {
                 return (2.0 * Math.IEEERemainder(value, 1073741824.0)) + 1073741824.0;
             }
-            else
-            {
-                return value;
-            }
+            return value;
         }
 
         internal static double MapCubicSCurve(double value)
@@ -266,21 +263,21 @@
 
         internal static double MapQuinticSCurve(double value)
         {
-            double a3 = value * value * value;
-            double a4 = a3 * value;
-            double a5 = a4 * value;
+            var a3 = value * value * value;
+            var a4 = a3 * value;
+            var a5 = a4 * value;
             return (6.0 * a5) - (15.0 * a4) + (10.0 * a3);
         }
 
         internal static double ValueNoise3D(int x, int y, int z, int seed)
         {
-            return 1.0 - ((double)Utils.ValueNoise3DInt(x, y, z, seed) / 1073741824.0);
+            return 1.0 - (ValueNoise3DInt(x, y, z, seed) / 1073741824.0);
         }
 
         internal static long ValueNoise3DInt(int x, int y, int z, int seed)
         {
-            long n = (Utils.GeneratorNoiseX * x + Utils.GeneratorNoiseY * y + Utils.GeneratorNoiseZ * z +
-                Utils.GeneratorSeed * seed) & 0x7fffffff;
+            long n = (GeneratorNoiseX * x + GeneratorNoiseY * y + GeneratorNoiseZ * z +
+                      GeneratorSeed * seed) & 0x7fffffff;
             n = (n >> 13) ^ n;
             return (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
         }

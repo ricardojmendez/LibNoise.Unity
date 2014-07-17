@@ -1,7 +1,5 @@
 ﻿namespace LibNoise.Unity.Generator
 {
-    using System;
-    
     /// <summary>
     /// Provides a noise module that outputs a constant value. [GENERATOR]
     /// </summary>
@@ -9,7 +7,7 @@
     {
         #region Fields
 
-        private double m_value = 0.0;
+        private double m_value;
 
         #endregion
 
@@ -30,7 +28,7 @@
         public Const(double value)
             : base(0)
         {
-            this.Value = value;
+            Value = value;
         }
 
         #endregion
@@ -42,8 +40,8 @@
         /// </summary>
         public double Value
         {
-            get { return this.m_value; }
-            set { this.m_value = value; }
+            get { return m_value; }
+            set { m_value = value; }
         }
 
         #endregion
@@ -59,7 +57,7 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            return this.m_value;
+            return m_value;
         }
 
         #endregion

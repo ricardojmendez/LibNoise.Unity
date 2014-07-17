@@ -1,10 +1,9 @@
-﻿namespace LibNoise.Unity.Operator
-{
-    using System;
-	using System.Collections.Generic;
-    
-    using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using Debug = System.Diagnostics.Debug;
 
+namespace LibNoise.Unity.Operator
+{
     /// <summary>
     /// Provides a noise module that maps the output value from a source module onto an
     /// arbitrary function curve. [OPERATOR]
@@ -13,7 +12,7 @@
     {
         #region Fields
 
-        private List<KeyValuePair<double, double>> m_data = new List<KeyValuePair<double,double>>();
+        private readonly List<KeyValuePair<double, double>> m_data = new List<KeyValuePair<double, double>>();
 
         #endregion
 
@@ -34,7 +33,7 @@
         public Curve(ModuleBase input)
             : base(1)
         {
-            this.m_modules[0] = input;
+            m_modules[0] = input;
         }
 
         #endregion
@@ -46,7 +45,7 @@
         /// </summary>
         public int ControlPointCount
         {
-            get { return this.m_data.Count; }
+            get { return m_data.Count; }
         }
 
         /// <summary>
@@ -54,7 +53,7 @@
         /// </summary>
         public List<KeyValuePair<double, double>> ControlPoints
         {
-            get { return this.m_data; }
+            get { return m_data; }
         }
 
         #endregion
@@ -68,13 +67,16 @@
         /// <param name="output">The curves output value.</param>
         public void Add(double input, double output)
         {
-            KeyValuePair<double, double> kvp = new KeyValuePair<double, double>(input, output);
-            if (!this.m_data.Contains(kvp))
+            var kvp = new KeyValuePair<double, double>(input, output);
+            if (!m_data.Contains(kvp))
             {
-                this.m_data.Add(kvp);
+                m_data.Add(kvp);
             }
-            this.m_data.Sort(delegate(KeyValuePair<double, double> lhs, KeyValuePair<double, double> rhs)
-                { return lhs.Key.CompareTo(rhs.Key); });
+            m_data.Sort(
+                delegate(KeyValuePair<double, double> lhs, KeyValuePair<double, double> rhs)
+                {
+                    return lhs.Key.CompareTo(rhs.Key);
+                });
         }
 
         /// <summary>
@@ -82,7 +84,7 @@
         /// </summary>
         public void Clear()
         {
-            this.m_data.Clear();
+            m_data.Clear();
         }
 
         #endregion
@@ -98,31 +100,32 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            System.Diagnostics.Debug.Assert(this.ControlPointCount >= 4);
-            double smv = this.m_modules[0].GetValue(x, y, z);
+            Debug.Assert(m_modules[0] != null);
+            Debug.Assert(ControlPointCount >= 4);
+            var smv = m_modules[0].GetValue(x, y, z);
             int ip;
-            for (ip = 0; ip < this.m_data.Count; ip++)
+            for (ip = 0; ip < m_data.Count; ip++)
             {
-                if (smv < this.m_data[ip].Key)
+                if (smv < m_data[ip].Key)
                 {
                     break;
                 }
             }
-            int i0 = (int)Mathf.Clamp(ip - 2, 0, this.m_data.Count - 1);
-            int i1 = (int)Mathf.Clamp(ip - 1, 0, this.m_data.Count - 1);
-            int i2 = (int)Mathf.Clamp(ip, 0, this.m_data.Count - 1);
-            int i3 = (int)Mathf.Clamp(ip + 1, 0, this.m_data.Count - 1);
+            var i0 = Mathf.Clamp(ip - 2, 0, m_data.Count - 1);
+            var i1 = Mathf.Clamp(ip - 1, 0, m_data.Count - 1);
+            var i2 = Mathf.Clamp(ip, 0, m_data.Count - 1);
+            var i3 = Mathf.Clamp(ip + 1, 0, m_data.Count - 1);
             if (i1 == i2)
             {
-                return this.m_data[i1].Value;
+                return m_data[i1].Value;
             }
-            //double ip0 = this.m_data[i1].Value;
-            //double ip1 = this.m_data[i2].Value;
-            double ip0 = this.m_data[i1].Key;
-            double ip1 = this.m_data[i2].Key;
-            double a = (smv - ip0) / (ip1 - ip0);
-            return Utils.InterpolateCubic(this.m_data[i0].Value, this.m_data[i1].Value, this.m_data[i2].Value, this.m_data[i3].Value, a);
+            //double ip0 = m_data[i1].Value;
+            //double ip1 = m_data[i2].Value;
+            var ip0 = m_data[i1].Key;
+            var ip1 = m_data[i2].Key;
+            var a = (smv - ip0) / (ip1 - ip0);
+            return Utils.InterpolateCubic(m_data[i0].Value, m_data[i1].Value, m_data[i2].Value,
+                m_data[i3].Value, a);
         }
 
         #endregion
