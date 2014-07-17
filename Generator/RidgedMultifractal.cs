@@ -10,12 +10,12 @@ namespace LibNoise.Unity.Generator
     {
         #region Fields
 
-        private double m_frequency = 1.0;
-        private double m_lacunarity = 2.0;
-        private QualityMode m_quality = QualityMode.Medium;
-        private int m_octaveCount = 6;
-        private int m_seed;
-        private readonly double[] m_weights = new double[Utils.OctavesMaximum];
+        private double _frequency = 1.0;
+        private double _lacunarity = 2.0;
+        private QualityMode _quality = QualityMode.Medium;
+        private int _octaveCount = 6;
+        private int _seed;
+        private readonly double[] _weights = new double[Utils.OctavesMaximum];
 
         #endregion
 
@@ -57,8 +57,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public double Frequency
         {
-            get { return m_frequency; }
-            set { m_frequency = value; }
+            get { return _frequency; }
+            set { _frequency = value; }
         }
 
         /// <summary>
@@ -66,10 +66,10 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public double Lacunarity
         {
-            get { return m_lacunarity; }
+            get { return _lacunarity; }
             set
             {
-                m_lacunarity = value;
+                _lacunarity = value;
                 UpdateWeights();
             }
         }
@@ -79,8 +79,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public QualityMode Quality
         {
-            get { return m_quality; }
-            set { m_quality = value; }
+            get { return _quality; }
+            set { _quality = value; }
         }
 
         /// <summary>
@@ -88,8 +88,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public int OctaveCount
         {
-            get { return m_octaveCount; }
-            set { m_octaveCount = Mathf.Clamp(value, 1, Utils.OctavesMaximum); }
+            get { return _octaveCount; }
+            set { _octaveCount = Mathf.Clamp(value, 1, Utils.OctavesMaximum); }
         }
 
         /// <summary>
@@ -97,8 +97,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public int Seed
         {
-            get { return m_seed; }
-            set { m_seed = value; }
+            get { return _seed; }
+            set { _seed = value; }
         }
 
         #endregion
@@ -113,8 +113,8 @@ namespace LibNoise.Unity.Generator
             var f = 1.0;
             for (var i = 0; i < Utils.OctavesMaximum; i++)
             {
-                m_weights[i] = Math.Pow(f, -1.0);
-                f *= m_lacunarity;
+                _weights[i] = Math.Pow(f, -1.0);
+                f *= _lacunarity;
             }
         }
 
@@ -131,31 +131,30 @@ namespace LibNoise.Unity.Generator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            x *= m_frequency;
-            y *= m_frequency;
-            z *= m_frequency;
-            var signal = 0.0;
+            x *= _frequency;
+            y *= _frequency;
+            z *= _frequency;
             var value = 0.0;
             var weight = 1.0;
-            var offset = 1.0;
-            var gain = 2.0;
-            for (var i = 0; i < m_octaveCount; i++)
+            var offset = 1.0; // TODO: Review why Offset is never assigned
+            var gain = 2.0;   // TODO: Review why gain is never assigned
+            for (var i = 0; i < _octaveCount; i++)
             {
                 var nx = Utils.MakeInt32Range(x);
                 var ny = Utils.MakeInt32Range(y);
                 var nz = Utils.MakeInt32Range(z);
-                long seed = (m_seed + i) & 0x7fffffff;
-                signal = Utils.GradientCoherentNoise3D(nx, ny, nz, seed, m_quality);
+                long seed = (_seed + i) & 0x7fffffff;
+                var signal = Utils.GradientCoherentNoise3D(nx, ny, nz, seed, _quality);
                 signal = Math.Abs(signal);
                 signal = offset - signal;
                 signal *= signal;
                 signal *= weight;
                 weight = signal * gain;
                 weight = Mathf.Clamp01((float) weight);
-                value += (signal * m_weights[i]);
-                x *= m_lacunarity;
-                y *= m_lacunarity;
-                z *= m_lacunarity;
+                value += (signal * _weights[i]);
+                x *= _lacunarity;
+                y *= _lacunarity;
+                z *= _lacunarity;
             }
             return (value * 1.25) - 1.0;
         }

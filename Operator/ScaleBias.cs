@@ -10,8 +10,8 @@ namespace LibNoise.Unity.Operator
     {
         #region Fields
 
-        private double m_scale = 1.0;
-        private double m_bias;
+        private double _scale = 1.0;
+        private double _bias;
 
         #endregion
 
@@ -32,7 +32,7 @@ namespace LibNoise.Unity.Operator
         public ScaleBias(ModuleBase input)
             : base(1)
         {
-            m_modules[0] = input;
+            Modules[0] = input;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace LibNoise.Unity.Operator
         public ScaleBias(double scale, double bias, ModuleBase input)
             : base(1)
         {
-            m_modules[0] = input;
+            Modules[0] = input;
             Bias = bias;
             Scale = scale;
         }
@@ -58,8 +58,8 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double Bias
         {
-            get { return m_bias; }
-            set { m_bias = value; }
+            get { return _bias; }
+            set { _bias = value; }
         }
 
         /// <summary>
@@ -67,8 +67,8 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double Scale
         {
-            get { return m_scale; }
-            set { m_scale = value; }
+            get { return _scale; }
+            set { _scale = value; }
         }
 
         #endregion
@@ -84,8 +84,8 @@ namespace LibNoise.Unity.Operator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            Debug.Assert(m_modules[0] != null);
-            return m_modules[0].GetValue(x, y, z) * m_scale + m_bias;
+            Debug.Assert(Modules[0] != null);
+            return Modules[0].GetValue(x, y, z) * _scale + _bias;
         }
 
         #endregion

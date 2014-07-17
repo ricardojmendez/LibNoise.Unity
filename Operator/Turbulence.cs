@@ -25,10 +25,10 @@ namespace LibNoise.Unity.Operator
 
         #region Fields
 
-        private double m_power = 1.0;
-        private readonly Perlin m_xDistort;
-        private readonly Perlin m_yDistort;
-        private readonly Perlin m_zDistort;
+        private double _power = 1.0;
+        private readonly Perlin _xDistort;
+        private readonly Perlin _yDistort;
+        private readonly Perlin _zDistort;
 
         #endregion
 
@@ -40,9 +40,9 @@ namespace LibNoise.Unity.Operator
         public Turbulence()
             : base(1)
         {
-            m_xDistort = new Perlin();
-            m_yDistort = new Perlin();
-            m_zDistort = new Perlin();
+            _xDistort = new Perlin();
+            _yDistort = new Perlin();
+            _zDistort = new Perlin();
         }
 
         /// <summary>
@@ -52,10 +52,10 @@ namespace LibNoise.Unity.Operator
         public Turbulence(ModuleBase input)
             : base(1)
         {
-            m_xDistort = new Perlin();
-            m_yDistort = new Perlin();
-            m_zDistort = new Perlin();
-            m_modules[0] = input;
+            _xDistort = new Perlin();
+            _yDistort = new Perlin();
+            _zDistort = new Perlin();
+            Modules[0] = input;
         }
 
         /// <summary>
@@ -77,10 +77,10 @@ namespace LibNoise.Unity.Operator
         public Turbulence(Perlin x, Perlin y, Perlin z, double power, ModuleBase input)
             : base(1)
         {
-            m_xDistort = x;
-            m_yDistort = y;
-            m_zDistort = z;
-            m_modules[0] = input;
+            _xDistort = x;
+            _yDistort = y;
+            _zDistort = z;
+            Modules[0] = input;
             Power = power;
         }
 
@@ -93,12 +93,12 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double Frequency
         {
-            get { return m_xDistort.Frequency; }
+            get { return _xDistort.Frequency; }
             set
             {
-                m_xDistort.Frequency = value;
-                m_yDistort.Frequency = value;
-                m_zDistort.Frequency = value;
+                _xDistort.Frequency = value;
+                _yDistort.Frequency = value;
+                _zDistort.Frequency = value;
             }
         }
 
@@ -107,8 +107,8 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double Power
         {
-            get { return m_power; }
-            set { m_power = value; }
+            get { return _power; }
+            set { _power = value; }
         }
 
         /// <summary>
@@ -116,12 +116,12 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public int Roughness
         {
-            get { return m_xDistort.OctaveCount; }
+            get { return _xDistort.OctaveCount; }
             set
             {
-                m_xDistort.OctaveCount = value;
-                m_yDistort.OctaveCount = value;
-                m_zDistort.OctaveCount = value;
+                _xDistort.OctaveCount = value;
+                _yDistort.OctaveCount = value;
+                _zDistort.OctaveCount = value;
             }
         }
 
@@ -130,12 +130,12 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public int Seed
         {
-            get { return m_xDistort.Seed; }
+            get { return _xDistort.Seed; }
             set
             {
-                m_xDistort.Seed = value;
-                m_yDistort.Seed = value + 1;
-                m_zDistort.Seed = value + 2;
+                _xDistort.Seed = value;
+                _yDistort.Seed = value + 1;
+                _zDistort.Seed = value + 2;
             }
         }
 
@@ -152,11 +152,11 @@ namespace LibNoise.Unity.Operator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            Debug.Assert(m_modules[0] != null);
-            var xd = x + (m_xDistort.GetValue(x + X0, y + Y0, z + Z0) * m_power);
-            var yd = y + (m_yDistort.GetValue(x + X1, y + Y1, z + Z1) * m_power);
-            var zd = z + (m_zDistort.GetValue(x + X2, y + Y2, z + Z2) * m_power);
-            return m_modules[0].GetValue(xd, yd, zd);
+            Debug.Assert(Modules[0] != null);
+            var xd = x + (_xDistort.GetValue(x + X0, y + Y0, z + Z0) * _power);
+            var yd = y + (_yDistort.GetValue(x + X1, y + Y1, z + Z1) * _power);
+            var zd = z + (_zDistort.GetValue(x + X2, y + Y2, z + Z2) * _power);
+            return Modules[0].GetValue(xd, yd, zd);
         }
 
         #endregion

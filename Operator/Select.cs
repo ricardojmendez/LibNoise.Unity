@@ -10,10 +10,10 @@ namespace LibNoise.Unity.Operator
     {
         #region Fields
 
-        private double m_fallOff;
-        private double m_raw;
-        private double m_min = -1.0;
-        private double m_max = 1.0;
+        private double _fallOff;
+        private double _raw;
+        private double _min = -1.0;
+        private double _max = 1.0;
 
         #endregion
 
@@ -32,13 +32,13 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         /// <param name="inputA">The first input module.</param>
         /// <param name="inputB">The second input module.</param>
-        /// <param name="inputB">The controller module.</param>
+        /// <param name="controller">The controller module.</param>
         public Select(ModuleBase inputA, ModuleBase inputB, ModuleBase controller)
             : base(3)
         {
-            m_modules[0] = inputA;
-            m_modules[1] = inputB;
-            m_modules[2] = controller;
+            Modules[0] = inputA;
+            Modules[1] = inputB;
+            Modules[2] = controller;
         }
 
         /// <summary>
@@ -52,8 +52,8 @@ namespace LibNoise.Unity.Operator
         public Select(double min, double max, double fallOff, ModuleBase inputA, ModuleBase inputB)
             : this(inputA, inputB, null)
         {
-            m_min = min;
-            m_max = max;
+            _min = min;
+            _max = max;
             FallOff = fallOff;
         }
 
@@ -66,11 +66,11 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public ModuleBase Controller
         {
-            get { return m_modules[2]; }
+            get { return Modules[2]; }
             set
             {
                 Debug.Assert(value != null);
-                m_modules[2] = value;
+                Modules[2] = value;
             }
         }
 
@@ -79,12 +79,12 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double FallOff
         {
-            get { return m_fallOff; }
+            get { return _fallOff; }
             set
             {
-                var bs = m_max - m_min;
-                m_raw = value;
-                m_fallOff = (value > bs / 2) ? bs / 2 : value;
+                var bs = _max - _min;
+                _raw = value;
+                _fallOff = (value > bs / 2) ? bs / 2 : value;
             }
         }
 
@@ -93,11 +93,11 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double Maximum
         {
-            get { return m_max; }
+            get { return _max; }
             set
             {
-                m_max = value;
-                FallOff = m_raw;
+                _max = value;
+                FallOff = _raw;
             }
         }
 
@@ -106,11 +106,11 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double Minimum
         {
-            get { return m_min; }
+            get { return _min; }
             set
             {
-                m_min = value;
-                FallOff = m_raw;
+                _min = value;
+                FallOff = _raw;
             }
         }
 
@@ -126,9 +126,9 @@ namespace LibNoise.Unity.Operator
         public void SetBounds(double min, double max)
         {
             Debug.Assert(min < max);
-            m_min = min;
-            m_max = max;
-            FallOff = m_fallOff;
+            _min = min;
+            _max = max;
+            FallOff = _fallOff;
         }
 
         #endregion
@@ -144,44 +144,44 @@ namespace LibNoise.Unity.Operator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            Debug.Assert(m_modules[0] != null);
-            Debug.Assert(m_modules[1] != null);
-            Debug.Assert(m_modules[2] != null);
-            var cv = m_modules[2].GetValue(x, y, z);
-            double a;
-            if (m_fallOff > 0.0)
+            Debug.Assert(Modules[0] != null);
+            Debug.Assert(Modules[1] != null);
+            Debug.Assert(Modules[2] != null);
+            var cv = Modules[2].GetValue(x, y, z);
+            if (_fallOff > 0.0)
             {
-                if (cv < (m_min - m_fallOff))
+                double a;
+                if (cv < (_min - _fallOff))
                 {
-                    return m_modules[0].GetValue(x, y, z);
+                    return Modules[0].GetValue(x, y, z);
                 }
-                if (cv < (m_min + m_fallOff))
+                if (cv < (_min + _fallOff))
                 {
-                    var lc = (m_min - m_fallOff);
-                    var uc = (m_min + m_fallOff);
+                    var lc = (_min - _fallOff);
+                    var uc = (_min + _fallOff);
                     a = Utils.MapCubicSCurve((cv - lc) / (uc - lc));
-                    return Utils.InterpolateLinear(m_modules[0].GetValue(x, y, z),
-                        m_modules[1].GetValue(x, y, z), a);
+                    return Utils.InterpolateLinear(Modules[0].GetValue(x, y, z),
+                        Modules[1].GetValue(x, y, z), a);
                 }
-                if (cv < (m_max - m_fallOff))
+                if (cv < (_max - _fallOff))
                 {
-                    return m_modules[1].GetValue(x, y, z);
+                    return Modules[1].GetValue(x, y, z);
                 }
-                if (cv < (m_max + m_fallOff))
+                if (cv < (_max + _fallOff))
                 {
-                    var lc = (m_max - m_fallOff);
-                    var uc = (m_max + m_fallOff);
+                    var lc = (_max - _fallOff);
+                    var uc = (_max + _fallOff);
                     a = Utils.MapCubicSCurve((cv - lc) / (uc - lc));
-                    return Utils.InterpolateLinear(m_modules[1].GetValue(x, y, z),
-                        m_modules[0].GetValue(x, y, z), a);
+                    return Utils.InterpolateLinear(Modules[1].GetValue(x, y, z),
+                        Modules[0].GetValue(x, y, z), a);
                 }
-                return m_modules[0].GetValue(x, y, z);
+                return Modules[0].GetValue(x, y, z);
             }
-            if (cv < m_min || cv > m_max)
+            if (cv < _min || cv > _max)
             {
-                return m_modules[0].GetValue(x, y, z);
+                return Modules[0].GetValue(x, y, z);
             }
-            return m_modules[1].GetValue(x, y, z);
+            return Modules[1].GetValue(x, y, z);
         }
 
         #endregion

@@ -27,7 +27,7 @@ namespace LibNoise.Unity
 
         #region Fields
 
-        internal static double[] _randoms =
+        internal static readonly double[] Randoms =
         {
             -0.763874, -0.596439, -0.246489, 0.0, 0.396055, 0.904518, -0.158073, 0.0,
             -0.499004, -0.8665, -0.0131631, 0.0, 0.468724, -0.824756, 0.316346, 0.0,
@@ -196,21 +196,20 @@ namespace LibNoise.Unity
                     break;
                 }
             }
-            double n0, n1, ix0, ix1, iy0, iy1;
-            n0 = GradientNoise3D(x, y, z, x0, y0, z0, seed);
-            n1 = GradientNoise3D(x, y, z, x1, y0, z0, seed);
-            ix0 = InterpolateLinear(n0, n1, xs);
+            var n0 = GradientNoise3D(x, y, z, x0, y0, z0, seed);
+            var n1 = GradientNoise3D(x, y, z, x1, y0, z0, seed);
+            var ix0 = InterpolateLinear(n0, n1, xs);
             n0 = GradientNoise3D(x, y, z, x0, y1, z0, seed);
             n1 = GradientNoise3D(x, y, z, x1, y1, z0, seed);
-            ix1 = InterpolateLinear(n0, n1, xs);
-            iy0 = InterpolateLinear(ix0, ix1, ys);
+            var ix1 = InterpolateLinear(n0, n1, xs);
+            var iy0 = InterpolateLinear(ix0, ix1, ys);
             n0 = GradientNoise3D(x, y, z, x0, y0, z1, seed);
             n1 = GradientNoise3D(x, y, z, x1, y0, z1, seed);
             ix0 = InterpolateLinear(n0, n1, xs);
             n0 = GradientNoise3D(x, y, z, x0, y1, z1, seed);
             n1 = GradientNoise3D(x, y, z, x1, y1, z1, seed);
             ix1 = InterpolateLinear(n0, n1, xs);
-            iy1 = InterpolateLinear(ix0, ix1, ys);
+            var iy1 = InterpolateLinear(ix0, ix1, ys);
             return InterpolateLinear(iy0, iy1, zs);
         }
 
@@ -220,9 +219,9 @@ namespace LibNoise.Unity
                      GeneratorSeed * seed) & 0xffffffff;
             i ^= (i >> GeneratorShift);
             i &= 0xff;
-            var xvg = _randoms[(i << 2)];
-            var yvg = _randoms[(i << 2) + 1];
-            var zvg = _randoms[(i << 2) + 2];
+            var xvg = Randoms[(i << 2)];
+            var yvg = Randoms[(i << 2) + 1];
+            var zvg = Randoms[(i << 2) + 2];
             var xvp = (fx - ix);
             var yvp = (fy - iy);
             var zvp = (fz - iz);

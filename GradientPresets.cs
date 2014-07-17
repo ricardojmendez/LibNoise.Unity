@@ -26,43 +26,47 @@ namespace LibNoise.Unity
         static GradientPresets()
         {
             // Grayscale gradient color keys
-            var grayscaleColorKeys = new List<GradientColorKey>();
-            grayscaleColorKeys.Add(new GradientColorKey(Color.black, 0));
-            grayscaleColorKeys.Add(new GradientColorKey(Color.white, 1));
+            var grayscaleColorKeys = new List<GradientColorKey>
+            {
+                new GradientColorKey(Color.black, 0),
+                new GradientColorKey(Color.white, 1)
+            };
 
             // RGB gradient color keys
-            var rgbColorKeys = new List<GradientColorKey>();
-            rgbColorKeys.Add(new GradientColorKey(Color.red, 0));
-            rgbColorKeys.Add(new GradientColorKey(Color.green, 0.5f));
-            rgbColorKeys.Add(new GradientColorKey(Color.blue, 1));
+            var rgbColorKeys = new List<GradientColorKey>
+            {
+                new GradientColorKey(Color.red, 0),
+                new GradientColorKey(Color.green, 0.5f),
+                new GradientColorKey(Color.blue, 1)
+            };
 
             // RGBA gradient color keys
-            var rgbaColorKeys = new List<GradientColorKey>();
-            rgbaColorKeys.Add(new GradientColorKey(Color.red, 0));
-            rgbaColorKeys.Add(new GradientColorKey(Color.green, 1 / 3f));
-            rgbaColorKeys.Add(new GradientColorKey(Color.blue, 2 / 3f));
-            rgbaColorKeys.Add(new GradientColorKey(Color.black, 1));
+            var rgbaColorKeys = new List<GradientColorKey>
+            {
+                new GradientColorKey(Color.red, 0),
+                new GradientColorKey(Color.green, 1 / 3f),
+                new GradientColorKey(Color.blue, 2 / 3f),
+                new GradientColorKey(Color.black, 1)
+            };
 
             // RGBA gradient alpha keys
-            var rgbaAlphaKeys = new List<GradientAlphaKey>();
-            rgbaAlphaKeys.Add(new GradientAlphaKey(0, 2 / 3f));
-            rgbaAlphaKeys.Add(new GradientAlphaKey(1, 1));
+            var rgbaAlphaKeys = new List<GradientAlphaKey> {new GradientAlphaKey(0, 2 / 3f), new GradientAlphaKey(1, 1)};
 
             // Terrain gradient color keys
-            var terrainColorKeys = new List<GradientColorKey>();
-            terrainColorKeys.Add(new GradientColorKey(new Color(0, 0, 0.5f), 0));
-            terrainColorKeys.Add(new GradientColorKey(new Color(0.125f, 0.25f, 0.5f), 0.4f));
-            terrainColorKeys.Add(new GradientColorKey(new Color(0.25f, 0.375f, 0.75f), 0.48f));
-            terrainColorKeys.Add(new GradientColorKey(new Color(0, 0.75f, 0), 0.5f));
-            terrainColorKeys.Add(new GradientColorKey(new Color(0.75f, 0.75f, 0), 0.625f));
-            terrainColorKeys.Add(new GradientColorKey(new Color(0.625f, 0.375f, 0.25f), 0.75f));
-            terrainColorKeys.Add(new GradientColorKey(new Color(0.5f, 1, 1), 0.875f));
-            terrainColorKeys.Add(new GradientColorKey(Color.white, 1));
+            var terrainColorKeys = new List<GradientColorKey>
+            {
+                new GradientColorKey(new Color(0, 0, 0.5f), 0),
+                new GradientColorKey(new Color(0.125f, 0.25f, 0.5f), 0.4f),
+                new GradientColorKey(new Color(0.25f, 0.375f, 0.75f), 0.48f),
+                new GradientColorKey(new Color(0, 0.75f, 0), 0.5f),
+                new GradientColorKey(new Color(0.75f, 0.75f, 0), 0.625f),
+                new GradientColorKey(new Color(0.625f, 0.375f, 0.25f), 0.75f),
+                new GradientColorKey(new Color(0.5f, 1, 1), 0.875f),
+                new GradientColorKey(Color.white, 1)
+            };
 
             // Generic gradient alpha keys
-            var alphaKeys = new List<GradientAlphaKey>();
-            alphaKeys.Add(new GradientAlphaKey(1, 0));
-            alphaKeys.Add(new GradientAlphaKey(1, 1));
+            var alphaKeys = new List<GradientAlphaKey> {new GradientAlphaKey(1, 0), new GradientAlphaKey(1, 1)};
 
             _empty = new Gradient();
 

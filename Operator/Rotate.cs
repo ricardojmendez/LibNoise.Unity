@@ -12,18 +12,18 @@ namespace LibNoise.Unity.Operator
     {
         #region Fields
 
-        private double m_x;
-        private double m_x1Matrix;
-        private double m_x2Matrix;
-        private double m_x3Matrix;
-        private double m_y;
-        private double m_y1Matrix;
-        private double m_y2Matrix;
-        private double m_y3Matrix;
-        private double m_z;
-        private double m_z1Matrix;
-        private double m_z2Matrix;
-        private double m_z3Matrix;
+        private double _x;
+        private double _x1Matrix;
+        private double _x2Matrix;
+        private double _x3Matrix;
+        private double _y;
+        private double _y1Matrix;
+        private double _y2Matrix;
+        private double _y3Matrix;
+        private double _z;
+        private double _z1Matrix;
+        private double _z2Matrix;
+        private double _z3Matrix;
 
         #endregion
 
@@ -45,7 +45,7 @@ namespace LibNoise.Unity.Operator
         public Rotate(ModuleBase input)
             : base(1)
         {
-            m_modules[0] = input;
+            Modules[0] = input;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace LibNoise.Unity.Operator
         public Rotate(double x, double y, double z, ModuleBase input)
             : base(1)
         {
-            m_modules[0] = input;
+            Modules[0] = input;
             SetAngles(x, y, z);
         }
 
@@ -71,8 +71,8 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double X
         {
-            get { return m_x; }
-            set { SetAngles(value, m_y, m_z); }
+            get { return _x; }
+            set { SetAngles(value, _y, _z); }
         }
 
         /// <summary>
@@ -80,8 +80,8 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double Y
         {
-            get { return m_y; }
-            set { SetAngles(m_x, value, m_z); }
+            get { return _y; }
+            set { SetAngles(_x, value, _z); }
         }
 
         /// <summary>
@@ -89,8 +89,8 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double Z
         {
-            get { return m_x; }
-            set { SetAngles(m_x, m_y, value); }
+            get { return _x; }
+            set { SetAngles(_x, _y, value); }
         }
 
         #endregion
@@ -111,18 +111,18 @@ namespace LibNoise.Unity.Operator
             var xs = Math.Sin(x * Mathf.Deg2Rad);
             var ys = Math.Sin(y * Mathf.Deg2Rad);
             var zs = Math.Sin(z * Mathf.Deg2Rad);
-            m_x1Matrix = ys * xs * zs + yc * zc;
-            m_y1Matrix = xc * zs;
-            m_z1Matrix = ys * zc - yc * xs * zs;
-            m_x2Matrix = ys * xs * zc - yc * zs;
-            m_y2Matrix = xc * zc;
-            m_z2Matrix = -yc * xs * zc - ys * zs;
-            m_x3Matrix = -ys * xc;
-            m_y3Matrix = xs;
-            m_z3Matrix = yc * xc;
-            m_x = x;
-            m_y = y;
-            m_z = z;
+            _x1Matrix = ys * xs * zs + yc * zc;
+            _y1Matrix = xc * zs;
+            _z1Matrix = ys * zc - yc * xs * zs;
+            _x2Matrix = ys * xs * zc - yc * zs;
+            _y2Matrix = xc * zc;
+            _z2Matrix = -yc * xs * zc - ys * zs;
+            _x3Matrix = -ys * xc;
+            _y3Matrix = xs;
+            _z3Matrix = yc * xc;
+            _x = x;
+            _y = y;
+            _z = z;
         }
 
         #endregion
@@ -138,11 +138,11 @@ namespace LibNoise.Unity.Operator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            Debug.Assert(m_modules[0] != null);
-            var nx = (m_x1Matrix * x) + (m_y1Matrix * y) + (m_z1Matrix * z);
-            var ny = (m_x2Matrix * x) + (m_y2Matrix * y) + (m_z2Matrix * z);
-            var nz = (m_x3Matrix * x) + (m_y3Matrix * y) + (m_z3Matrix * z);
-            return m_modules[0].GetValue(nx, ny, nz);
+            Debug.Assert(Modules[0] != null);
+            var nx = (_x1Matrix * x) + (_y1Matrix * y) + (_z1Matrix * z);
+            var ny = (_x2Matrix * x) + (_y2Matrix * y) + (_z2Matrix * z);
+            var nz = (_x3Matrix * x) + (_y3Matrix * y) + (_z3Matrix * z);
+            return Modules[0].GetValue(nx, ny, nz);
         }
 
         #endregion

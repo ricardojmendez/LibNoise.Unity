@@ -29,10 +29,10 @@ namespace LibNoise.Unity.Operator
         public Displace(ModuleBase input, ModuleBase x, ModuleBase y, ModuleBase z)
             : base(4)
         {
-            m_modules[0] = input;
-            m_modules[1] = x;
-            m_modules[2] = y;
-            m_modules[3] = z;
+            Modules[0] = input;
+            Modules[1] = x;
+            Modules[2] = y;
+            Modules[3] = z;
         }
 
         #endregion
@@ -44,11 +44,11 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public ModuleBase X
         {
-            get { return m_modules[1]; }
+            get { return Modules[1]; }
             set
             {
                 Debug.Assert(value != null);
-                m_modules[1] = value;
+                Modules[1] = value;
             }
         }
 
@@ -57,11 +57,11 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public ModuleBase Y
         {
-            get { return m_modules[2]; }
+            get { return Modules[2]; }
             set
             {
                 Debug.Assert(value != null);
-                m_modules[2] = value;
+                Modules[2] = value;
             }
         }
 
@@ -70,11 +70,11 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public ModuleBase Z
         {
-            get { return m_modules[3]; }
+            get { return Modules[3]; }
             set
             {
                 Debug.Assert(value != null);
-                m_modules[3] = value;
+                Modules[3] = value;
             }
         }
 
@@ -91,14 +91,14 @@ namespace LibNoise.Unity.Operator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            Debug.Assert(m_modules[0] != null);
-            Debug.Assert(m_modules[1] != null);
-            Debug.Assert(m_modules[2] != null);
-            Debug.Assert(m_modules[3] != null);
-            var dx = x + m_modules[1].GetValue(x, y, z);
-            var dy = y + m_modules[2].GetValue(x, y, z);
-            var dz = z + m_modules[3].GetValue(x, y, z);
-            return m_modules[0].GetValue(dx, dy, dz);
+            Debug.Assert(Modules[0] != null);
+            Debug.Assert(Modules[1] != null);
+            Debug.Assert(Modules[2] != null);
+            Debug.Assert(Modules[3] != null);
+            var dx = x + Modules[1].GetValue(x, y, z);
+            var dy = y + Modules[2].GetValue(x, y, z);
+            var dz = z + Modules[3].GetValue(x, y, z);
+            return Modules[0].GetValue(dx, dy, dz);
         }
 
         #endregion

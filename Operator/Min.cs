@@ -27,8 +27,8 @@ namespace LibNoise.Unity.Operator
         public Min(ModuleBase lhs, ModuleBase rhs)
             : base(2)
         {
-            m_modules[0] = lhs;
-            m_modules[1] = rhs;
+            Modules[0] = lhs;
+            Modules[1] = rhs;
         }
 
         #endregion
@@ -44,10 +44,10 @@ namespace LibNoise.Unity.Operator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            Debug.Assert(m_modules[0] != null);
-            Debug.Assert(m_modules[1] != null);
-            var a = m_modules[0].GetValue(x, y, z);
-            var b = m_modules[1].GetValue(x, y, z);
+            Debug.Assert(Modules[0] != null);
+            Debug.Assert(Modules[1] != null);
+            var a = Modules[0].GetValue(x, y, z);
+            var b = Modules[1].GetValue(x, y, z);
             return Math.Min(a, b);
         }
 

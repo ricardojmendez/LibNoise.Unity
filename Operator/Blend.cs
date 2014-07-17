@@ -27,9 +27,9 @@ namespace LibNoise.Unity.Operator
         public Blend(ModuleBase lhs, ModuleBase rhs, ModuleBase controller)
             : base(3)
         {
-            m_modules[0] = lhs;
-            m_modules[1] = rhs;
-            m_modules[2] = controller;
+            Modules[0] = lhs;
+            Modules[1] = rhs;
+            Modules[2] = controller;
         }
 
         #endregion
@@ -41,11 +41,11 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public ModuleBase Controller
         {
-            get { return m_modules[2]; }
+            get { return Modules[2]; }
             set
             {
                 Debug.Assert(value != null);
-                m_modules[2] = value;
+                Modules[2] = value;
             }
         }
 
@@ -62,12 +62,12 @@ namespace LibNoise.Unity.Operator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            Debug.Assert(m_modules[0] != null);
-            Debug.Assert(m_modules[1] != null);
-            Debug.Assert(m_modules[2] != null);
-            var a = m_modules[0].GetValue(x, y, z);
-            var b = m_modules[1].GetValue(x, y, z);
-            var c = (m_modules[2].GetValue(x, y, z) + 1.0) / 2.0;
+            Debug.Assert(Modules[0] != null);
+            Debug.Assert(Modules[1] != null);
+            Debug.Assert(Modules[2] != null);
+            var a = Modules[0].GetValue(x, y, z);
+            var b = Modules[1].GetValue(x, y, z);
+            var c = (Modules[2].GetValue(x, y, z) + 1.0) / 2.0;
             return Utils.InterpolateLinear(a, b, c);
         }
 

@@ -11,7 +11,7 @@ namespace LibNoise.Unity.Operator
     {
         #region Fields
 
-        private double m_exponent = 1.0;
+        private double _exponent = 1.0;
 
         #endregion
 
@@ -32,7 +32,7 @@ namespace LibNoise.Unity.Operator
         public Exponent(ModuleBase input)
             : base(1)
         {
-            m_modules[0] = input;
+            Modules[0] = input;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace LibNoise.Unity.Operator
         public Exponent(double exponent, ModuleBase input)
             : base(1)
         {
-            m_modules[0] = input;
+            Modules[0] = input;
             Value = exponent;
         }
 
@@ -56,8 +56,8 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double Value
         {
-            get { return m_exponent; }
-            set { m_exponent = value; }
+            get { return _exponent; }
+            set { _exponent = value; }
         }
 
         #endregion
@@ -73,9 +73,9 @@ namespace LibNoise.Unity.Operator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            Debug.Assert(m_modules[0] != null);
-            var v = m_modules[0].GetValue(x, y, z);
-            return (Math.Pow(Math.Abs((v + 1.0) / 2.0), m_exponent) * 2.0 - 1.0);
+            Debug.Assert(Modules[0] != null);
+            var v = Modules[0].GetValue(x, y, z);
+            return (Math.Pow(Math.Abs((v + 1.0) / 2.0), _exponent) * 2.0 - 1.0);
         }
 
         #endregion

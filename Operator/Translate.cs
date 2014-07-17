@@ -10,9 +10,9 @@ namespace LibNoise.Unity.Operator
     {
         #region Fields
 
-        private double m_x = 1.0;
-        private double m_y = 1.0;
-        private double m_z = 1.0;
+        private double _x = 1.0;
+        private double _y = 1.0;
+        private double _z = 1.0;
 
         #endregion
 
@@ -33,7 +33,7 @@ namespace LibNoise.Unity.Operator
         public Translate(ModuleBase input)
             : base(1)
         {
-            m_modules[0] = input;
+            Modules[0] = input;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace LibNoise.Unity.Operator
         public Translate(double x, double y, double z, ModuleBase input)
             : base(1)
         {
-            m_modules[0] = input;
+            Modules[0] = input;
             X = x;
             Y = y;
             Z = z;
@@ -61,8 +61,8 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double X
         {
-            get { return m_x; }
-            set { m_x = value; }
+            get { return _x; }
+            set { _x = value; }
         }
 
         /// <summary>
@@ -70,8 +70,8 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double Y
         {
-            get { return m_y; }
-            set { m_y = value; }
+            get { return _y; }
+            set { _y = value; }
         }
 
         /// <summary>
@@ -79,8 +79,8 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double Z
         {
-            get { return m_z; }
-            set { m_z = value; }
+            get { return _z; }
+            set { _z = value; }
         }
 
         #endregion
@@ -96,8 +96,8 @@ namespace LibNoise.Unity.Operator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            Debug.Assert(m_modules[0] != null);
-            return m_modules[0].GetValue(x + m_x, y + m_y, z + m_z);
+            Debug.Assert(Modules[0] != null);
+            return Modules[0].GetValue(x + _x, y + _y, z + _z);
         }
 
         #endregion

@@ -9,12 +9,12 @@ namespace LibNoise.Unity.Generator
     {
         #region Fields
 
-        private double m_frequency = 1.0;
-        private double m_lacunarity = 2.0;
-        private QualityMode m_quality = QualityMode.Medium;
-        private int m_octaveCount = 6;
-        private double m_persistence = 0.5;
-        private int m_seed;
+        private double _frequency = 1.0;
+        private double _lacunarity = 2.0;
+        private QualityMode _quality = QualityMode.Medium;
+        private int _octaveCount = 6;
+        private double _persistence = 0.5;
+        private int _seed;
 
         #endregion
 
@@ -58,8 +58,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public double Frequency
         {
-            get { return m_frequency; }
-            set { m_frequency = value; }
+            get { return _frequency; }
+            set { _frequency = value; }
         }
 
         /// <summary>
@@ -67,8 +67,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public double Lacunarity
         {
-            get { return m_lacunarity; }
-            set { m_lacunarity = value; }
+            get { return _lacunarity; }
+            set { _lacunarity = value; }
         }
 
         /// <summary>
@@ -76,8 +76,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public QualityMode Quality
         {
-            get { return m_quality; }
-            set { m_quality = value; }
+            get { return _quality; }
+            set { _quality = value; }
         }
 
         /// <summary>
@@ -85,8 +85,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public int OctaveCount
         {
-            get { return m_octaveCount; }
-            set { m_octaveCount = Mathf.Clamp(value, 1, Utils.OctavesMaximum); }
+            get { return _octaveCount; }
+            set { _octaveCount = Mathf.Clamp(value, 1, Utils.OctavesMaximum); }
         }
 
         /// <summary>
@@ -94,8 +94,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public double Persistence
         {
-            get { return m_persistence; }
-            set { m_persistence = value; }
+            get { return _persistence; }
+            set { _persistence = value; }
         }
 
         /// <summary>
@@ -103,8 +103,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public int Seed
         {
-            get { return m_seed; }
-            set { m_seed = value; }
+            get { return _seed; }
+            set { _seed = value; }
         }
 
         #endregion
@@ -121,25 +121,22 @@ namespace LibNoise.Unity.Generator
         public override double GetValue(double x, double y, double z)
         {
             var value = 0.0;
-            var signal = 0.0;
             var cp = 1.0;
-            double nx, ny, nz;
-            long seed;
-            x *= m_frequency;
-            y *= m_frequency;
-            z *= m_frequency;
-            for (var i = 0; i < m_octaveCount; i++)
+            x *= _frequency;
+            y *= _frequency;
+            z *= _frequency;
+            for (var i = 0; i < _octaveCount; i++)
             {
-                nx = Utils.MakeInt32Range(x);
-                ny = Utils.MakeInt32Range(y);
-                nz = Utils.MakeInt32Range(z);
-                seed = (m_seed + i) & 0xffffffff;
-                signal = Utils.GradientCoherentNoise3D(nx, ny, nz, seed, m_quality);
+                var nx = Utils.MakeInt32Range(x);
+                var ny = Utils.MakeInt32Range(y);
+                var nz = Utils.MakeInt32Range(z);
+                var seed = (_seed + i) & 0xffffffff;
+                var signal = Utils.GradientCoherentNoise3D(nx, ny, nz, seed, _quality);
                 value += signal * cp;
-                x *= m_lacunarity;
-                y *= m_lacunarity;
-                z *= m_lacunarity;
-                cp *= m_persistence;
+                x *= _lacunarity;
+                y *= _lacunarity;
+                z *= _lacunarity;
+                cp *= _persistence;
             }
             return value;
         }

@@ -7,7 +7,7 @@
     {
         #region Fields
 
-        private double m_value;
+        private double _value;
 
         #endregion
 
@@ -40,8 +40,8 @@
         /// </summary>
         public double Value
         {
-            get { return m_value; }
-            set { m_value = value; }
+            get { return _value; }
+            set { _value = value; }
         }
 
         #endregion
@@ -57,7 +57,7 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            return m_value;
+            return _value;
         }
 
         #endregion

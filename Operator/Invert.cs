@@ -24,7 +24,7 @@ namespace LibNoise.Unity.Operator
         public Invert(ModuleBase input)
             : base(1)
         {
-            m_modules[0] = input;
+            Modules[0] = input;
         }
 
         #endregion
@@ -40,8 +40,8 @@ namespace LibNoise.Unity.Operator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            Debug.Assert(m_modules[0] != null);
-            return -m_modules[0].GetValue(x, y, z);
+            Debug.Assert(Modules[0] != null);
+            return -Modules[0].GetValue(x, y, z);
         }
 
         #endregion

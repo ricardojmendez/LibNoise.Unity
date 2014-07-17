@@ -13,8 +13,8 @@ namespace LibNoise.Unity.Operator
     {
         #region Fields
 
-        private readonly List<double> m_data = new List<double>();
-        private bool m_inverted;
+        private readonly List<double> _data = new List<double>();
+        private bool _inverted;
 
         #endregion
 
@@ -35,7 +35,7 @@ namespace LibNoise.Unity.Operator
         public Terrace(ModuleBase input)
             : base(1)
         {
-            m_modules[0] = input;
+            Modules[0] = input;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace LibNoise.Unity.Operator
         public Terrace(bool inverted, ModuleBase input)
             : base(1)
         {
-            m_modules[0] = input;
+            Modules[0] = input;
             IsInverted = inverted;
         }
 
@@ -59,7 +59,7 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public int ControlPointCount
         {
-            get { return m_data.Count; }
+            get { return _data.Count; }
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public List<double> ControlPoints
         {
-            get { return m_data; }
+            get { return _data; }
         }
 
         /// <summary>
@@ -75,8 +75,8 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public bool IsInverted
         {
-            get { return m_inverted; }
-            set { m_inverted = value; }
+            get { return _inverted; }
+            set { _inverted = value; }
         }
 
         #endregion
@@ -89,11 +89,11 @@ namespace LibNoise.Unity.Operator
         /// <param name="input">The curves input value.</param>
         public void Add(double input)
         {
-            if (!m_data.Contains(input))
+            if (!_data.Contains(input))
             {
-                m_data.Add(input);
+                _data.Add(input);
             }
-            m_data.Sort(delegate(double lhs, double rhs) { return lhs.CompareTo(rhs); });
+            _data.Sort(delegate(double lhs, double rhs) { return lhs.CompareTo(rhs); });
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public void Clear()
         {
-            m_data.Clear();
+            _data.Clear();
         }
 
         /// <summary>
@@ -137,27 +137,27 @@ namespace LibNoise.Unity.Operator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            Debug.Assert(m_modules[0] != null);
+            Debug.Assert(Modules[0] != null);
             Debug.Assert(ControlPointCount >= 2);
-            var smv = m_modules[0].GetValue(x, y, z);
+            var smv = Modules[0].GetValue(x, y, z);
             int ip;
-            for (ip = 0; ip < m_data.Count; ip++)
+            for (ip = 0; ip < _data.Count; ip++)
             {
-                if (smv < m_data[ip])
+                if (smv < _data[ip])
                 {
                     break;
                 }
             }
-            var i0 = Mathf.Clamp(ip - 1, 0, m_data.Count - 1);
-            var i1 = Mathf.Clamp(ip, 0, m_data.Count - 1);
+            var i0 = Mathf.Clamp(ip - 1, 0, _data.Count - 1);
+            var i1 = Mathf.Clamp(ip, 0, _data.Count - 1);
             if (i0 == i1)
             {
-                return m_data[i1];
+                return _data[i1];
             }
-            var v0 = m_data[i0];
-            var v1 = m_data[i1];
+            var v0 = _data[i0];
+            var v1 = _data[i1];
             var a = (smv - v0) / (v1 - v0);
-            if (m_inverted)
+            if (_inverted)
             {
                 a = 1.0 - a;
                 var t = v0;

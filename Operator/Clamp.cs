@@ -10,8 +10,8 @@ namespace LibNoise.Unity.Operator
     {
         #region Fields
 
-        private double m_min = -1.0;
-        private double m_max = 1.0;
+        private double _min = -1.0;
+        private double _max = 1.0;
 
         #endregion
 
@@ -32,7 +32,7 @@ namespace LibNoise.Unity.Operator
         public Clamp(ModuleBase input)
             : base(1)
         {
-            m_modules[0] = input;
+            Modules[0] = input;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace LibNoise.Unity.Operator
         {
             Minimum = min;
             Maximum = max;
-            m_modules[0] = input;
+            Modules[0] = input;
         }
 
         #endregion
@@ -58,8 +58,8 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double Maximum
         {
-            get { return m_max; }
-            set { m_max = value; }
+            get { return _max; }
+            set { _max = value; }
         }
 
         /// <summary>
@@ -67,8 +67,8 @@ namespace LibNoise.Unity.Operator
         /// </summary>
         public double Minimum
         {
-            get { return m_min; }
-            set { m_min = value; }
+            get { return _min; }
+            set { _min = value; }
         }
 
         #endregion
@@ -83,8 +83,8 @@ namespace LibNoise.Unity.Operator
         public void SetBounds(double min, double max)
         {
             Debug.Assert(min < max);
-            m_min = min;
-            m_max = max;
+            _min = min;
+            _max = max;
         }
 
         #endregion
@@ -100,21 +100,21 @@ namespace LibNoise.Unity.Operator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            Debug.Assert(m_modules[0] != null);
-            if (m_min > m_max)
+            Debug.Assert(Modules[0] != null);
+            if (_min > _max)
             {
-                var t = m_min;
-                m_min = m_max;
-                m_max = t;
+                var t = _min;
+                _min = _max;
+                _max = t;
             }
-            var v = m_modules[0].GetValue(x, y, z);
-            if (v < m_min)
+            var v = Modules[0].GetValue(x, y, z);
+            if (v < _min)
             {
-                return m_min;
+                return _min;
             }
-            if (v > m_max)
+            if (v > _max)
             {
-                return m_max;
+                return _max;
             }
             return v;
         }

@@ -10,11 +10,11 @@ namespace LibNoise.Unity.Operator
     {
         #region Fields
 
-        private double m_value;
-        private bool m_cached;
-        private double m_x;
-        private double m_y;
-        private double m_z;
+        private double _value;
+        private bool _cached;
+        private double _x;
+        private double _y;
+        private double _z;
 
         #endregion
 
@@ -31,11 +31,11 @@ namespace LibNoise.Unity.Operator
         /// <summary>
         /// Initializes a new instance of Cache.
         /// </summary>
-        /// <param name="inpu">The input module.</param>
+        /// <param name="input">The input module.</param>
         public Cache(ModuleBase input)
             : base(1)
         {
-            m_modules[0] = input;
+            Modules[0] = input;
         }
 
         #endregion
@@ -53,7 +53,7 @@ namespace LibNoise.Unity.Operator
             set
             {
                 base[index] = value;
-                m_cached = false;
+                _cached = false;
             }
         }
 
@@ -66,16 +66,16 @@ namespace LibNoise.Unity.Operator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            Debug.Assert(m_modules[0] != null);
-            if (!(m_cached && m_x == x && m_y == y && m_z == z))
+            Debug.Assert(Modules[0] != null);
+            if (!(_cached && _x == x && _y == y && _z == z))
             {
-                m_value = m_modules[0].GetValue(x, y, z);
-                m_x = x;
-                m_y = y;
-                m_z = z;
+                _value = Modules[0].GetValue(x, y, z);
+                _x = x;
+                _y = y;
+                _z = z;
             }
-            m_cached = true;
-            return m_value;
+            _cached = true;
+            return _value;
         }
 
         #endregion

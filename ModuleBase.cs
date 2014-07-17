@@ -27,7 +27,7 @@ namespace LibNoise.Unity
     {
         #region Fields
 
-        protected ModuleBase[] m_modules = null;
+        private ModuleBase[] _modules;
 
         #endregion
 
@@ -41,7 +41,7 @@ namespace LibNoise.Unity
         {
             if (count > 0)
             {
-                m_modules = new ModuleBase[count];
+                _modules = new ModuleBase[count];
             }
         }
 
@@ -58,22 +58,22 @@ namespace LibNoise.Unity
         {
             get
             {
-                Debug.Assert(m_modules != null);
-                Debug.Assert(m_modules.Length > 0);
-                if (index < 0 || index >= m_modules.Length)
+                Debug.Assert(_modules != null);
+                Debug.Assert(_modules.Length > 0);
+                if (index < 0 || index >= _modules.Length)
                 {
                     throw new ArgumentOutOfRangeException("Index out of valid module range");
                 }
-                if (m_modules[index] == null)
+                if (_modules[index] == null)
                 {
                     throw new ArgumentNullException("Desired element is null");
                 }
-                return m_modules[index];
+                return _modules[index];
             }
             set
             {
-                Debug.Assert(m_modules.Length > 0);
-                if (index < 0 || index >= m_modules.Length)
+                Debug.Assert(_modules.Length > 0);
+                if (index < 0 || index >= _modules.Length)
                 {
                     throw new ArgumentOutOfRangeException("Index out of valid module range");
                 }
@@ -81,20 +81,24 @@ namespace LibNoise.Unity
                 {
                     throw new ArgumentNullException("Value should not be null");
                 }
-                m_modules[index] = value;
+                _modules[index] = value;
             }
         }
 
         #endregion
 
         #region Properties
+        protected ModuleBase[] Modules
+        {
+            get { return _modules; }
+        }
 
         /// <summary>
         /// Gets the number of source modules required by this noise module.
         /// </summary>
         public int SourceModuleCount
         {
-            get { return (m_modules == null) ? 0 : m_modules.Length; }
+            get { return (_modules == null) ? 0 : _modules.Length; }
         }
 
         #endregion
@@ -138,14 +142,14 @@ namespace LibNoise.Unity
 #if !XBOX360 && !ZUNE
         [NonSerialized]
 #endif
-            private bool m_disposed;
+        private bool _disposed;
 
         /// <summary>
         /// Gets a value whether the object is disposed.
         /// </summary>
         public bool IsDisposed
         {
-            get { return m_disposed; }
+            get { return _disposed; }
         }
 
         /// <summary>
@@ -153,9 +157,9 @@ namespace LibNoise.Unity
         /// </summary>
         public void Dispose()
         {
-            if (!m_disposed)
+            if (!_disposed)
             {
-                m_disposed = Disposing();
+                _disposed = Disposing();
             }
             GC.SuppressFinalize(this);
         }
@@ -166,14 +170,14 @@ namespace LibNoise.Unity
         /// <returns>True if the object is completely disposed.</returns>
         protected virtual bool Disposing()
         {
-            if (m_modules != null)
+            if (_modules != null)
             {
-                for (var i = 0; i < m_modules.Length; i++)
+                for (var i = 0; i < _modules.Length; i++)
                 {
-                    m_modules[i].Dispose();
-                    m_modules[i] = null;
+                    _modules[i].Dispose();
+                    _modules[i] = null;
                 }
-                m_modules = null;
+                _modules = null;
             }
             return true;
         }

@@ -9,7 +9,7 @@ namespace LibNoise.Unity.Generator
     {
         #region Fields
 
-        private double m_frequency = 1.0;
+        private double _frequency = 1.0;
 
         #endregion
 
@@ -42,8 +42,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public double Frequency
         {
-            get { return m_frequency; }
-            set { m_frequency = value; }
+            get { return _frequency; }
+            set { _frequency = value; }
         }
 
         #endregion
@@ -59,8 +59,8 @@ namespace LibNoise.Unity.Generator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            x *= m_frequency;
-            z *= m_frequency;
+            x *= _frequency;
+            z *= _frequency;
             var dfc = Math.Sqrt(x * x + z * z);
             var dfss = dfc - Math.Floor(dfc);
             var dfls = 1.0 - dfss;

@@ -9,10 +9,10 @@ namespace LibNoise.Unity.Generator
     {
         #region Fields
 
-        private double m_displacement = 1.0;
-        private double m_frequency = 1.0;
-        private int m_seed;
-        private bool m_distance;
+        private double _displacement = 1.0;
+        private double _frequency = 1.0;
+        private int _seed;
+        private bool _distance;
 
         #endregion
 
@@ -31,7 +31,6 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         /// <param name="frequency">The frequency of the first octave.</param>
         /// <param name="displacement">The displacement of the ridged-multifractal noise.</param>
-        /// <param name="persistence">The persistence of the ridged-multifractal noise.</param>
         /// <param name="seed">The seed of the ridged-multifractal noise.</param>
         /// <param name="distance">Indicates whether the distance from the nearest seed point is applied to the output value.</param>
         public Voronoi(double frequency, double displacement, int seed, bool distance)
@@ -53,8 +52,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public double Displacement
         {
-            get { return m_displacement; }
-            set { m_displacement = value; }
+            get { return _displacement; }
+            set { _displacement = value; }
         }
 
         /// <summary>
@@ -62,8 +61,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public double Frequency
         {
-            get { return m_frequency; }
-            set { m_frequency = value; }
+            get { return _frequency; }
+            set { _frequency = value; }
         }
 
         /// <summary>
@@ -71,8 +70,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public int Seed
         {
-            get { return m_seed; }
-            set { m_seed = value; }
+            get { return _seed; }
+            set { _seed = value; }
         }
 
         /// <summary>
@@ -80,8 +79,8 @@ namespace LibNoise.Unity.Generator
         /// </summary>
         public bool UseDistance
         {
-            get { return m_distance; }
-            set { m_distance = value; }
+            get { return _distance; }
+            set { _distance = value; }
         }
 
         #endregion
@@ -97,9 +96,9 @@ namespace LibNoise.Unity.Generator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            x *= m_frequency;
-            y *= m_frequency;
-            z *= m_frequency;
+            x *= _frequency;
+            y *= _frequency;
+            z *= _frequency;
             var xi = (x > 0.0 ? (int) x : (int) x - 1);
             var iy = (y > 0.0 ? (int) y : (int) y - 1);
             var iz = (z > 0.0 ? (int) z : (int) z - 1);
@@ -113,9 +112,9 @@ namespace LibNoise.Unity.Generator
                 {
                     for (var xcu = xi - 2; xcu <= xi + 2; xcu++)
                     {
-                        var xp = xcu + Utils.ValueNoise3D(xcu, ycu, zcu, m_seed);
-                        var yp = ycu + Utils.ValueNoise3D(xcu, ycu, zcu, m_seed + 1);
-                        var zp = zcu + Utils.ValueNoise3D(xcu, ycu, zcu, m_seed + 2);
+                        var xp = xcu + Utils.ValueNoise3D(xcu, ycu, zcu, _seed);
+                        var yp = ycu + Utils.ValueNoise3D(xcu, ycu, zcu, _seed + 1);
+                        var zp = zcu + Utils.ValueNoise3D(xcu, ycu, zcu, _seed + 2);
                         var xd = xp - x;
                         var yd = yp - y;
                         var zd = zp - z;
@@ -131,7 +130,7 @@ namespace LibNoise.Unity.Generator
                 }
             }
             double v;
-            if (m_distance)
+            if (_distance)
             {
                 var xd = xc - x;
                 var yd = yc - y;
@@ -142,7 +141,7 @@ namespace LibNoise.Unity.Generator
             {
                 v = 0.0;
             }
-            return v + (m_displacement * Utils.ValueNoise3D((int) (Math.Floor(xc)), (int) (Math.Floor(yc)),
+            return v + (_displacement * Utils.ValueNoise3D((int) (Math.Floor(xc)), (int) (Math.Floor(yc)),
                 (int) (Math.Floor(zc)), 0));
         }
 
