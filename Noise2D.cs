@@ -7,6 +7,9 @@ namespace LibNoise.Unity
     /// <summary>
     /// Provides a two-dimensional noise map.
     /// </summary>
+	/// <remarks>This covers most of the functionality from LibNoise's noiseutils library, but 
+	/// the method calls might not be the same. See the tutorials project if you're wondering
+	/// which calls are equivalent.</remarks>
     public class Noise2D : IDisposable
     {
         #region Constants
