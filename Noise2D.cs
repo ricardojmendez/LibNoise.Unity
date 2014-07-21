@@ -2,7 +2,7 @@ using System;
 using System.Xml.Serialization;
 using UnityEngine;
 
-namespace LibNoise.Unity
+namespace LibNoise
 {
     /// <summary>
     /// Provides a two-dimensional noise map.

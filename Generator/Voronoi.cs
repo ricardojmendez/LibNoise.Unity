@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LibNoise.Unity.Generator
+namespace LibNoise.Generator
 {
     /// <summary>
     /// Provides a noise module that outputs Voronoi cells. [GENERATOR]

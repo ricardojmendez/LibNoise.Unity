@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace LibNoise.Unity.Operator
+namespace LibNoise.Operator
 {
     /// <summary>
     /// Provides a noise module that outputs value from a first source module

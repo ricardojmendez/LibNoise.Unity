@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace LibNoise.Unity.Operator
+namespace LibNoise.Operator
 {
     /// <summary>
     /// Provides a noise module that inverts the output value from a source module. [OPERATOR]

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace LibNoise.Unity.Operator
+namespace LibNoise.Operator
 {
     /// <summary>
     /// Provides a noise module that outputs the difference of the two output values from two

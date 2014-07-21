@@ -1,4 +1,4 @@
-﻿namespace LibNoise.Unity.Generator
+﻿namespace LibNoise.Generator
 {
     /// <summary>
     /// Provides a noise module that outputs a constant value. [GENERATOR]

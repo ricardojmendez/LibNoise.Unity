@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace LibNoise.Unity.Generator
+namespace LibNoise.Generator
 {
     /// <summary>
     /// Provides a noise module that outputs 3-dimensional ridged-multifractal noise. [GENERATOR]

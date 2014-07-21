@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace LibNoise.Unity.Operator
+namespace LibNoise.Operator
 {
     /// <summary>
     /// Provides a noise module that applies a scaling factor and a bias to the output

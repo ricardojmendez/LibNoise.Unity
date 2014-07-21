@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using LibNoise.Unity.Generator;
+using LibNoise.Generator;
 
-namespace LibNoise.Unity.Operator
+namespace LibNoise.Operator
 {
     /// <summary>
     /// Provides a noise module that that randomly displaces the input value before

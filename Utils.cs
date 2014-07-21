@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LibNoise.Unity
+namespace LibNoise
 {
     internal static class Utils
     {

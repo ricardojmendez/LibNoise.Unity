@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 using UnityEngine;
 using Debug = System.Diagnostics.Debug;
 
-namespace LibNoise.Unity
+namespace LibNoise
 {
 
     #region Enumerations

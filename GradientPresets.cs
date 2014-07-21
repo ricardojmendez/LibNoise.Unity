@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LibNoise.Unity
+namespace LibNoise
 {
     /// <summary>
     /// Provides a series of gradient presets

@@ -2,7 +2,7 @@
 using UnityEngine;
 using Debug = System.Diagnostics.Debug;
 
-namespace LibNoise.Unity.Operator
+namespace LibNoise.Operator
 {
     /// <summary>
     /// Provides a noise module that rotates the input value around the origin before
