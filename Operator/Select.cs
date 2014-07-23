@@ -77,6 +77,9 @@ namespace LibNoise.Operator
         /// <summary>
         /// Gets or sets the falloff value at the edge transition.
         /// </summary>
+		/// <remarks>
+		/// Called SetEdgeFallOff() on the original LibNoise.
+		/// </remarks>
         public double FallOff
         {
             get { return _fallOff; }
@@ -89,7 +92,7 @@ namespace LibNoise.Operator
         }
 
         /// <summary>
-        /// Gets or sets the maximum.
+        /// Gets or sets the maximum, and re-calculated the fall-off accordingly.
         /// </summary>
         public double Maximum
         {
@@ -102,7 +105,7 @@ namespace LibNoise.Operator
         }
 
         /// <summary>
-        /// Gets or sets the minimum.
+		/// Gets or sets the minimum, and re-calculated the fall-off accordingly.
         /// </summary>
         public double Minimum
         {
