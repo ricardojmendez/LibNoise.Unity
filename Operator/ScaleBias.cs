@@ -8,13 +8,6 @@ namespace LibNoise.Operator
     /// </summary>
     public class ScaleBias : ModuleBase
     {
-        #region Fields
-
-        private double _scale = 1.0;
-        private double _bias;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -23,6 +16,7 @@ namespace LibNoise.Operator
         public ScaleBias()
             : base(1)
         {
+			Scale = 1;
         }
 
         /// <summary>
@@ -33,6 +27,7 @@ namespace LibNoise.Operator
             : base(1)
         {
             Modules[0] = input;
+			Scale = 1;
         }
 
         /// <summary>
@@ -56,21 +51,12 @@ namespace LibNoise.Operator
         /// <summary>
         /// Gets or sets the bias to apply to the scaled output value from the source module.
         /// </summary>
-        public double Bias
-        {
-            get { return _bias; }
-            set { _bias = value; }
-        }
+		public double Bias { get; set; }
 
         /// <summary>
         /// Gets or sets the scaling factor to apply to the output value from the source module.
         /// </summary>
-        public double Scale
-        {
-            get { return _scale; }
-            set { _scale = value; }
-        }
-
+		public double Scale { get; set; }
         #endregion
 
         #region ModuleBase Members
@@ -85,7 +71,7 @@ namespace LibNoise.Operator
         public override double GetValue(double x, double y, double z)
         {
             Debug.Assert(Modules[0] != null);
-            return Modules[0].GetValue(x, y, z) * _scale + _bias;
+            return Modules[0].GetValue(x, y, z) * Scale + Bias;
         }
 
         #endregion
