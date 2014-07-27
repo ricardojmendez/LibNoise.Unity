@@ -1,7 +1,8 @@
-﻿namespace LibNoise.Unity.Operator
+﻿using System;
+using System.Diagnostics;
+
+namespace LibNoise.Operator
 {
-    using System;
-    
     /// <summary>
     /// Provides a noise module that maps the output value from a source module onto an
     /// exponential curve. [OPERATOR]
@@ -10,7 +11,7 @@
     {
         #region Fields
 
-        private double m_exponent = 1.0;
+        private double _exponent = 1.0;
 
         #endregion
 
@@ -31,7 +32,7 @@
         public Exponent(ModuleBase input)
             : base(1)
         {
-            this.m_modules[0] = input;
+            Modules[0] = input;
         }
 
         /// <summary>
@@ -42,8 +43,8 @@
         public Exponent(double exponent, ModuleBase input)
             : base(1)
         {
-            this.m_modules[0] = input;
-            this.Value = exponent;
+            Modules[0] = input;
+            Value = exponent;
         }
 
         #endregion
@@ -55,8 +56,8 @@
         /// </summary>
         public double Value
         {
-            get { return this.m_exponent; }
-            set { this.m_exponent = value; }
+            get { return _exponent; }
+            set { _exponent = value; }
         }
 
         #endregion
@@ -72,9 +73,9 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            double v = this.m_modules[0].GetValue(x, y, z);
-            return (Math.Pow(Math.Abs((v + 1.0) / 2.0), this.m_exponent) * 2.0 - 1.0);
+            Debug.Assert(Modules[0] != null);
+            var v = Modules[0].GetValue(x, y, z);
+            return (Math.Pow(Math.Abs((v + 1.0) / 2.0), _exponent) * 2.0 - 1.0);
         }
 
         #endregion

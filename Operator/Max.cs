@@ -1,7 +1,8 @@
-﻿namespace LibNoise.Unity.Operator
+﻿using System;
+using System.Diagnostics;
+
+namespace LibNoise.Operator
 {
-    using System;
-    
     /// <summary>
     /// Provides a noise module that outputs the larger of the two output values from two
     /// source modules. [OPERATOR]
@@ -26,8 +27,8 @@
         public Max(ModuleBase lhs, ModuleBase rhs)
             : base(2)
         {
-            this.m_modules[0] = lhs;
-            this.m_modules[1] = rhs;
+            Modules[0] = lhs;
+            Modules[1] = rhs;
         }
 
         #endregion
@@ -43,10 +44,10 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            System.Diagnostics.Debug.Assert(this.m_modules[1] != null);
-            double a = this.m_modules[0].GetValue(x, y, z);
-            double b = this.m_modules[1].GetValue(x, y, z);
+            Debug.Assert(Modules[0] != null);
+            Debug.Assert(Modules[1] != null);
+            var a = Modules[0].GetValue(x, y, z);
+            var b = Modules[1].GetValue(x, y, z);
             return Math.Max(a, b);
         }
 

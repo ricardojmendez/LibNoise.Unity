@@ -1,12 +1,15 @@
-namespace LibNoise.Unity
-{
-    using System;
-    
-    using UnityEngine;
+using System;
+using System.Xml.Serialization;
+using UnityEngine;
 
+namespace LibNoise
+{
     /// <summary>
     /// Provides a two-dimensional noise map.
     /// </summary>
+	/// <remarks>This covers most of the functionality from LibNoise's noiseutils library, but 
+	/// the method calls might not be the same. See the tutorials project if you're wondering
+	/// which calls are equivalent.</remarks>
     public class Noise2D : IDisposable
     {
         #region Constants
@@ -26,15 +29,18 @@ namespace LibNoise.Unity
 
         #region Fields
 
-        private int m_width = 0;
-        private int m_height = 0;
-        private float[,] m_data = null;
-        private int m_ucWidth = 0;
-        private int m_ucHeight = 0;
-        private int m_ucBorder = 1; // Border size of extra noise for uncropped data.
-        private float[,] m_ucData = null; // Uncropped data. This has a border of extra noise data used for calculating normal map edges.
-        private float m_borderValue = float.NaN;
-        private ModuleBase m_generator = null;
+        private int _width;
+        private int _height;
+        private float[,] _data;
+        private readonly int _ucWidth;
+        private readonly int _ucHeight;
+        private int _ucBorder = 1; // Border size of extra noise for uncropped data.
+
+        private readonly float[,] _ucData;
+            // Uncropped data. This has a border of extra noise data used for calculating normal map edges.
+
+        private float _borderValue = float.NaN;
+        private ModuleBase _generator;
 
         #endregion
 
@@ -71,27 +77,18 @@ namespace LibNoise.Unity
         /// </summary>
         /// <param name="width">The width of the noise map.</param>
         /// <param name="height">The height of the noise map.</param>
-        public Noise2D(int width, int height)
-            : this(width, height, null)
+        /// <param name="generator">The generator module.</param>
+        public Noise2D(int width, int height, ModuleBase generator = null)
         {
+            _generator = generator;
+            _width = width;
+            _height = height;
+            _data = new float[width, height];
+            _ucWidth = width + _ucBorder * 2;
+            _ucHeight = height + _ucBorder * 2;
+            _ucData = new float[width + _ucBorder * 2, height + _ucBorder * 2];
         }
 
-        /// <summary>
-        /// Initializes a new instance of Noise2D.
-        /// </summary>
-        /// <param name="width">The width of the noise map.</param>
-        /// <param name="height">The height of the noise map.</param>
-        /// <param name="generator">The generator module.</param>
-        public Noise2D(int width, int height, ModuleBase generator)
-        {
-            this.m_generator = generator;
-            this.m_width = width;
-            this.m_height = height;
-            this.m_data = new float[width, height];
-            this.m_ucWidth = width + m_ucBorder * 2;
-            this.m_ucHeight = height + m_ucBorder * 2;
-            this.m_ucData = new float[width + m_ucBorder * 2, height + m_ucBorder * 2];
-        }
         #endregion
 
         #region Indexers
@@ -109,54 +106,51 @@ namespace LibNoise.Unity
             {
                 if (isCropped)
                 {
-                    if (x < 0 && x >= this.m_width)
+                    if (x < 0 && x >= _width)
                     {
                         throw new ArgumentOutOfRangeException("Invalid x position");
                     }
-                    if (y < 0 && y >= this.m_height)
+                    if (y < 0 && y >= _height)
                     {
                         throw new ArgumentOutOfRangeException("Invalid y position");
                     }
-                    return this.m_data[x, y];
+                    return _data[x, y];
                 }
-                else
+                if (x < 0 && x >= _ucWidth)
                 {
-                    if (x < 0 && x >= this.m_ucWidth)
-                    {
-                        throw new ArgumentOutOfRangeException("Invalid x position");
-                    }
-                    if (y < 0 && y >= this.m_ucHeight)
-                    {
-                        throw new ArgumentOutOfRangeException("Invalid y position");
-                    }
-                    return this.m_ucData[x, y];
+                    throw new ArgumentOutOfRangeException("Invalid x position");
                 }
+                if (y < 0 && y >= _ucHeight)
+                {
+                    throw new ArgumentOutOfRangeException("Invalid y position");
+                }
+                return _ucData[x, y];
             }
             set
             {
                 if (isCropped)
                 {
-                    if (x < 0 && x >= this.m_width)
+                    if (x < 0 && x >= _width)
                     {
                         throw new ArgumentOutOfRangeException("Invalid x position");
                     }
-                    if (y < 0 && y >= this.m_height)
+                    if (y < 0 && y >= _height)
                     {
                         throw new ArgumentOutOfRangeException("Invalid y position");
                     }
-                    this.m_data[x, y] = value;
+                    _data[x, y] = value;
                 }
                 else
                 {
-                    if (x < 0 && x >= this.m_ucWidth)
+                    if (x < 0 && x >= _ucWidth)
                     {
                         throw new ArgumentOutOfRangeException("Invalid x position");
                     }
-                    if (y < 0 && y >= this.m_ucHeight)
+                    if (y < 0 && y >= _ucHeight)
                     {
                         throw new ArgumentOutOfRangeException("Invalid y position");
                     }
-                    this.m_ucData[x, y] = value;
+                    _ucData[x, y] = value;
                 }
             }
         }
@@ -170,8 +164,8 @@ namespace LibNoise.Unity
         /// </summary>
         public float Border
         {
-            get { return this.m_borderValue; }
-            set { this.m_borderValue = value; }
+            get { return _borderValue; }
+            set { _borderValue = value; }
         }
 
         /// <summary>
@@ -179,8 +173,8 @@ namespace LibNoise.Unity
         /// </summary>
         public ModuleBase Generator
         {
-            get { return this.m_generator; }
-            set { this.m_generator = value; }
+            get { return _generator; }
+            set { _generator = value; }
         }
 
         /// <summary>
@@ -188,7 +182,7 @@ namespace LibNoise.Unity
         /// </summary>
         public int Height
         {
-            get { return this.m_height; }
+            get { return _height; }
         }
 
         /// <summary>
@@ -196,7 +190,7 @@ namespace LibNoise.Unity
         /// </summary>
         public int Width
         {
-            get { return this.m_width; }
+            get { return _width; }
         }
 
         #endregion
@@ -212,7 +206,7 @@ namespace LibNoise.Unity
         /// <returns>The normalized noise map data.</returns>
         public float[,] GetNormalizedData(bool isCropped = true, int xCrop = 0, int yCrop = 0)
         {
-            return this.GetData(isCropped, xCrop, yCrop, true);
+            return GetData(isCropped, xCrop, yCrop, true);
         }
 
         /// <summary>
@@ -229,31 +223,31 @@ namespace LibNoise.Unity
             float[,] data;
             if (isCropped)
             {
-                width = this.m_width;
-                height = this.m_height;
-                data = this.m_data;
+                width = _width;
+                height = _height;
+                data = _data;
             }
             else
             {
-                width = this.m_ucWidth;
-                height = this.m_ucHeight;
-                data = this.m_ucData;
+                width = _ucWidth;
+                height = _ucHeight;
+                data = _ucData;
             }
             width -= xCrop;
             height -= yCrop;
-            float[,] result = new float[width, height];
-            for (int x = 0; x < width; x++)
+            var result = new float[width, height];
+            for (var x = 0; x < width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for (var y = 0; y < height; y++)
                 {
                     float sample;
                     if (isNormalized)
                     {
-                        sample = ((float)data[x, y] + 1) / 2;
+                        sample = (data[x, y] + 1) / 2;
                     }
                     else
                     {
-                        sample = (float)data[x, y];
+                        sample = data[x, y];
                     }
                     result[x, y] = sample;
                 }
@@ -267,11 +261,11 @@ namespace LibNoise.Unity
         /// <param name="value">The constant value to clear the noise map with.</param>
         public void Clear(float value = 0f)
         {
-            for (int x = 0; x < this.m_width; x++)
+            for (var x = 0; x < _width; x++)
             {
-                for (int y = 0; y < this.m_height; y++)
+                for (var y = 0; y < _height; y++)
                 {
-                    this.m_data[x, y] = value;
+                    _data[x, y] = value;
                 }
             }
         }
@@ -284,7 +278,7 @@ namespace LibNoise.Unity
         /// <returns>The corresponding noise map value.</returns>
         private double GeneratePlanar(double x, double y)
         {
-            return this.m_generator.GetValue(x, 0.0, y);
+            return _generator.GetValue(x, 0.0, y);
         }
 
         /// <summary>
@@ -301,42 +295,42 @@ namespace LibNoise.Unity
             {
                 throw new ArgumentException("Invalid right/left or bottom/top combination");
             }
-            if (m_generator == null)
+            if (_generator == null)
             {
                 throw new ArgumentNullException("Generator is null");
-            }           
-            double xe = right - left;
-            double ze = bottom - top;
-            double xd = xe / ((double)this.m_width - m_ucBorder);
-            double zd = ze / ((double)this.m_height - m_ucBorder);
-            double xc = left;
-            double zc = top;
-            float fv = 0.0f;
-            for (int x = 0; x < this.m_ucWidth; x++)
+            }
+            var xe = right - left;
+            var ze = bottom - top;
+            var xd = xe / ((double) _width - _ucBorder);
+            var zd = ze / ((double) _height - _ucBorder);
+            var xc = left;
+            for (var x = 0; x < _ucWidth; x++)
             {
-                zc = top;
-                for (int y = 0; y < this.m_ucHeight; y++)
+                var zc = top;
+                for (var y = 0; y < _ucHeight; y++)
                 {
+                    float fv;
                     if (isSeamless)
                     {
-                        fv = (float)this.GeneratePlanar(xc, zc);
+                        fv = (float) GeneratePlanar(xc, zc);
                     }
                     else
                     {
-                        double swv = this.GeneratePlanar(xc, zc);
-                        double sev = this.GeneratePlanar(xc + xe, zc);
-                        double nwv = this.GeneratePlanar(xc, zc + ze);
-                        double nev = this.GeneratePlanar(xc + xe, zc + ze);
-                        double xb = 1.0 - ((xc - left) / xe);
-                        double zb = 1.0 - ((zc - top) / ze);
-                        double z0 = Utils.InterpolateLinear(swv, sev, xb);
-                        double z1 = Utils.InterpolateLinear(nwv, nev, xb);
-                        fv = (float)Utils.InterpolateLinear(z0, z1, zb);
+                        var swv = GeneratePlanar(xc, zc);
+                        var sev = GeneratePlanar(xc + xe, zc);
+                        var nwv = GeneratePlanar(xc, zc + ze);
+                        var nev = GeneratePlanar(xc + xe, zc + ze);
+                        var xb = 1.0 - ((xc - left) / xe);
+                        var zb = 1.0 - ((zc - top) / ze);
+                        var z0 = Utils.InterpolateLinear(swv, sev, xb);
+                        var z1 = Utils.InterpolateLinear(nwv, nev, xb);
+                        fv = (float) Utils.InterpolateLinear(z0, z1, zb);
                     }
-                    this.m_ucData[x, y] = fv;
-                    if (x >= m_ucBorder && y >= m_ucBorder && x < this.m_width + m_ucBorder && y < this.m_height + m_ucBorder)
+                    _ucData[x, y] = fv;
+                    if (x >= _ucBorder && y >= _ucBorder && x < _width + _ucBorder &&
+                        y < _height + _ucBorder)
                     {
-                        this.m_data[x - m_ucBorder, y - m_ucBorder] = fv; // Cropped data
+                        _data[x - _ucBorder, y - _ucBorder] = fv; // Cropped data
                     }
                     zc += zd;
                 }
@@ -352,10 +346,10 @@ namespace LibNoise.Unity
         /// <returns>The corresponding noise map value.</returns>
         private double GenerateCylindrical(double angle, double height)
         {
-            double x = Math.Cos(angle * Mathf.Deg2Rad);
-            double y = height;
-            double z = Math.Sin(angle * Mathf.Deg2Rad);
-            return this.m_generator.GetValue(x, y, z);
+            var x = Math.Cos(angle * Mathf.Deg2Rad);
+            var y = height;
+            var z = Math.Sin(angle * Mathf.Deg2Rad);
+            return _generator.GetValue(x, y, z);
         }
 
         /// <summary>
@@ -371,25 +365,26 @@ namespace LibNoise.Unity
             {
                 throw new ArgumentException("Invalid angle or height parameters");
             }
-            if (m_generator == null)
+            if (_generator == null)
             {
                 throw new ArgumentNullException("Generator is null");
             }
-            double ae = angleMax - angleMin;
-            double he = heightMax - heightMin;
-            double xd = ae / ((double)this.m_width - m_ucBorder);
-            double yd = he / ((double)this.m_height - m_ucBorder);
-            double ca = angleMin;
-            double ch = heightMin;
-            for (int x = 0; x < this.m_ucWidth; x++)
+            var ae = angleMax - angleMin;
+            var he = heightMax - heightMin;
+            var xd = ae / ((double) _width - _ucBorder);
+            var yd = he / ((double) _height - _ucBorder);
+            var ca = angleMin;
+            for (var x = 0; x < _ucWidth; x++)
             {
-                ch = heightMin;
-                for (int y = 0; y < this.m_ucHeight; y++)
+                var ch = heightMin;
+                for (var y = 0; y < _ucHeight; y++)
                 {
-                    this.m_ucData[x, y] = (float)this.GenerateCylindrical(ca, ch);
-                    if (x >= m_ucBorder && y >= m_ucBorder && x < this.m_width + m_ucBorder && y < this.m_height + m_ucBorder)
+                    _ucData[x, y] = (float) GenerateCylindrical(ca, ch);
+                    if (x >= _ucBorder && y >= _ucBorder && x < _width + _ucBorder &&
+                        y < _height + _ucBorder)
                     {
-                        this.m_data[x - m_ucBorder, y - m_ucBorder] = (float)this.GenerateCylindrical(ca, ch); // Cropped data
+                        _data[x - _ucBorder, y - _ucBorder] = (float) GenerateCylindrical(ca, ch);
+                            // Cropped data
                     }
                     ch += yd;
                 }
@@ -405,8 +400,8 @@ namespace LibNoise.Unity
         /// <returns>The corresponding noise map value.</returns>
         private double GenerateSpherical(double lat, double lon)
         {
-            double r = Math.Cos(Mathf.Deg2Rad * lat);
-            return this.m_generator.GetValue(r * Math.Cos(Mathf.Deg2Rad * lon), Math.Sin(Mathf.Deg2Rad * lat),
+            var r = Math.Cos(Mathf.Deg2Rad * lat);
+            return _generator.GetValue(r * Math.Cos(Mathf.Deg2Rad * lon), Math.Sin(Mathf.Deg2Rad * lat),
                 r * Math.Sin(Mathf.Deg2Rad * lon));
         }
 
@@ -423,25 +418,26 @@ namespace LibNoise.Unity
             {
                 throw new ArgumentException("Invalid east/west or north/south combination");
             }
-            if (m_generator == null)
+            if (_generator == null)
             {
                 throw new ArgumentNullException("Generator is null");
             }
-            double loe = east - west;
-            double lae = north - south;
-            double xd = loe / ((double)this.m_width - m_ucBorder);
-            double yd = lae / ((double)this.m_height - m_ucBorder);
-            double clo = west;
-            double cla = south;
-            for (int x = 0; x < this.m_ucWidth; x++)
+            var loe = east - west;
+            var lae = north - south;
+            var xd = loe / ((double) _width - _ucBorder);
+            var yd = lae / ((double) _height - _ucBorder);
+            var clo = west;
+            for (var x = 0; x < _ucWidth; x++)
             {
-                cla = south;
-                for (int y = 0; y < this.m_ucHeight; y++)
+                var cla = south;
+                for (var y = 0; y < _ucHeight; y++)
                 {
-                    this.m_ucData[x, y] = (float)this.GenerateSpherical(cla, clo);
-                    if (x >= m_ucBorder && y >= m_ucBorder && x < this.m_width + m_ucBorder && y < this.m_height + m_ucBorder)
+                    _ucData[x, y] = (float) GenerateSpherical(cla, clo);
+                    if (x >= _ucBorder && y >= _ucBorder && x < _width + _ucBorder &&
+                        y < _height + _ucBorder)
                     {
-                        this.m_data[x - m_ucBorder, y - m_ucBorder] = (float)this.GenerateSpherical(cla, clo); // Cropped data
+                        _data[x - _ucBorder, y - _ucBorder] = (float) GenerateSpherical(cla, clo);
+                            // Cropped data
                     }
                     cla += yd;
                 }
@@ -455,7 +451,7 @@ namespace LibNoise.Unity
         /// <returns>The created texture map.</returns>
         public Texture2D GetTexture()
         {
-            return this.GetTexture(GradientPresets.Grayscale);
+            return GetTexture(GradientPresets.Grayscale);
         }
 
         /// <summary>
@@ -465,22 +461,23 @@ namespace LibNoise.Unity
         /// <returns>The created texture map.</returns>
         public Texture2D GetTexture(Gradient gradient)
         {
-            Texture2D texture = new Texture2D(this.m_width, this.m_height);
-            Color[] pixels = new Color[this.m_width * this.m_height];
-            for (int x = 0; x < this.m_width; x++)
+            var texture = new Texture2D(_width, _height);
+            var pixels = new Color[_width * _height];
+            for (var x = 0; x < _width; x++)
             {
-                for (int y = 0; y < this.m_height; y++)
+                for (var y = 0; y < _height; y++)
                 {
-                    float sample = 0.0f;
-                    if (!float.IsNaN(this.m_borderValue) && (x == 0 || x == this.m_width - m_ucBorder || y == 0 || y == this.m_height - m_ucBorder))
+                    float sample;
+                    if (!float.IsNaN(_borderValue) &&
+                        (x == 0 || x == _width - _ucBorder || y == 0 || y == _height - _ucBorder))
                     {
-                        sample = this.m_borderValue;
+                        sample = _borderValue;
                     }
                     else
                     {
-                        sample = this.m_data[x, y];
+                        sample = _data[x, y];
                     }
-                    pixels[x + y * this.m_width] = gradient.Evaluate((sample + 1) / 2);
+                    pixels[x + y * _width] = gradient.Evaluate((sample + 1) / 2);
                 }
             }
             texture.SetPixels(pixels);
@@ -496,28 +493,32 @@ namespace LibNoise.Unity
         /// <returns>The created normal map.</returns>
         public Texture2D GetNormalMap(float intensity)
         {
-            Texture2D texture = new Texture2D(this.m_width, this.m_height);
-            Color[] pixels = new Color[this.m_width * this.m_height];
-            for (int x = 0; x < this.m_ucWidth; x++)
+            var texture = new Texture2D(_width, _height);
+            var pixels = new Color[_width * _height];
+            for (var x = 0; x < _ucWidth; x++)
             {
-                for (int y = 0; y < this.m_ucHeight; y++)
+                for (var y = 0; y < _ucHeight; y++)
                 {
-                    float xPos = (this.m_ucData[Mathf.Max(0, x - m_ucBorder), y] - this.m_ucData[Mathf.Min(x + m_ucBorder, this.m_height + m_ucBorder), y]) / 2;
-                    float yPos = (this.m_ucData[x, Mathf.Max(0, y - m_ucBorder)] - this.m_ucData[x, Mathf.Min(y + m_ucBorder, this.m_width + m_ucBorder)]) / 2;
-                    Vector3 normalX = new Vector3(xPos * intensity, 0, 1);
-                    Vector3 normalY = new Vector3(0, yPos * intensity, 1);
+                    var xPos = (_ucData[Mathf.Max(0, x - _ucBorder), y] -
+                                _ucData[Mathf.Min(x + _ucBorder, _height + _ucBorder), y]) / 2;
+                    var yPos = (_ucData[x, Mathf.Max(0, y - _ucBorder)] -
+                                _ucData[x, Mathf.Min(y + _ucBorder, _width + _ucBorder)]) / 2;
+                    var normalX = new Vector3(xPos * intensity, 0, 1);
+                    var normalY = new Vector3(0, yPos * intensity, 1);
                     // Get normal vector
-                    Vector3 normalVector = normalX + normalY;
+                    var normalVector = normalX + normalY;
                     normalVector.Normalize();
                     // Get color vector
-                    Vector3 colorVector = Vector3.zero;
+                    var colorVector = Vector3.zero;
                     colorVector.x = (normalVector.x + 1) / 2;
                     colorVector.y = (normalVector.y + 1) / 2;
                     colorVector.z = (normalVector.z + 1) / 2;
-                    // Start at (x + m_ucBorder, y + m_ucBorder) so that resulting normal map aligns with cropped data
-                    if (x >= m_ucBorder && y >= m_ucBorder && x < this.m_width + m_ucBorder && y < this.m_height + m_ucBorder)
+                    // Start at (x + _ucBorder, y + _ucBorder) so that resulting normal map aligns with cropped data
+                    if (x >= _ucBorder && y >= _ucBorder && x < _width + _ucBorder &&
+                        y < _height + _ucBorder)
                     {
-                        pixels[(x - m_ucBorder) + (y - m_ucBorder) * this.m_width] = new Color(colorVector.x, colorVector.y, colorVector.z);
+                        pixels[(x - _ucBorder) + (y - _ucBorder) * _width] = new Color(colorVector.x,
+                            colorVector.y, colorVector.z);
                     }
                 }
             }
@@ -531,18 +532,18 @@ namespace LibNoise.Unity
 
         #region IDisposable Members
 
-        [System.Xml.Serialization.XmlIgnore]
-        #if !XBOX360 && !ZUNE
-            [NonSerialized]
-        #endif
-        private bool m_disposed = false;
+        [XmlIgnore]
+#if !XBOX360 && !ZUNE
+        [NonSerialized]
+#endif
+            private bool _disposed;
 
         /// <summary>
         /// Gets a value whether the object is disposed.
         /// </summary>
         public bool IsDisposed
         {
-            get { return this.m_disposed; }
+            get { return _disposed; }
         }
 
         /// <summary>
@@ -550,9 +551,9 @@ namespace LibNoise.Unity
         /// </summary>
         public void Dispose()
         {
-            if (!this.m_disposed)
+            if (!_disposed)
             {
-                this.m_disposed = this.Disposing();
+                _disposed = Disposing();
             }
             GC.SuppressFinalize(this);
         }
@@ -563,12 +564,9 @@ namespace LibNoise.Unity
         /// <returns>True if the object is completely disposed.</returns>
         protected virtual bool Disposing()
         {
-            if (this.m_data != null)
-            {
-                this.m_data = null;
-            }
-            this.m_width = 0;
-            this.m_height = 0;
+            _data = null;
+            _width = 0;
+            _height = 0;
             return true;
         }
 

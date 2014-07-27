@@ -1,7 +1,7 @@
-﻿namespace LibNoise.Unity.Operator
+﻿using System.Diagnostics;
+
+namespace LibNoise.Operator
 {
-    using System;
-    
     /// <summary>
     /// Provides a noise module that inverts the output value from a source module. [OPERATOR]
     /// </summary>
@@ -24,7 +24,7 @@
         public Invert(ModuleBase input)
             : base(1)
         {
-            this.m_modules[0] = input;
+            Modules[0] = input;
         }
 
         #endregion
@@ -40,8 +40,8 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            return -this.m_modules[0].GetValue(x, y, z);
+            Debug.Assert(Modules[0] != null);
+            return -Modules[0].GetValue(x, y, z);
         }
 
         #endregion

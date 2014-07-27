@@ -1,7 +1,7 @@
-﻿namespace LibNoise.Unity.Operator
+﻿using System.Diagnostics;
+
+namespace LibNoise.Operator
 {
-    using System;
-    
     /// <summary>
     /// Provides a noise module that scales the coordinates of the input value before
     /// returning the output value from a source module. [OPERATOR]
@@ -10,9 +10,9 @@
     {
         #region Fields
 
-        private double m_x = 1.0;
-        private double m_y = 1.0;
-        private double m_z = 1.0;
+        private double _x = 1.0;
+        private double _y = 1.0;
+        private double _z = 1.0;
 
         #endregion
 
@@ -33,7 +33,7 @@
         public Scale(ModuleBase input)
             : base(1)
         {
-            this.m_modules[0] = input;
+            Modules[0] = input;
         }
 
         /// <summary>
@@ -46,10 +46,10 @@
         public Scale(double x, double y, double z, ModuleBase input)
             : base(1)
         {
-            this.m_modules[0] = input;
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            Modules[0] = input;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         #endregion
@@ -61,8 +61,8 @@
         /// </summary>
         public double X
         {
-            get { return this.m_x; }
-            set { this.m_x = value; }
+            get { return _x; }
+            set { _x = value; }
         }
 
         /// <summary>
@@ -70,8 +70,8 @@
         /// </summary>
         public double Y
         {
-            get { return this.m_y; }
-            set { this.m_y = value; }
+            get { return _y; }
+            set { _y = value; }
         }
 
         /// <summary>
@@ -79,8 +79,8 @@
         /// </summary>
         public double Z
         {
-            get { return this.m_z; }
-            set { this.m_z = value; }
+            get { return _z; }
+            set { _z = value; }
         }
 
         #endregion
@@ -96,8 +96,8 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            return this.m_modules[0].GetValue(x * this.m_x, y * this.m_y, z * this.m_z);
+            Debug.Assert(Modules[0] != null);
+            return Modules[0].GetValue(x * _x, y * _y, z * _z);
         }
 
         #endregion

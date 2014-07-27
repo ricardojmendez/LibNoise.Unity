@@ -1,20 +1,13 @@
-﻿namespace LibNoise.Unity.Operator
+﻿using System.Diagnostics;
+
+namespace LibNoise.Operator
 {
-    using System;
-    
     /// <summary>
     /// Provides a noise module that applies a scaling factor and a bias to the output
     /// value from a source module. [OPERATOR]
     /// </summary>
     public class ScaleBias : ModuleBase
     {
-        #region Fields
-
-        private double m_scale = 1.0;
-        private double m_bias = 0.0;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -23,6 +16,7 @@
         public ScaleBias()
             : base(1)
         {
+			Scale = 1;
         }
 
         /// <summary>
@@ -32,7 +26,8 @@
         public ScaleBias(ModuleBase input)
             : base(1)
         {
-            this.m_modules[0] = input;
+            Modules[0] = input;
+			Scale = 1;
         }
 
         /// <summary>
@@ -44,9 +39,9 @@
         public ScaleBias(double scale, double bias, ModuleBase input)
             : base(1)
         {
-            this.m_modules[0] = input;
-            this.Bias = bias;
-            this.Scale = scale;
+            Modules[0] = input;
+            Bias = bias;
+            Scale = scale;
         }
 
         #endregion
@@ -56,21 +51,12 @@
         /// <summary>
         /// Gets or sets the bias to apply to the scaled output value from the source module.
         /// </summary>
-        public double Bias
-        {
-            get { return this.m_bias; }
-            set { this.m_bias = value; }
-        }
+		public double Bias { get; set; }
 
         /// <summary>
         /// Gets or sets the scaling factor to apply to the output value from the source module.
         /// </summary>
-        public double Scale
-        {
-            get { return this.m_scale; }
-            set { this.m_scale = value; }
-        }
-
+		public double Scale { get; set; }
         #endregion
 
         #region ModuleBase Members
@@ -84,8 +70,8 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            return this.m_modules[0].GetValue(x, y, z) * this.m_scale + this.m_bias;
+            Debug.Assert(Modules[0] != null);
+            return Modules[0].GetValue(x, y, z) * Scale + Bias;
         }
 
         #endregion

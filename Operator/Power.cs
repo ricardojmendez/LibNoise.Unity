@@ -1,7 +1,8 @@
-﻿namespace LibNoise.Unity.Operator
+﻿using System;
+using System.Diagnostics;
+
+namespace LibNoise.Operator
 {
-    using System;
-    
     /// <summary>
     /// Provides a noise module that outputs value from a first source module
     /// to the power of the output value from a second source module. [OPERATOR]
@@ -26,8 +27,8 @@
         public Power(ModuleBase lhs, ModuleBase rhs)
             : base(2)
         {
-            this.m_modules[0] = lhs;
-            this.m_modules[1] = rhs;
+            Modules[0] = lhs;
+            Modules[1] = rhs;
         }
 
         #endregion
@@ -43,9 +44,9 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            System.Diagnostics.Debug.Assert(this.m_modules[1] != null);
-            return Math.Pow(this.m_modules[0].GetValue(x, y, z), this.m_modules[1].GetValue(x, y, z));
+            Debug.Assert(Modules[0] != null);
+            Debug.Assert(Modules[1] != null);
+            return Math.Pow(Modules[0].GetValue(x, y, z), Modules[1].GetValue(x, y, z));
         }
 
         #endregion

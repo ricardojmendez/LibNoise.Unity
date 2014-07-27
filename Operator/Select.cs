@@ -1,7 +1,7 @@
-﻿namespace LibNoise.Unity.Operator
+﻿using System.Diagnostics;
+
+namespace LibNoise.Operator
 {
-    using System;
-    
     /// <summary>
     /// Provides a noise module that outputs the value selected from one of two source
     /// modules chosen by the output value from a control module. [OPERATOR]
@@ -10,10 +10,10 @@
     {
         #region Fields
 
-        private double m_fallOff = 0.0;
-        private double m_raw = 0.0;
-        private double m_min = -1.0;
-        private double m_max = 1.0;
+        private double _fallOff;
+        private double _raw;
+        private double _min = -1.0;
+        private double _max = 1.0;
 
         #endregion
 
@@ -26,20 +26,20 @@
             : base(3)
         {
         }
-        
+
         /// <summary>
         /// Initializes a new instance of Select.
         /// </summary>
         /// <param name="inputA">The first input module.</param>
         /// <param name="inputB">The second input module.</param>
-        /// <param name="inputB">The controller module.</param>
+        /// <param name="controller">The controller module.</param>
         public Select(ModuleBase inputA, ModuleBase inputB, ModuleBase controller)
             : base(3)
         {
-            this.m_modules[0] = inputA;
-            this.m_modules[1] = inputB;
-            this.m_modules[2] = controller;
-        }       
+            Modules[0] = inputA;
+            Modules[1] = inputB;
+            Modules[2] = controller;
+        }
 
         /// <summary>
         /// Initializes a new instance of Select.
@@ -52,9 +52,9 @@
         public Select(double min, double max, double fallOff, ModuleBase inputA, ModuleBase inputB)
             : this(inputA, inputB, null)
         {
-            this.m_min = min;
-            this.m_max = max;
-            this.FallOff = fallOff;
+            _min = min;
+            _max = max;
+            FallOff = fallOff;
         }
 
         #endregion
@@ -66,51 +66,54 @@
         /// </summary>
         public ModuleBase Controller
         {
-            get { return this.m_modules[2]; }
+            get { return Modules[2]; }
             set
             {
-                System.Diagnostics.Debug.Assert(value != null);
-                this.m_modules[2] = value;
+                Debug.Assert(value != null);
+                Modules[2] = value;
             }
         }
 
         /// <summary>
         /// Gets or sets the falloff value at the edge transition.
         /// </summary>
+		/// <remarks>
+		/// Called SetEdgeFallOff() on the original LibNoise.
+		/// </remarks>
         public double FallOff
         {
-            get { return this.m_fallOff; }
+            get { return _fallOff; }
             set
             {
-                double bs = this.m_max - this.m_min;
-                this.m_raw = value;
-                this.m_fallOff = (value > bs / 2) ? bs / 2 : value;
+                var bs = _max - _min;
+                _raw = value;
+                _fallOff = (value > bs / 2) ? bs / 2 : value;
             }
         }
 
         /// <summary>
-        /// Gets or sets the maximum.
+        /// Gets or sets the maximum, and re-calculated the fall-off accordingly.
         /// </summary>
         public double Maximum
         {
-            get { return this.m_max; }
+            get { return _max; }
             set
             {
-                this.m_max = value;
-                this.FallOff = this.m_raw;
+                _max = value;
+                FallOff = _raw;
             }
         }
 
         /// <summary>
-        /// Gets or sets the minimum.
+		/// Gets or sets the minimum, and re-calculated the fall-off accordingly.
         /// </summary>
         public double Minimum
         {
-            get { return this.m_min; }
+            get { return _min; }
             set
             {
-                this.m_min = value;
-                this.FallOff = this.m_raw;
+                _min = value;
+                FallOff = _raw;
             }
         }
 
@@ -125,10 +128,10 @@
         /// <param name="max">The maximum value.</param>
         public void SetBounds(double min, double max)
         {
-            System.Diagnostics.Debug.Assert(min < max);
-            this.m_min = min;
-            this.m_max = max;
-            this.FallOff = this.m_fallOff;
+            Debug.Assert(min < max);
+            _min = min;
+            _max = max;
+            FallOff = _fallOff;
         }
 
         #endregion
@@ -144,47 +147,44 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            System.Diagnostics.Debug.Assert(this.m_modules[1] != null);
-            System.Diagnostics.Debug.Assert(this.m_modules[2] != null);
-            double cv = this.m_modules[2].GetValue(x, y, z);
-            double a;
-            if (this.m_fallOff > 0.0)
+            Debug.Assert(Modules[0] != null);
+            Debug.Assert(Modules[1] != null);
+            Debug.Assert(Modules[2] != null);
+            var cv = Modules[2].GetValue(x, y, z);
+            if (_fallOff > 0.0)
             {
-                if (cv < (this.m_min - this.m_fallOff))
+                double a;
+                if (cv < (_min - _fallOff))
                 {
-                    return this.m_modules[0].GetValue(x, y, z);
+                    return Modules[0].GetValue(x, y, z);
                 }
-                else if (cv < (this.m_min + this.m_fallOff))
+                if (cv < (_min + _fallOff))
                 {
-                    double lc = (this.m_min - this.m_fallOff);
-                    double uc = (this.m_min + this.m_fallOff);
+                    var lc = (_min - _fallOff);
+                    var uc = (_min + _fallOff);
                     a = Utils.MapCubicSCurve((cv - lc) / (uc - lc));
-                    return Utils.InterpolateLinear(this.m_modules[0].GetValue(x, y, z), this.m_modules[1].GetValue(x, y, z), a);
-
+                    return Utils.InterpolateLinear(Modules[0].GetValue(x, y, z),
+                        Modules[1].GetValue(x, y, z), a);
                 }
-                else if (cv < (this.m_max - this.m_fallOff))
+                if (cv < (_max - _fallOff))
                 {
-                    return this.m_modules[1].GetValue(x, y, z);
+                    return Modules[1].GetValue(x, y, z);
                 }
-                else if (cv < (this.m_max + this.m_fallOff))
+                if (cv < (_max + _fallOff))
                 {
-                    double lc = (this.m_max - this.m_fallOff);
-                    double uc = (this.m_max + this.m_fallOff);
+                    var lc = (_max - _fallOff);
+                    var uc = (_max + _fallOff);
                     a = Utils.MapCubicSCurve((cv - lc) / (uc - lc));
-                    return Utils.InterpolateLinear(this.m_modules[1].GetValue(x, y, z), this.m_modules[0].GetValue(x, y, z), a);
-
+                    return Utils.InterpolateLinear(Modules[1].GetValue(x, y, z),
+                        Modules[0].GetValue(x, y, z), a);
                 }
-                return this.m_modules[0].GetValue(x, y, z);
+                return Modules[0].GetValue(x, y, z);
             }
-            else
+            if (cv < _min || cv > _max)
             {
-                if (cv < this.m_min || cv > this.m_max)
-                {
-                    return this.m_modules[0].GetValue(x, y, z);
-                }
-                return this.m_modules[1].GetValue(x, y, z);
+                return Modules[0].GetValue(x, y, z);
             }
+            return Modules[1].GetValue(x, y, z);
         }
 
         #endregion

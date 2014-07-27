@@ -1,7 +1,7 @@
-﻿namespace LibNoise.Unity.Operator
+﻿using System.Diagnostics;
+
+namespace LibNoise.Operator
 {
-    using System;
-    
     /// <summary>
     /// Provides a noise module that clamps the output value from a source module to a
     /// range of values. [OPERATOR]
@@ -10,8 +10,8 @@
     {
         #region Fields
 
-        private double m_min = -1.0;
-        private double m_max = 1.0;
+        private double _min = -1.0;
+        private double _max = 1.0;
 
         #endregion
 
@@ -32,7 +32,7 @@
         public Clamp(ModuleBase input)
             : base(1)
         {
-            this.m_modules[0] = input;
+            Modules[0] = input;
         }
 
         /// <summary>
@@ -44,9 +44,9 @@
         public Clamp(double min, double max, ModuleBase input)
             : base(1)
         {
-            this.Minimum = min;
-            this.Maximum = max;
-            this.m_modules[0] = input;
+            Minimum = min;
+            Maximum = max;
+            Modules[0] = input;
         }
 
         #endregion
@@ -58,8 +58,8 @@
         /// </summary>
         public double Maximum
         {
-            get { return this.m_max; }
-            set { this.m_max = value; }
+            get { return _max; }
+            set { _max = value; }
         }
 
         /// <summary>
@@ -67,8 +67,8 @@
         /// </summary>
         public double Minimum
         {
-            get { return this.m_min; }
-            set { this.m_min = value; }
+            get { return _min; }
+            set { _min = value; }
         }
 
         #endregion
@@ -82,9 +82,9 @@
         /// <param name="max">The maximum value.</param>
         public void SetBounds(double min, double max)
         {
-            System.Diagnostics.Debug.Assert(min < max);
-            this.m_min = min;
-            this.m_max = max;
+            Debug.Assert(min < max);
+            _min = min;
+            _max = max;
         }
 
         #endregion
@@ -100,21 +100,21 @@
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            System.Diagnostics.Debug.Assert(this.m_modules[0] != null);
-            if (this.m_min > this.m_max)
+            Debug.Assert(Modules[0] != null);
+            if (_min > _max)
             {
-                double t = this.m_min;
-                this.m_min = this.m_max;
-                this.m_max = t;
+                var t = _min;
+                _min = _max;
+                _max = t;
             }
-            double v = this.m_modules[0].GetValue(x, y, z);
-            if (v < this.m_min)
+            var v = Modules[0].GetValue(x, y, z);
+            if (v < _min)
             {
-                return this.m_min;
+                return _min;
             }
-            else if (v > this.m_max)
+            if (v > _max)
             {
-                return this.m_max;
+                return _max;
             }
             return v;
         }
