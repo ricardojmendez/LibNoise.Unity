@@ -40,7 +40,6 @@ namespace LibNoise.Generator
             Displacement = displacement;
             Seed = seed;
             UseDistance = distance;
-            Seed = seed;
         }
 
         #endregion
