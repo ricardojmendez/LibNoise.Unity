@@ -500,9 +500,9 @@ namespace LibNoise
                 for (var y = 0; y < _ucHeight; y++)
                 {
                     var xPos = (_ucData[Mathf.Max(0, x - _ucBorder), y] -
-                                _ucData[Mathf.Min(x + _ucBorder, _height + _ucBorder), y]) / 2;
+                                _ucData[Mathf.Min(x + _ucBorder, _width + _ucBorder), y]) / 2;
                     var yPos = (_ucData[x, Mathf.Max(0, y - _ucBorder)] -
-                                _ucData[x, Mathf.Min(y + _ucBorder, _width + _ucBorder)]) / 2;
+                                _ucData[x, Mathf.Min(y + _ucBorder, _height + _ucBorder)]) / 2;
                     var normalX = new Vector3(xPos * intensity, 0, 1);
                     var normalY = new Vector3(0, yPos * intensity, 1);
                     // Get normal vector
