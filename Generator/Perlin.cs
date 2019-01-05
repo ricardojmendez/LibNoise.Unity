@@ -55,6 +55,7 @@ namespace LibNoise.Generator
 
         /// <summary>
         /// Gets or sets the frequency of the first octave.
+        /// <para>Frequency represents the number of cycles per unit length that a generation module outputs.</para>
         /// </summary>
         public double Frequency
         {
@@ -64,6 +65,7 @@ namespace LibNoise.Generator
 
         /// <summary>
         /// Gets or sets the lacunarity of the perlin noise.
+        /// <para>A multiplier that determines how quickly the frequency increases for each successive octave.</para>
         /// </summary>
         public double Lacunarity
         {
@@ -82,6 +84,8 @@ namespace LibNoise.Generator
 
         /// <summary>
         /// Gets or sets the number of octaves of the perlin noise.
+        /// <para>The number of octaves control the amount of detail of the perlin noise
+        /// Adding more octaves increases the detail of the perlin noise, but with the drawback of increasing the calculation time.</para>
         /// </summary>
         public int OctaveCount
         {
@@ -90,7 +94,8 @@ namespace LibNoise.Generator
         }
 
         /// <summary>
-        /// Gets or sets the persistence of the perlin noise.
+        /// Gets or sets the persistence of the perlin noise. 
+        /// <para>A multiplier that determines how quickly the amplitudes diminish for each successive octave.</para>
         /// </summary>
         public double Persistence
         {
@@ -120,8 +125,9 @@ namespace LibNoise.Generator
         /// <returns>The resulting output value.</returns>
         public override double GetValue(double x, double y, double z)
         {
-            var value = 0.0;
-            var cp = 1.0;
+            var value       = 0.0;
+            var amplitude   = 1.0;
+
             x *= _frequency;
             y *= _frequency;
             z *= _frequency;
@@ -132,11 +138,11 @@ namespace LibNoise.Generator
                 var nz = Utils.MakeInt32Range(z);
                 var seed = (_seed + i) & 0xffffffff;
                 var signal = Utils.GradientCoherentNoise3D(nx, ny, nz, seed, _quality);
-                value += signal * cp;
+                value += signal * amplitude;
                 x *= _lacunarity;
                 y *= _lacunarity;
                 z *= _lacunarity;
-                cp *= _persistence;
+                amplitude *= _persistence;
             }
             return value;
         }
