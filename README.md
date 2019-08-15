@@ -10,6 +10,13 @@ LibNoise.Unity is released under the
 [LGPL license](https://www.gnu.org/licenses/lgpl.html). See COPYING.txt and
 COPYING.LESSER.txt for details.
 
+## Install
+
+To install, you must open in the folders of your ***Packages/manifest.json*** files add the package 
+> "com.libnoise": "https://github.com/ExpressoBits/LibNoise.Unity.git"
+
+and you're done!
+
 ## About
 
 [LibNoise](http://libnoise.sourceforge.net/) was originally created by
