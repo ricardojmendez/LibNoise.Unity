@@ -310,7 +310,7 @@ namespace LibNoise
                 for (var y = 0; y < _ucHeight; y++)
                 {
                     float fv;
-                    if (isSeamless)
+                    if (!isSeamless)
                     {
                         fv = (float) GeneratePlanar(xc, zc);
                     }
